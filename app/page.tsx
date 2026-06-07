@@ -19,21 +19,8 @@ export default function HomePage() {
     <div className="bg-dark-1 min-h-screen">
       {/* ── HERO ── */}
       <section ref={heroRef} className="relative h-screen flex items-center justify-center overflow-hidden">
-        {/* Video background */}
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ filter: "brightness(0.35) contrast(1.1)" }}
-        >
-          <source src="/brand/model.mp4" type="video/mp4" />
-        </video>
-
-        {/* Dark overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-dark-1 via-dark-1/40 to-dark-1/20" />
-        <div className="absolute inset-0 bg-gradient-to-b from-dark-1/60 via-transparent to-dark-1/80" />
+        {/* Pure dark background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-dark-1 via-dark-2 to-dark-1" />
 
         {/* Diagonal gold lines */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
