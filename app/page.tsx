@@ -8,80 +8,138 @@ import ProductCard from "@/components/ProductCard";
 import AnimatedSection from "@/components/AnimatedSection";
 import Footer from "@/components/Footer";
 
+const marqueeItems = [
+  "ROYVÉ", "NOT FOR EVERYONE", "LUXURY IN EVERY DETAIL",
+  "ROYVÉ", "NOT FOR EVERYONE", "LUXURY IN EVERY DETAIL",
+  "ROYVÉ", "NOT FOR EVERYONE", "LUXURY IN EVERY DETAIL",
+];
+
+function VideoCell({
+  src,
+  className = "",
+  cropStyle = {},
+  label,
+  brightness = 0.72,
+}: {
+  src: string;
+  className?: string;
+  cropStyle?: React.CSSProperties;
+  label?: string;
+  brightness?: number;
+}) {
+  return (
+    <div className={`relative overflow-hidden bg-dark-2 ${className}`}>
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute object-cover"
+        style={{
+          filter: `brightness(${brightness}) contrast(1.05)`,
+          width: "170%",
+          height: "170%",
+          top: "-20%",
+          left: "-15%",
+          ...cropStyle,
+        }}
+      >
+        <source src={src} type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-gradient-to-t from-dark-1/60 via-transparent to-transparent" />
+      {label && (
+        <p className="absolute bottom-4 left-4 text-white/40 text-[10px] tracking-[0.35em] uppercase font-sans z-10">
+          {label}
+        </p>
+      )}
+    </div>
+  );
+}
+
 export default function HomePage() {
   const { t } = useLang();
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   return (
     <div className="bg-dark-1 min-h-screen">
+
       {/* ── HERO ── */}
       <section ref={heroRef} className="relative h-screen flex items-center justify-center overflow-hidden">
-        {/* Pure dark background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-dark-1 via-dark-2 to-dark-1" />
+        {/* Video background - new high quality clip */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute object-cover"
+          style={{
+            filter: "brightness(0.28) contrast(1.15)",
+            width: "180%",
+            height: "180%",
+            top: "-25%",
+            left: "-20%",
+          }}
+        >
+          <source src="/brand/hero2.mp4" type="video/mp4" />
+        </video>
 
-        {/* Diagonal gold lines */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <motion.div
-            className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-gold/15 to-transparent"
-            initial={{ scaleY: 0 }}
-            animate={{ scaleY: 1 }}
-            transition={{ delay: 2.5, duration: 1.5, ease: "easeOut" }}
-            style={{ transformOrigin: "top" }}
-          />
-          <motion.div
-            className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-gold/15 to-transparent"
-            initial={{ scaleY: 0 }}
-            animate={{ scaleY: 1 }}
-            transition={{ delay: 2.7, duration: 1.5, ease: "easeOut" }}
-            style={{ transformOrigin: "top" }}
-          />
-        </div>
+        {/* Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-dark-1 via-dark-1/30 to-dark-1/50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-dark-1/70 via-transparent to-dark-1/60" />
 
         {/* Hero content */}
         <motion.div
           className="relative z-10 text-center px-6"
           style={{ y: heroY, opacity: heroOpacity }}
         >
-          {/* Brand name reveal */}
+          {/* Small line above */}
           <motion.div
-            initial={{ opacity: 0, letterSpacing: "0.2em" }}
-            animate={{ opacity: 1, letterSpacing: "0.6em" }}
-            transition={{ delay: 2.4, duration: 1.2, ease: "easeOut" }}
+            className="flex items-center justify-center gap-3 mb-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 2.4, duration: 1 }}
+          >
+            <div className="h-px w-12 bg-gold/50" />
+            <span className="text-gold/60 text-[10px] tracking-[0.5em] font-sans uppercase">Eyewear</span>
+            <div className="h-px w-12 bg-gold/50" />
+          </motion.div>
+
+          {/* Brand name */}
+          <motion.div
+            initial={{ opacity: 0, letterSpacing: "0.15em" }}
+            animate={{ opacity: 1, letterSpacing: "0.55em" }}
+            transition={{ delay: 2.5, duration: 1.4, ease: "easeOut" }}
           >
             <h1
-              className="font-serif font-bold text-gold-gradient"
-              style={{ fontSize: "clamp(4rem, 12vw, 10rem)", lineHeight: 1 }}
+              className="font-serif font-bold text-white"
+              style={{ fontSize: "clamp(4.5rem, 14vw, 11rem)", lineHeight: 1 }}
             >
               ROYVÉ
             </h1>
           </motion.div>
 
-          <motion.div
-            className="h-px bg-gold mx-auto my-6"
-            initial={{ width: 0 }}
-            animate={{ width: "min(200px, 40vw)" }}
-            transition={{ delay: 3, duration: 0.8, ease: "easeOut" }}
-          />
-
           <motion.p
-            className="text-white/50 text-sm md:text-base tracking-[0.5em] uppercase font-sans mb-12"
-            initial={{ opacity: 0, y: 20 }}
+            className="text-white/40 text-xs md:text-sm tracking-[0.5em] uppercase font-sans mt-6 mb-12"
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 3.2, duration: 0.8 }}
           >
-            {t("hero", "slogan")}
+            NOT FOR EVERYONE. LUXURY IN EVERY DETAIL.
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 3.5, duration: 0.8 }}
           >
-            <Link href="/shop" className="btn-luxury inline-block">
-              <span>{t("hero", "cta")}</span>
+            <Link
+              href="/shop"
+              className="inline-flex items-center gap-3 border border-gold/60 text-gold/90 hover:bg-gold hover:text-dark-1 transition-all duration-400 px-10 py-3.5 text-xs tracking-[0.4em] uppercase font-sans"
+            >
+              SHOP THE COLLECTION <span>→</span>
             </Link>
           </motion.div>
         </motion.div>
@@ -91,16 +149,78 @@ export default function HomePage() {
           className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 4, duration: 1 }}
+          transition={{ delay: 4.2, duration: 1 }}
         >
-          <span className="text-white/20 text-[10px] tracking-[0.4em] uppercase font-sans">scroll</span>
           <motion.div
-            className="w-px h-12 bg-gradient-to-b from-gold/50 to-transparent"
+            className="w-px h-14 bg-gradient-to-b from-gold/60 to-transparent"
             animate={{ scaleY: [1, 0.3, 1] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
             style={{ transformOrigin: "top" }}
           />
         </motion.div>
+      </section>
+
+      {/* ── MARQUEE TICKER ── */}
+      <div className="border-y border-white/8 bg-dark-1 overflow-hidden py-3">
+        <motion.div
+          className="flex gap-12 whitespace-nowrap"
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+        >
+          {[...marqueeItems, ...marqueeItems].map((item, i) => (
+            <span key={i} className="text-[10px] tracking-[0.4em] uppercase font-sans text-white/25 flex-shrink-0">
+              {item} <span className="text-gold/40 mx-3">·</span>
+            </span>
+          ))}
+        </motion.div>
+      </div>
+
+      {/* ── EDITORIAL: THE LOOK ── */}
+      <section className="py-20 px-6 lg:px-12 max-w-7xl mx-auto">
+        <AnimatedSection className="text-center mb-12">
+          <p className="text-gold/60 text-[10px] tracking-[0.6em] uppercase font-sans mb-3">EDITORIAL</p>
+          <h2 className="font-serif text-4xl md:text-6xl font-light text-white tracking-[0.2em]">THE LOOK</h2>
+        </AnimatedSection>
+
+        {/* Editorial grid - 3 col layout like inspiration */}
+        <div className="grid grid-cols-3 gap-2 md:gap-3 h-[70vh] max-h-[700px]">
+          {/* Left: tall portrait - model */}
+          <VideoCell
+            src="/brand/model.mp4"
+            className="col-span-1 row-span-1 h-full"
+            cropStyle={{ top: "-10%", left: "-30%", width: "200%" }}
+            label="EDITORIAL"
+            brightness={0.75}
+          />
+
+          {/* Right 2 cols: stacked */}
+          <div className="col-span-2 grid grid-rows-2 gap-2 md:gap-3 h-full">
+            {/* Top row: 2 cells */}
+            <div className="grid grid-cols-2 gap-2 md:gap-3">
+              <VideoCell
+                src="/brand/flatlay.mp4"
+                className="h-full"
+                cropStyle={{ top: "-20%", left: "-15%", width: "175%" }}
+                label="SUMMER ESSENTIALS"
+                brightness={0.7}
+              />
+              <VideoCell
+                src="/brand/product.mp4"
+                className="h-full"
+                cropStyle={{ top: "-15%", left: "-20%", width: "175%" }}
+                brightness={0.72}
+              />
+            </div>
+
+            {/* Bottom row: hero1 full width */}
+            <VideoCell
+              src="/brand/hero1.mp4"
+              className="h-full"
+              cropStyle={{ top: "-20%", left: "-10%", width: "160%" }}
+              brightness={0.65}
+            />
+          </div>
+        </div>
       </section>
 
       {/* ── FEATURED PRODUCTS ── */}
@@ -133,89 +253,12 @@ export default function HomePage() {
         <div className="relative z-10 max-w-4xl mx-auto px-6 lg:px-12 text-center">
           <AnimatedSection>
             <p className="text-gold text-xs tracking-[0.5em] uppercase font-sans mb-8">— BRAND —</p>
-            <blockquote
-              className="font-serif text-2xl md:text-4xl text-white/80 leading-relaxed font-light italic"
-            >
+            <blockquote className="font-serif text-2xl md:text-4xl text-white/80 leading-relaxed font-light italic">
               &ldquo;{t("brand", "story")}&rdquo;
             </blockquote>
             <div className="h-px bg-gold/30 w-24 mx-auto mt-10" />
           </AnimatedSection>
         </div>
-      </section>
-
-      {/* ── SUMMER EDITORIAL ── */}
-      <section className="py-24 px-6 lg:px-12 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <AnimatedSection direction="left">
-            <div className="relative aspect-[3/4] bg-dark-3 border border-white/5 overflow-hidden">
-              {/* Flatlay video - zoomed to crop social media UI from edges */}
-              <video
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="absolute object-cover"
-                style={{
-                  filter: "brightness(0.75) contrast(1.05)",
-                  width: "160%",
-                  height: "160%",
-                  top: "-15%",
-                  left: "-10%",
-                }}
-              >
-                <source src="/brand/flatlay.mp4" type="video/mp4" />
-              </video>
-              <div className="absolute inset-0 bg-gradient-to-t from-dark-1/70 via-transparent to-transparent" />
-              {/* Corner accents */}
-              <div className="absolute top-4 left-4 w-8 h-8 border-l border-t border-gold/60" />
-              <div className="absolute bottom-4 right-4 w-8 h-8 border-r border-b border-gold/60" />
-            </div>
-          </AnimatedSection>
-
-          <AnimatedSection direction="right" delay={0.2}>
-            <p className="text-gold text-xs tracking-[0.5em] uppercase font-sans mb-6">— EDITORIAL —</p>
-            <h2 className="font-serif text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-              {t("brand", "editorial")}
-            </h2>
-            <p className="text-white/40 font-sans text-sm leading-relaxed mb-8 tracking-wide">
-              {t("brand", "editorialSub")}
-            </p>
-            <div className="h-px bg-white/10 w-full mb-8" />
-            <p className="text-white/30 text-xs tracking-[0.3em] uppercase font-sans mb-8">
-              {t("hero", "slogan")}
-            </p>
-            <Link href="/shop" className="btn-luxury inline-block">
-              <span>{t("hero", "cta")}</span>
-            </Link>
-          </AnimatedSection>
-        </div>
-      </section>
-
-      {/* ── PACKAGING / CRAFT ── */}
-      <section className="relative h-[60vh] overflow-hidden flex items-center justify-center">
-        {/* Packaging video - zoomed to crop social media UI */}
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute object-cover"
-          style={{
-            filter: "brightness(0.4) contrast(1.1)",
-            width: "160%",
-            height: "160%",
-            top: "-15%",
-            left: "-20%",
-          }}
-        >
-          <source src="/brand/packaging.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-r from-dark-1/80 via-transparent to-dark-1/80" />
-        <AnimatedSection className="relative z-10 text-center px-6">
-          <p className="text-gold text-xs tracking-[0.6em] uppercase font-sans mb-4">LUXURY IN EVERY DETAIL.</p>
-          <h2 className="font-serif text-4xl md:text-6xl font-bold text-white tracking-widest">ROYVÉ</h2>
-          <div className="h-px bg-gold/50 w-20 mx-auto mt-6" />
-        </AnimatedSection>
       </section>
 
       {/* ── STATS / MANIFESTO ── */}
