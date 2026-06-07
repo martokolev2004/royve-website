@@ -148,14 +148,20 @@ export default function HomePage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <AnimatedSection direction="left">
             <div className="relative aspect-[3/4] bg-dark-3 border border-white/5 overflow-hidden">
-              {/* Flatlay video */}
+              {/* Flatlay video - zoomed to crop social media UI from edges */}
               <video
                 autoPlay
                 muted
                 loop
                 playsInline
-                className="absolute inset-0 w-full h-full object-cover"
-                style={{ filter: "brightness(0.75) contrast(1.05)" }}
+                className="absolute object-cover"
+                style={{
+                  filter: "brightness(0.75) contrast(1.05)",
+                  width: "160%",
+                  height: "160%",
+                  top: "-15%",
+                  left: "-10%",
+                }}
               >
                 <source src="/brand/flatlay.mp4" type="video/mp4" />
               </video>
@@ -187,13 +193,20 @@ export default function HomePage() {
 
       {/* ── PACKAGING / CRAFT ── */}
       <section className="relative h-[60vh] overflow-hidden flex items-center justify-center">
+        {/* Packaging video - zoomed to crop social media UI */}
         <video
           autoPlay
           muted
           loop
           playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ filter: "brightness(0.4) contrast(1.1)" }}
+          className="absolute object-cover"
+          style={{
+            filter: "brightness(0.4) contrast(1.1)",
+            width: "160%",
+            height: "160%",
+            top: "-15%",
+            left: "-20%",
+          }}
         >
           <source src="/brand/packaging.mp4" type="video/mp4" />
         </video>

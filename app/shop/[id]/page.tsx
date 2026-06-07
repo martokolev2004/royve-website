@@ -42,8 +42,14 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                   muted
                   loop
                   playsInline
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                  style={{ filter: "brightness(0.85) contrast(1.05)" }}
+                  className="absolute object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  style={{
+                    filter: "brightness(0.85) contrast(1.05)",
+                    width: "155%",
+                    height: "155%",
+                    top: "-15%",
+                    left: "-15%",
+                  }}
                 >
                   <source src="/brand/product.mp4" type="video/mp4" />
                 </video>
