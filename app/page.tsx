@@ -17,13 +17,11 @@ const marqueeItems = [
 function VideoCell({
   src,
   className = "",
-  cropStyle = {},
   label,
   brightness = 0.72,
 }: {
   src: string;
   className?: string;
-  cropStyle?: React.CSSProperties;
   label?: string;
   brightness?: number;
 }) {
@@ -34,15 +32,8 @@ function VideoCell({
         muted
         loop
         playsInline
-        className="absolute object-cover"
-        style={{
-          filter: `brightness(${brightness}) contrast(1.05)`,
-          width: "170%",
-          height: "170%",
-          top: "-20%",
-          left: "-15%",
-          ...cropStyle,
-        }}
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{ filter: `brightness(${brightness}) contrast(1.05)` }}
       >
         <source src={src} type="video/mp4" />
       </video>
@@ -74,14 +65,8 @@ export default function HomePage() {
           muted
           loop
           playsInline
-          className="absolute object-cover"
-          style={{
-            filter: "brightness(0.28) contrast(1.15)",
-            width: "180%",
-            height: "180%",
-            top: "-25%",
-            left: "-20%",
-          }}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ filter: "brightness(0.28) contrast(1.15)" }}
         >
           <source src="/brand/hero2.mp4" type="video/mp4" />
         </video>
@@ -188,7 +173,6 @@ export default function HomePage() {
           <VideoCell
             src="/brand/model.mp4"
             className="col-span-1 row-span-1 h-full"
-            cropStyle={{ top: "-10%", left: "-30%", width: "200%" }}
             label="EDITORIAL"
             brightness={0.75}
           />
@@ -200,14 +184,12 @@ export default function HomePage() {
               <VideoCell
                 src="/brand/flatlay.mp4"
                 className="h-full"
-                cropStyle={{ top: "-20%", left: "-15%", width: "175%" }}
                 label="SUMMER ESSENTIALS"
                 brightness={0.7}
               />
               <VideoCell
                 src="/brand/product.mp4"
                 className="h-full"
-                cropStyle={{ top: "-15%", left: "-20%", width: "175%" }}
                 brightness={0.72}
               />
             </div>
@@ -216,7 +198,6 @@ export default function HomePage() {
             <VideoCell
               src="/brand/hero1.mp4"
               className="h-full"
-              cropStyle={{ top: "-20%", left: "-10%", width: "160%" }}
               brightness={0.65}
             />
           </div>
