@@ -1,50 +1,89 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
   <defs>
     <radialGradient id="bg" cx="50%" cy="50%" r="70%">
-      <stop offset="0%" stop-color="#090d1a"/>
-      <stop offset="100%" stop-color="#050505"/>
+      <stop offset="0%" stop-color="#f8f8f6"/>
+      <stop offset="100%" stop-color="#eeeeec"/>
     </radialGradient>
-    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#4a7cc9" stop-opacity="0.15"/>
-      <stop offset="100%" stop-color="#4a7cc9" stop-opacity="0"/>
+    <radialGradient id="lensL" cx="30%" cy="25%" r="70%">
+      <stop offset="0%" stop-color="#a8c8f0"/>
+      <stop offset="50%" stop-color="#6090cc"/>
+      <stop offset="100%" stop-color="#3060a0"/>
     </radialGradient>
+    <radialGradient id="lensR" cx="30%" cy="25%" r="70%">
+      <stop offset="0%" stop-color="#a8c8f0"/>
+      <stop offset="50%" stop-color="#6090cc"/>
+      <stop offset="100%" stop-color="#3060a0"/>
+    </radialGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000060" flood-opacity="0.15"/>
+    </filter>
+    <!-- Box logo pattern -->
+    <pattern id="boxPattern" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="15" x2="30" y2="15" stroke="#ddd" stroke-width="0.3"/>
+    </pattern>
   </defs>
-  <rect width="800" height="600" fill="url(#bg)"/>
-  <ellipse cx="400" cy="300" rx="300" ry="220" fill="url(#glow)"/>
-  <line x1="40" y1="40" x2="120" y2="40" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
-  <line x1="40" y1="40" x2="40" y2="120" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
-  <line x1="760" y1="40" x2="680" y2="40" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
-  <line x1="760" y1="40" x2="760" y2="120" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
-  <line x1="40" y1="560" x2="120" y2="560" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
-  <line x1="40" y1="560" x2="40" y2="480" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
-  <line x1="760" y1="560" x2="680" y2="560" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
-  <line x1="760" y1="560" x2="760" y2="480" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
-  <!-- Rimless left - just lens shape with slight blue tint, no frame -->
-  <ellipse cx="250" cy="295" rx="90" ry="65" fill="#1a3a6a" opacity="0.65"/>
-  <ellipse cx="250" cy="295" rx="90" ry="65" fill="none" stroke="#c9a84c" stroke-width="1" stroke-dasharray="4,6"/>
-  <!-- Rimless right -->
-  <ellipse cx="550" cy="295" rx="90" ry="65" fill="#1a3a6a" opacity="0.65"/>
-  <ellipse cx="550" cy="295" rx="90" ry="65" fill="none" stroke="#c9a84c" stroke-width="1" stroke-dasharray="4,6"/>
-  <!-- Gold bridge screws -->
-  <circle cx="340" cy="295" r="4" fill="#c9a84c"/>
-  <circle cx="460" cy="295" r="4" fill="#c9a84c"/>
-  <!-- Bridge wire -->
-  <line x1="340" y1="295" x2="460" y2="295" stroke="#c9a84c" stroke-width="1.5"/>
-  <!-- Temple wires -->
-  <line x1="160" y1="295" x2="80" y2="285" stroke="#c9a84c" stroke-width="1.5"/>
-  <line x1="640" y1="295" x2="720" y2="285" stroke="#c9a84c" stroke-width="1.5"/>
-  <!-- Nose pad left -->
-  <line x1="340" y1="295" x2="330" y2="320" stroke="#c9a84c" stroke-width="1.5"/>
-  <circle cx="328" cy="322" r="3" fill="#c9a84c"/>
-  <!-- Nose pad right -->
-  <line x1="460" y1="295" x2="470" y2="320" stroke="#c9a84c" stroke-width="1.5"/>
-  <circle cx="472" cy="322" r="3" fill="#c9a84c"/>
-  <!-- Blue sheen glint -->
-  <line x1="200" y1="265" x2="230" y2="278" stroke="#6090e0" stroke-width="1.5" opacity="0.5"/>
-  <line x1="500" y1="265" x2="530" y2="278" stroke="#6090e0" stroke-width="1.5" opacity="0.5"/>
-  <text x="400" y="430" font-family="Georgia, serif" font-size="52" font-weight="700" letter-spacing="12" fill="#c9a84c" text-anchor="middle" opacity="0.95">AZURE</text>
-  <line x1="285" y1="450" x2="515" y2="450" stroke="#c9a84c" stroke-width="0.5" opacity="0.5"/>
-  <text x="400" y="480" font-family="Georgia, serif" font-size="16" letter-spacing="6" fill="#c9a84c" text-anchor="middle" opacity="0.5">ROYVÉ EYEWEAR</text>
-  <polygon points="400,80 410,100 390,100" fill="none" stroke="#c9a84c" stroke-width="0.8" opacity="0.3"/>
-  <polygon points="400,520 410,500 390,500" fill="none" stroke="#c9a84c" stroke-width="0.8" opacity="0.3"/>
+
+  <!-- White/cream background (ROYVÉ box) -->
+  <rect width="800" height="500" fill="url(#bg)"/>
+
+  <!-- Branded box at bottom -->
+  <rect x="150" y="290" width="500" height="160" rx="4" fill="white" opacity="0.9"/>
+  <rect x="150" y="290" width="500" height="160" rx="4" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+
+  <!-- RV Logo on box -->
+  <text x="400" y="355" font-family="Georgia, serif" font-size="38" font-weight="700" letter-spacing="2" fill="#c9a84c" text-anchor="middle" opacity="0.9">RV</text>
+  <line x1="360" y1="365" x2="440" y2="365" stroke="#c9a84c" stroke-width="0.8" opacity="0.6"/>
+  <text x="400" y="385" font-family="Georgia, serif" font-size="14" letter-spacing="8" fill="#c9a84c" text-anchor="middle" opacity="0.8">ROYVÉ</text>
+
+  <!-- Glasses on top of box -->
+  <g filter="url(#shadow)">
+    <!-- Left lens - rimless rectangular, slightly rounded corners -->
+    <rect x="115" y="150" width="232" height="148" rx="10" fill="url(#lensL)" opacity="0.88"/>
+    <!-- Subtle frame edge effect -->
+    <rect x="115" y="150" width="232" height="148" rx="10" fill="none" stroke="#c9a84c" stroke-width="1.5" opacity="0.4"/>
+
+    <!-- Right lens -->
+    <rect x="453" y="150" width="232" height="148" rx="10" fill="url(#lensR)" opacity="0.88"/>
+    <rect x="453" y="150" width="232" height="148" rx="10" fill="none" stroke="#c9a84c" stroke-width="1.5" opacity="0.4"/>
+
+    <!-- Gold bridge hardware - ornate connectors -->
+    <rect x="347" y="195" width="106" height="14" rx="7" fill="#c9a84c"/>
+    <circle cx="347" cy="202" r="7" fill="#c9a84c"/>
+    <circle cx="453" cy="202" r="7" fill="#c9a84c"/>
+    <!-- Bridge center detail -->
+    <rect x="385" y="198" width="30" height="8" rx="4" fill="#e8c96a"/>
+
+    <!-- Gold temple hinges - ornate -->
+    <circle cx="115" cy="202" r="9" fill="#c9a84c"/>
+    <circle cx="685" cy="202" r="9" fill="#c9a84c"/>
+    <rect x="106" y="197" width="12" height="10" rx="2" fill="#b89040"/>
+    <rect x="682" y="197" width="12" height="10" rx="2" fill="#b89040"/>
+
+    <!-- Left temple - dark slim arm -->
+    <rect x="50" y="196" width="58" height="12" rx="6" fill="#1a1a1a"/>
+    <rect x="30" y="200" width="24" height="4" rx="2" fill="#1a1a1a"/>
+
+    <!-- Right temple -->
+    <rect x="692" y="196" width="58" height="12" rx="6" fill="#1a1a1a"/>
+    <rect x="746" y="200" width="24" height="4" rx="2" fill="#1a1a1a"/>
+
+    <!-- Ornate corner hardware - left lens corners -->
+    <circle cx="125" cy="160" r="5" fill="#c9a84c"/>
+    <circle cx="337" cy="160" r="5" fill="#c9a84c"/>
+    <circle cx="125" cy="288" r="5" fill="#c9a84c"/>
+    <circle cx="337" cy="288" r="5" fill="#c9a84c"/>
+
+    <!-- Right lens corners -->
+    <circle cx="463" cy="160" r="5" fill="#c9a84c"/>
+    <circle cx="675" cy="160" r="5" fill="#c9a84c"/>
+    <circle cx="463" cy="288" r="5" fill="#c9a84c"/>
+    <circle cx="675" cy="288" r="5" fill="#c9a84c"/>
+
+    <!-- ROYVÉ on lens -->
+    <text x="620" y="234" font-family="Georgia, serif" font-size="10" letter-spacing="2" fill="white" text-anchor="middle" opacity="0.5">ROYVÉ</text>
+
+    <!-- Blue lens light reflections -->
+    <ellipse cx="190" cy="182" rx="45" ry="14" fill="white" opacity="0.18" transform="rotate(-20, 190, 182)"/>
+    <ellipse cx="528" cy="182" rx="45" ry="14" fill="white" opacity="0.18" transform="rotate(-20, 528, 182)"/>
+  </g>
 </svg>
