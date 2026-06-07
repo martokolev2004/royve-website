@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#1a1a1a"/>
+      <stop offset="100%" stop-color="#050505"/>
+    </radialGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur">
+      <feGaussianBlur stdDeviation="2"/>
+    </filter>
+  </defs>
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <!-- Glow -->
+  <ellipse cx="400" cy="300" rx="300" ry="220" fill="url(#glow)"/>
+  <!-- Decorative corner lines -->
+  <line x1="40" y1="40" x2="120" y2="40" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
+  <line x1="40" y1="40" x2="40" y2="120" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
+  <line x1="760" y1="40" x2="680" y2="40" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
+  <line x1="760" y1="40" x2="760" y2="120" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
+  <line x1="40" y1="560" x2="120" y2="560" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
+  <line x1="40" y1="560" x2="40" y2="480" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
+  <line x1="760" y1="560" x2="680" y2="560" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
+  <line x1="760" y1="560" x2="760" y2="480" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
+  <!-- Sunglasses shape - left lens -->
+  <rect x="160" y="230" width="180" height="130" rx="65" fill="none" stroke="#c9a84c" stroke-width="2.5"/>
+  <rect x="163" y="233" width="174" height="124" rx="62" fill="#0a0a0a" opacity="0.95"/>
+  <!-- Sunglasses shape - right lens -->
+  <rect x="460" y="230" width="180" height="130" rx="65" fill="none" stroke="#c9a84c" stroke-width="2.5"/>
+  <rect x="463" y="233" width="174" height="124" rx="62" fill="#0a0a0a" opacity="0.95"/>
+  <!-- Bridge -->
+  <line x1="340" y1="295" x2="460" y2="295" stroke="#c9a84c" stroke-width="2.5"/>
+  <!-- Temple left -->
+  <line x1="160" y1="295" x2="80" y2="285" stroke="#c9a84c" stroke-width="2.5"/>
+  <!-- Temple right -->
+  <line x1="640" y1="295" x2="720" y2="285" stroke="#c9a84c" stroke-width="2.5"/>
+  <!-- Reflection glint left lens -->
+  <line x1="195" y1="255" x2="225" y2="265" stroke="#c9a84c" stroke-width="1" opacity="0.35"/>
+  <!-- Reflection glint right lens -->
+  <line x1="495" y1="255" x2="525" y2="265" stroke="#c9a84c" stroke-width="1" opacity="0.35"/>
+  <!-- Product name -->
+  <text x="400" y="430" font-family="Georgia, serif" font-size="52" font-weight="700" letter-spacing="16" fill="#c9a84c" text-anchor="middle" opacity="0.95">NOIR</text>
+  <!-- Thin separator line -->
+  <line x1="300" y1="450" x2="500" y2="450" stroke="#c9a84c" stroke-width="0.5" opacity="0.5"/>
+  <!-- Price hint -->
+  <text x="400" y="480" font-family="Georgia, serif" font-size="16" letter-spacing="6" fill="#c9a84c" text-anchor="middle" opacity="0.5">ROYVÉ EYEWEAR</text>
+  <!-- Small geometric accent -->
+  <polygon points="400,80 410,100 390,100" fill="none" stroke="#c9a84c" stroke-width="0.8" opacity="0.3"/>
+  <polygon points="400,520 410,500 390,500" fill="none" stroke="#c9a84c" stroke-width="0.8" opacity="0.3"/>
+</svg>

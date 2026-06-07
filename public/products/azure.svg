@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#090d1a"/>
+      <stop offset="100%" stop-color="#050505"/>
+    </radialGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#4a7cc9" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#4a7cc9" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <ellipse cx="400" cy="300" rx="300" ry="220" fill="url(#glow)"/>
+  <line x1="40" y1="40" x2="120" y2="40" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
+  <line x1="40" y1="40" x2="40" y2="120" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
+  <line x1="760" y1="40" x2="680" y2="40" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
+  <line x1="760" y1="40" x2="760" y2="120" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
+  <line x1="40" y1="560" x2="120" y2="560" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
+  <line x1="40" y1="560" x2="40" y2="480" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
+  <line x1="760" y1="560" x2="680" y2="560" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
+  <line x1="760" y1="560" x2="760" y2="480" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
+  <!-- Rimless left - just lens shape with slight blue tint, no frame -->
+  <ellipse cx="250" cy="295" rx="90" ry="65" fill="#1a3a6a" opacity="0.65"/>
+  <ellipse cx="250" cy="295" rx="90" ry="65" fill="none" stroke="#c9a84c" stroke-width="1" stroke-dasharray="4,6"/>
+  <!-- Rimless right -->
+  <ellipse cx="550" cy="295" rx="90" ry="65" fill="#1a3a6a" opacity="0.65"/>
+  <ellipse cx="550" cy="295" rx="90" ry="65" fill="none" stroke="#c9a84c" stroke-width="1" stroke-dasharray="4,6"/>
+  <!-- Gold bridge screws -->
+  <circle cx="340" cy="295" r="4" fill="#c9a84c"/>
+  <circle cx="460" cy="295" r="4" fill="#c9a84c"/>
+  <!-- Bridge wire -->
+  <line x1="340" y1="295" x2="460" y2="295" stroke="#c9a84c" stroke-width="1.5"/>
+  <!-- Temple wires -->
+  <line x1="160" y1="295" x2="80" y2="285" stroke="#c9a84c" stroke-width="1.5"/>
+  <line x1="640" y1="295" x2="720" y2="285" stroke="#c9a84c" stroke-width="1.5"/>
+  <!-- Nose pad left -->
+  <line x1="340" y1="295" x2="330" y2="320" stroke="#c9a84c" stroke-width="1.5"/>
+  <circle cx="328" cy="322" r="3" fill="#c9a84c"/>
+  <!-- Nose pad right -->
+  <line x1="460" y1="295" x2="470" y2="320" stroke="#c9a84c" stroke-width="1.5"/>
+  <circle cx="472" cy="322" r="3" fill="#c9a84c"/>
+  <!-- Blue sheen glint -->
+  <line x1="200" y1="265" x2="230" y2="278" stroke="#6090e0" stroke-width="1.5" opacity="0.5"/>
+  <line x1="500" y1="265" x2="530" y2="278" stroke="#6090e0" stroke-width="1.5" opacity="0.5"/>
+  <text x="400" y="430" font-family="Georgia, serif" font-size="52" font-weight="700" letter-spacing="12" fill="#c9a84c" text-anchor="middle" opacity="0.95">AZURE</text>
+  <line x1="285" y1="450" x2="515" y2="450" stroke="#c9a84c" stroke-width="0.5" opacity="0.5"/>
+  <text x="400" y="480" font-family="Georgia, serif" font-size="16" letter-spacing="6" fill="#c9a84c" text-anchor="middle" opacity="0.5">ROYVÉ EYEWEAR</text>
+  <polygon points="400,80 410,100 390,100" fill="none" stroke="#c9a84c" stroke-width="0.8" opacity="0.3"/>
+  <polygon points="400,520 410,500 390,500" fill="none" stroke="#c9a84c" stroke-width="0.8" opacity="0.3"/>
+</svg>

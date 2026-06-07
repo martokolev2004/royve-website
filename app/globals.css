@@ -1,0 +1,150 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-playfair: 'Playfair Display', Georgia, serif;
+  --font-inter: 'Inter', system-ui, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #0a0a0a;
+  color: #ffffff;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #c9a84c;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #e8c96a;
+}
+
+/* Selection */
+::selection {
+  background: #c9a84c;
+  color: #0a0a0a;
+}
+
+/* Hide default cursor everywhere */
+* {
+  cursor: none !important;
+}
+
+/* Grain texture */
+.grain::after {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  right: -50%;
+  bottom: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 9999;
+  animation: grain 8s steps(10) infinite;
+}
+
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -10%); }
+  20% { transform: translate(-15%, 5%); }
+  30% { transform: translate(7%, -25%); }
+  40% { transform: translate(-5%, 25%); }
+  50% { transform: translate(-15%, 10%); }
+  60% { transform: translate(15%, 0%); }
+  70% { transform: translate(0%, 15%); }
+  80% { transform: translate(3%, 35%); }
+  90% { transform: translate(-10%, 10%); }
+}
+
+/* Gold text gradient */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #c9a84c 0%, #e8c96a 50%, #c9a84c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Gold border glow */
+.gold-glow {
+  box-shadow: 0 0 20px rgba(201, 168, 76, 0.3), 0 0 40px rgba(201, 168, 76, 0.1);
+}
+
+/* Luxury button */
+.btn-luxury {
+  @apply relative px-8 py-3 border border-gold text-gold font-sans text-sm tracking-widest transition-all duration-300 overflow-hidden;
+}
+.btn-luxury::before {
+  content: '';
+  @apply absolute inset-0 bg-gold transform -translate-x-full transition-transform duration-300;
+}
+.btn-luxury:hover::before {
+  @apply translate-x-0;
+}
+.btn-luxury:hover {
+  @apply text-dark-1;
+}
+.btn-luxury span {
+  @apply relative z-10;
+}
+
+/* Product card hover */
+.product-card {
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 30px rgba(201, 168, 76, 0.2), 0 0 1px rgba(201, 168, 76, 0.6);
+}
+
+/* Smooth fade animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+/* Input styles */
+.luxury-input {
+  @apply w-full bg-dark-3 border border-dark-4 text-white px-4 py-3 font-sans text-sm tracking-wide outline-none transition-all duration-300;
+}
+.luxury-input:focus {
+  @apply border-gold;
+  box-shadow: 0 0 0 1px rgba(201, 168, 76, 0.3);
+}
+.luxury-input::placeholder {
+  @apply text-white/30;
+}
