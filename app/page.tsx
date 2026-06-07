@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { useLang } from "@/context/LanguageContext";
@@ -20,33 +19,33 @@ export default function HomePage() {
     <div className="bg-dark-1 min-h-screen">
       {/* ── HERO ── */}
       <section ref={heroRef} className="relative h-screen flex items-center justify-center overflow-hidden">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-dark-1 via-dark-2 to-dark-1" />
+        {/* Video background */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ filter: "brightness(0.35) contrast(1.1)" }}
+        >
+          <source src="/brand/model.mp4" type="video/mp4" />
+        </video>
 
-        {/* Decorative large R behind */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
-          <motion.span
-            className="font-serif font-bold text-gold/[0.03] select-none"
-            style={{ fontSize: "clamp(300px, 50vw, 700px)", lineHeight: 1 }}
-            initial={{ opacity: 0, scale: 1.1 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 2, delay: 2.2, ease: "easeOut" }}
-          >
-            R
-          </motion.span>
-        </div>
+        {/* Dark overlay gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-dark-1 via-dark-1/40 to-dark-1/20" />
+        <div className="absolute inset-0 bg-gradient-to-b from-dark-1/60 via-transparent to-dark-1/80" />
 
         {/* Diagonal gold lines */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <motion.div
-            className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-gold/10 to-transparent"
+            className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-gold/15 to-transparent"
             initial={{ scaleY: 0 }}
             animate={{ scaleY: 1 }}
             transition={{ delay: 2.5, duration: 1.5, ease: "easeOut" }}
             style={{ transformOrigin: "top" }}
           />
           <motion.div
-            className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-gold/10 to-transparent"
+            className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-gold/15 to-transparent"
             initial={{ scaleY: 0 }}
             animate={{ scaleY: 1 }}
             transition={{ delay: 2.7, duration: 1.5, ease: "easeOut" }}
@@ -161,29 +160,22 @@ export default function HomePage() {
       <section className="py-24 px-6 lg:px-12 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <AnimatedSection direction="left">
-            {/* Dark editorial image block */}
             <div className="relative aspect-[3/4] bg-dark-3 border border-white/5 overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center">
-                  {/* Large editorial text over dark bg */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-dark-2 via-dark-3 to-dark-1" />
-                  <div className="relative z-10 h-full flex flex-col items-center justify-center">
-                    <div className="w-full h-full relative">
-                      <Image
-                        src="/products/amber.svg"
-                        alt="Summer editorial"
-                        fill
-                        className="object-contain scale-125 opacity-60"
-                        unoptimized
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-dark-1/80 via-transparent to-dark-1/40" />
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {/* Flatlay video */}
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{ filter: "brightness(0.75) contrast(1.05)" }}
+              >
+                <source src="/brand/flatlay.mp4" type="video/mp4" />
+              </video>
+              <div className="absolute inset-0 bg-gradient-to-t from-dark-1/70 via-transparent to-transparent" />
               {/* Corner accents */}
-              <div className="absolute top-4 left-4 w-8 h-8 border-l border-t border-gold/40" />
-              <div className="absolute bottom-4 right-4 w-8 h-8 border-r border-b border-gold/40" />
+              <div className="absolute top-4 left-4 w-8 h-8 border-l border-t border-gold/60" />
+              <div className="absolute bottom-4 right-4 w-8 h-8 border-r border-b border-gold/60" />
             </div>
           </AnimatedSection>
 
@@ -204,6 +196,26 @@ export default function HomePage() {
             </Link>
           </AnimatedSection>
         </div>
+      </section>
+
+      {/* ── PACKAGING / CRAFT ── */}
+      <section className="relative h-[60vh] overflow-hidden flex items-center justify-center">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ filter: "brightness(0.4) contrast(1.1)" }}
+        >
+          <source src="/brand/packaging.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-r from-dark-1/80 via-transparent to-dark-1/80" />
+        <AnimatedSection className="relative z-10 text-center px-6">
+          <p className="text-gold text-xs tracking-[0.6em] uppercase font-sans mb-4">LUXURY IN EVERY DETAIL.</p>
+          <h2 className="font-serif text-4xl md:text-6xl font-bold text-white tracking-widest">ROYVÉ</h2>
+          <div className="h-px bg-gold/50 w-20 mx-auto mt-6" />
+        </AnimatedSection>
       </section>
 
       {/* ── STATS / MANIFESTO ── */}
