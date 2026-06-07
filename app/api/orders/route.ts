@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
       const resend = new Resend(process.env.RESEND_API_KEY || "re_placeholder");
 
       const itemsList = items
-        .map((i: { name: string; quantity: number; price: number }) => `${i.name} × ${i.quantity} — ${i.price * i.quantity} лв.`)
+        .map((i: { name: string; quantity: number; price: number }) => `${i.name} × ${i.quantity} — ${i.price * i.quantity} €`)
         .join("\n");
 
       await resend.emails.send({
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
 ПРОДУКТИ
 ${itemsList}
 
-ОБЩО: ${total} лв.
+ОБЩО: ${total} €
         `.trim(),
       });
     } catch (emailErr) {

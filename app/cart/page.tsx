@@ -58,7 +58,7 @@ export default function CartPage() {
                           <h3 className="font-serif text-lg font-bold text-white tracking-widest">{item.product.name}</h3>
                           <p className="text-white/30 text-xs font-sans mt-1">{item.product.category}</p>
                         </div>
-                        <span className="font-serif text-gold font-semibold">{item.product.price * item.quantity} лв.</span>
+                        <span className="font-serif text-gold font-semibold">{item.product.price * item.quantity} €</span>
                       </div>
                       <div className="flex items-center justify-between mt-3">
                         <div className="flex items-center gap-3">
@@ -97,14 +97,14 @@ export default function CartPage() {
                   {items.map((item) => (
                     <div key={item.product.id} className="flex justify-between text-xs font-sans text-white/50">
                       <span>{item.product.name} × {item.quantity}</span>
-                      <span>{item.product.price * item.quantity} лв.</span>
+                      <span>{item.product.price * item.quantity} €</span>
                     </div>
                   ))}
                 </div>
                 <div className="h-px bg-white/10 mb-6" />
                 <div className="flex justify-between items-center mb-8">
                   <span className="text-xs tracking-[0.3em] uppercase font-sans text-white/60">{t("cart", "total")}</span>
-                  <span className="font-serif text-2xl text-gold font-bold">{total()} лв.</span>
+                  <span className="font-serif text-2xl text-gold font-bold">{total()} €</span>
                 </div>
                 <Link href="/checkout" className="btn-luxury block text-center text-xs">
                   <span>{t("cart", "checkout")}</span>

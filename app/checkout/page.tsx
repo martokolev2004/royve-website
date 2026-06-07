@@ -220,14 +220,14 @@ export default function CheckoutPage() {
                     {items.map((item) => (
                       <div key={item.product.id} className="flex justify-between text-xs font-sans">
                         <span className="text-white/50">{item.product.name} × {item.quantity}</span>
-                        <span className="text-white/70">{item.product.price * item.quantity} лв.</span>
+                        <span className="text-white/70">{item.product.price * item.quantity} €</span>
                       </div>
                     ))}
                   </div>
                   <div className="h-px bg-white/10 mb-6" />
                   <div className="flex justify-between items-center mb-8">
                     <span className="text-xs tracking-[0.3em] uppercase font-sans text-white/60">{t("cart", "total")}</span>
-                    <span className="font-serif text-2xl text-gold font-bold">{total()} лв.</span>
+                    <span className="font-serif text-2xl text-gold font-bold">{total()} €</span>
                   </div>
 
                   <motion.button

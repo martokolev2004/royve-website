@@ -16,7 +16,7 @@ export const translations = {
     filter: { bg: "ФИЛТЪР", en: "FILTER" },
     all: { bg: "ВСИЧКИ", en: "ALL" },
     addBtn: { bg: "ДОБАВИ", en: "ADD" },
-    currency: { bg: "лв.", en: "BGN" },
+    currency: { bg: "€", en: "€" },
   },
   product: {
     addToCart: { bg: "ДОБАВИ В КОЛИЧКАТА", en: "ADD TO CART" },
