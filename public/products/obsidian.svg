@@ -1,84 +1,66 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" width="800" height="520">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="50%" r="70%">
-      <stop offset="0%" stop-color="#1c1c1c"/>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e8e4de"/>
+      <stop offset="100%" stop-color="#d8d4ce"/>
+    </linearGradient>
+    <radialGradient id="lensL" cx="35%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#282828"/>
       <stop offset="100%" stop-color="#060606"/>
     </radialGradient>
-    <radialGradient id="lensL" cx="35%" cy="30%" r="65%">
-      <stop offset="0%" stop-color="#1e1e1e"/>
-      <stop offset="100%" stop-color="#040404"/>
-    </radialGradient>
     <radialGradient id="lensR" cx="35%" cy="30%" r="65%">
-      <stop offset="0%" stop-color="#1e1e1e"/>
-      <stop offset="100%" stop-color="#040404"/>
+      <stop offset="0%" stop-color="#282828"/>
+      <stop offset="100%" stop-color="#060606"/>
     </radialGradient>
-    <filter id="shadow">
-      <feDropShadow dx="0" dy="6" stdDeviation="18" flood-color="#c9a84c" flood-opacity="0.15"/>
-    </filter>
+    <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.2"/></filter>
   </defs>
-  <!-- Dark background -->
-  <rect width="800" height="500" fill="url(#bg)"/>
+  <rect width="800" height="520" fill="url(#bg)"/>
 
-  <!-- Subtle gold grid lines -->
-  <line x1="0" y1="125" x2="800" y2="125" stroke="#c9a84c" stroke-width="0.3" opacity="0.08"/>
-  <line x1="0" y1="250" x2="800" y2="250" stroke="#c9a84c" stroke-width="0.3" opacity="0.08"/>
-  <line x1="0" y1="375" x2="800" y2="375" stroke="#c9a84c" stroke-width="0.3" opacity="0.08"/>
-  <line x1="200" y1="0" x2="200" y2="500" stroke="#c9a84c" stroke-width="0.3" opacity="0.08"/>
-  <line x1="400" y1="0" x2="400" y2="500" stroke="#c9a84c" stroke-width="0.3" opacity="0.08"/>
-  <line x1="600" y1="0" x2="600" y2="500" stroke="#c9a84c" stroke-width="0.3" opacity="0.08"/>
-
-  <!-- Gold corner accents -->
-  <line x1="30" y1="30" x2="80" y2="30" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
-  <line x1="30" y1="30" x2="30" y2="80" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
-  <line x1="770" y1="30" x2="720" y2="30" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
-  <line x1="770" y1="30" x2="770" y2="80" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
-  <line x1="30" y1="470" x2="80" y2="470" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
-  <line x1="30" y1="470" x2="30" y2="420" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
-  <line x1="770" y1="470" x2="720" y2="470" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
-  <line x1="770" y1="470" x2="770" y2="420" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
-
-  <!-- Glasses with gold glow shadow -->
   <g filter="url(#shadow)">
-    <!-- Left lens - chunky rectangular -->
-    <rect x="110" y="162" width="232" height="158" rx="14" fill="#0d0d0d"/>
-    <rect x="123" y="175" width="206" height="132" rx="8" fill="url(#lensL)"/>
-    <!-- Top edge highlight -->
-    <rect x="123" y="175" width="206" height="6" rx="3" fill="#2a2a2a" opacity="0.8"/>
+    <!-- Left lens: same shape as AZURE but dark -->
+    <rect x="95" y="155" width="248" height="185" rx="18" fill="url(#lensL)"/>
+    <rect x="95" y="155" width="248" height="185" rx="18" fill="none" stroke="white" stroke-width="0.5" opacity="0.1"/>
+    <!-- Subtle glint -->
+    <ellipse cx="200" cy="176" rx="50" ry="10" fill="white" opacity="0.07" transform="rotate(-10,200,176)"/>
 
     <!-- Right lens -->
-    <rect x="458" y="162" width="232" height="158" rx="14" fill="#0d0d0d"/>
-    <rect x="471" y="175" width="206" height="132" rx="8" fill="url(#lensR)"/>
-    <rect x="471" y="175" width="206" height="6" rx="3" fill="#2a2a2a" opacity="0.8"/>
+    <rect x="457" y="155" width="248" height="185" rx="18" fill="url(#lensR)"/>
+    <rect x="457" y="155" width="248" height="185" rx="18" fill="none" stroke="white" stroke-width="0.5" opacity="0.1"/>
+    <ellipse cx="562" cy="176" rx="50" ry="10" fill="white" opacity="0.07" transform="rotate(-10,562,176)"/>
 
-    <!-- Bridge -->
-    <rect x="342" y="182" width="116" height="22" rx="11" fill="#0d0d0d"/>
+    <!-- ROYVÉ on lens -->
+    <text x="630" y="190" font-family="Georgia,serif" font-size="12" letter-spacing="2" fill="#c9a84c" text-anchor="middle" opacity="0.8">ROYVÉ</text>
 
-    <!-- Nose area -->
-    <rect x="354" y="204" width="12" height="20" rx="4" fill="#111"/>
-    <rect x="434" y="204" width="12" height="20" rx="4" fill="#111"/>
+    <!-- Bridge hardware -->
+    <rect x="343" y="220" width="114" height="16" rx="8" fill="#c9a84c"/>
+    <rect x="343" y="218" width="114" height="5" rx="2.5" fill="#e8c96a" opacity="0.6"/>
+    <circle cx="400" cy="228" r="5" fill="#b89040"/>
+    <circle cx="400" cy="228" r="2.5" fill="#e8c96a"/>
 
-    <!-- Left temple -->
-    <rect x="52" y="180" width="60" height="18" rx="9" fill="#0d0d0d"/>
-    <rect x="34" y="185" width="22" height="8" rx="4" fill="#0d0d0d"/>
+    <!-- Left hardware connectors -->
+    <rect x="88" y="162" width="18" height="14" rx="3" fill="#c9a84c"/>
+    <rect x="90" y="164" width="14" height="4" rx="1" fill="#e8c96a" opacity="0.7"/>
+    <rect x="88" y="318" width="18" height="14" rx="3" fill="#c9a84c"/>
+    <rect x="90" y="320" width="14" height="4" rx="1" fill="#e8c96a" opacity="0.7"/>
+    <rect x="336" y="218" width="14" height="20" rx="4" fill="#c9a84c"/>
+    <circle cx="343" cy="228" r="4" fill="#b89040"/>
 
-    <!-- Right temple -->
-    <rect x="688" y="180" width="60" height="18" rx="9" fill="#0d0d0d"/>
-    <rect x="744" y="185" width="22" height="8" rx="4" fill="#0d0d0d"/>
+    <!-- Right hardware -->
+    <rect x="694" y="162" width="18" height="14" rx="3" fill="#c9a84c"/>
+    <rect x="696" y="164" width="14" height="4" rx="1" fill="#e8c96a" opacity="0.7"/>
+    <rect x="694" y="318" width="18" height="14" rx="3" fill="#c9a84c"/>
+    <rect x="696" y="320" width="14" height="4" rx="1" fill="#e8c96a" opacity="0.7"/>
+    <rect x="450" y="218" width="14" height="20" rx="4" fill="#c9a84c"/>
+    <circle cx="457" cy="228" r="4" fill="#b89040"/>
 
-    <!-- Hinges with gold tint -->
-    <rect x="108" y="174" width="8" height="34" rx="2" fill="#1a1a1a"/>
-    <rect x="684" y="174" width="8" height="34" rx="2" fill="#1a1a1a"/>
-
-    <!-- ROYVÉ on frame -->
-    <text x="618" y="250" font-family="Georgia, serif" font-size="11" letter-spacing="2" fill="#c9a84c" text-anchor="middle" opacity="0.5">ROYVÉ</text>
-
-    <!-- Very subtle lens glow reflection -->
-    <ellipse cx="178" cy="200" rx="30" ry="9" fill="#c9a84c" opacity="0.04" transform="rotate(-18, 178, 200)"/>
-    <ellipse cx="526" cy="200" rx="30" ry="9" fill="#c9a84c" opacity="0.04" transform="rotate(-18, 526, 200)"/>
+    <!-- Temples -->
+    <rect x="38" y="226" width="55" height="10" rx="5" fill="#1a1a1a"/>
+    <rect x="18" y="230" width="24" height="4" rx="2" fill="#1a1a1a"/>
+    <rect x="707" y="226" width="55" height="10" rx="5" fill="#1a1a1a"/>
+    <rect x="758" y="230" width="24" height="4" rx="2" fill="#1a1a1a"/>
   </g>
 
-  <!-- Name -->
-  <text x="400" y="395" font-family="Georgia, serif" font-size="26" font-weight="700" letter-spacing="8" fill="#c9a84c" text-anchor="middle" opacity="0.8">OBSIDIAN</text>
-  <line x1="295" y1="410" x2="505" y2="410" stroke="#c9a84c" stroke-width="0.5" opacity="0.3"/>
-  <text x="400" y="432" font-family="Georgia, serif" font-size="11" letter-spacing="5" fill="#c9a84c" text-anchor="middle" opacity="0.35">ROYVÉ EYEWEAR</text>
+  <text x="400" y="410" font-family="Georgia,serif" font-size="24" font-weight="700" letter-spacing="8" fill="#3a3a3a" text-anchor="middle" opacity="0.6">OBSIDIAN</text>
+  <line x1="300" y1="426" x2="500" y2="426" stroke="#3a3a3a" stroke-width="0.5" opacity="0.25"/>
+  <text x="400" y="448" font-family="Georgia,serif" font-size="11" letter-spacing="5" fill="#888" text-anchor="middle">ROYVÉ EYEWEAR</text>
 </svg>

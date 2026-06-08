@@ -1,68 +1,57 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" width="800" height="520">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="50%" r="70%">
-      <stop offset="0%" stop-color="#f5f5f5"/>
-      <stop offset="100%" stop-color="#e8e8e8"/>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e8e4de"/>
+      <stop offset="100%" stop-color="#d8d4ce"/>
+    </linearGradient>
+    <radialGradient id="lensL" cx="30%" cy="25%" r="70%">
+      <stop offset="0%" stop-color="#252525"/>
+      <stop offset="100%" stop-color="#050505"/>
     </radialGradient>
-    <radialGradient id="lensL" cx="40%" cy="35%" r="60%">
-      <stop offset="0%" stop-color="#2a2a2a"/>
-      <stop offset="100%" stop-color="#0a0a0a"/>
+    <radialGradient id="lensR" cx="30%" cy="25%" r="70%">
+      <stop offset="0%" stop-color="#252525"/>
+      <stop offset="100%" stop-color="#050505"/>
     </radialGradient>
-    <radialGradient id="lensR" cx="40%" cy="35%" r="60%">
-      <stop offset="0%" stop-color="#2a2a2a"/>
-      <stop offset="100%" stop-color="#0a0a0a"/>
-    </radialGradient>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.25"/>
-    </filter>
+    <filter id="shadow"><feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000" flood-opacity="0.2"/></filter>
   </defs>
-  <!-- Background -->
-  <rect width="800" height="500" fill="url(#bg)"/>
+  <rect width="800" height="520" fill="url(#bg)"/>
 
-  <!-- Full glasses group with shadow -->
   <g filter="url(#shadow)">
-    <!-- Left lens - thick chunky rectangular frame -->
-    <rect x="110" y="170" width="230" height="155" rx="14" fill="#0a0a0a"/>
-    <rect x="122" y="182" width="206" height="131" rx="8" fill="url(#lensL)"/>
-    <!-- Frame highlight -->
-    <rect x="122" y="182" width="206" height="8" rx="4" fill="#2a2a2a" opacity="0.6"/>
+    <!-- Left frame (same shape as AMBER) -->
+    <rect x="100" y="152" width="254" height="200" rx="16" fill="#0a0a0a"/>
+    <rect x="118" y="168" width="218" height="168" rx="8" fill="url(#lensL)"/>
+    <!-- Very subtle glint -->
+    <ellipse cx="185" cy="193" rx="42" ry="10" fill="white" opacity="0.05" transform="rotate(-12,185,193)"/>
 
-    <!-- Right lens -->
-    <rect x="460" y="170" width="230" height="155" rx="14" fill="#0a0a0a"/>
-    <rect x="472" y="182" width="206" height="131" rx="8" fill="url(#lensR)"/>
-    <rect x="472" y="182" width="206" height="8" rx="4" fill="#2a2a2a" opacity="0.6"/>
+    <!-- Right frame -->
+    <rect x="446" y="152" width="254" height="200" rx="16" fill="#0a0a0a"/>
+    <rect x="464" y="168" width="218" height="168" rx="8" fill="url(#lensR)"/>
+    <ellipse cx="531" cy="193" rx="42" ry="10" fill="white" opacity="0.05" transform="rotate(-12,531,193)"/>
 
-    <!-- Bridge - thick -->
-    <rect x="340" y="190" width="120" height="22" rx="11" fill="#0a0a0a"/>
+    <!-- ROYVÉ on frame -->
+    <text x="620" y="200" font-family="Georgia,serif" font-size="12" letter-spacing="2" fill="#c9a84c" text-anchor="middle" opacity="0.6">ROYVÉ</text>
 
-    <!-- Nose pads area -->
-    <rect x="352" y="212" width="14" height="20" rx="4" fill="#111"/>
-    <rect x="434" y="212" width="14" height="20" rx="4" fill="#111"/>
+    <!-- Bridge -->
+    <rect x="354" y="185" width="92" height="34" rx="10" fill="#0a0a0a"/>
+    <rect x="366" y="194" width="22" height="18" rx="5" fill="#1a1a1a"/>
+    <rect x="412" y="194" width="22" height="18" rx="5" fill="#1a1a1a"/>
 
-    <!-- Left temple -->
-    <rect x="60" y="188" width="52" height="18" rx="9" fill="#0a0a0a"/>
-    <rect x="44" y="193" width="20" height="8" rx="4" fill="#0a0a0a"/>
+    <!-- Temples -->
+    <rect x="35" y="230" width="68" height="18" rx="9" fill="#0a0a0a"/>
+    <rect x="16" y="236" width="22" height="6" rx="3" fill="#0a0a0a"/>
+    <rect x="697" y="230" width="68" height="18" rx="9" fill="#0a0a0a"/>
+    <rect x="762" y="236" width="22" height="6" rx="3" fill="#0a0a0a"/>
 
-    <!-- Right temple -->
-    <rect x="688" y="188" width="52" height="18" rx="9" fill="#0a0a0a"/>
-    <rect x="736" y="193" width="20" height="8" rx="4" fill="#0a0a0a"/>
+    <!-- Hinges -->
+    <rect x="98" y="220" width="10" height="36" rx="3" fill="#1a1a1a"/>
+    <rect x="692" y="220" width="10" height="36" rx="3" fill="#1a1a1a"/>
 
-    <!-- Hinge left -->
-    <rect x="108" y="182" width="8" height="32" rx="2" fill="#1a1a1a"/>
-    <!-- Hinge right -->
-    <rect x="684" y="182" width="8" height="32" rx="2" fill="#1a1a1a"/>
-
-    <!-- ROYVÉ logo on right lens -->
-    <text x="620" y="256" font-family="Georgia, serif" font-size="11" letter-spacing="2" fill="#3a3a3a" text-anchor="middle" opacity="0.7">ROYVÉ</text>
-
-    <!-- Lens reflection glint left -->
-    <ellipse cx="175" cy="210" rx="28" ry="8" fill="white" opacity="0.06" transform="rotate(-20, 175, 210)"/>
-    <!-- Lens reflection glint right -->
-    <ellipse cx="525" cy="210" rx="28" ry="8" fill="white" opacity="0.06" transform="rotate(-20, 525, 210)"/>
+    <!-- Top edge highlight -->
+    <rect x="102" y="154" width="250" height="6" rx="3" fill="#2a2a2a" opacity="0.5"/>
+    <rect x="448" y="154" width="250" height="6" rx="3" fill="#2a2a2a" opacity="0.5"/>
   </g>
 
-  <!-- Product name below -->
-  <text x="400" y="400" font-family="Georgia, serif" font-size="28" font-weight="700" letter-spacing="14" fill="#1a1a1a" text-anchor="middle" opacity="0.7">NOIR</text>
-  <line x1="340" y1="416" x2="460" y2="416" stroke="#1a1a1a" stroke-width="0.5" opacity="0.3"/>
-  <text x="400" y="438" font-family="Georgia, serif" font-size="11" letter-spacing="5" fill="#888" text-anchor="middle">ROYVÉ EYEWEAR</text>
+  <text x="400" y="415" font-family="Georgia,serif" font-size="26" font-weight="700" letter-spacing="14" fill="#3a3a3a" text-anchor="middle" opacity="0.6">NOIR</text>
+  <line x1="330" y1="431" x2="470" y2="431" stroke="#3a3a3a" stroke-width="0.5" opacity="0.25"/>
+  <text x="400" y="453" font-family="Georgia,serif" font-size="11" letter-spacing="5" fill="#888" text-anchor="middle">ROYVÉ EYEWEAR</text>
 </svg>

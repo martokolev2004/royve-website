@@ -50,12 +50,12 @@ export const products: Product[] = [
     slug: "obsidian",
     name: "OBSIDIAN",
     price: 119,
-    category: "Classic",
+    category: "Rimless",
     description: {
-      bg: "Лава, застинала в стил. Черна рамка с тъмни стъкла — присъствие без думи.",
-      en: "Lava frozen in style. Black frame with dark lenses — presence without words.",
+      bg: "Тъмнина без граници. Безободна конструкция с тъмни стъкла и златна арматура — мистерия в чист вид.",
+      en: "Darkness without boundaries. Rimless construction with dark lenses and gold hardware — mystery in pure form.",
     },
-    details: ["Черна ацетатна рамка", "Тъмни стъкла", "Леко тегло", "UV400 защита"],
+    details: ["Безободна конструкция", "Златна метална арматура", "Тъмни стъкла", "UV400 защита"],
   },
 ];
 
