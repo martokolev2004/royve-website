@@ -3,7 +3,6 @@ import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
 import Navbar from "@/components/Navbar";
-import CustomCursor from "@/components/CustomCursor";
 import LoadingScreen from "@/components/LoadingScreen";
 import SmoothScroll from "@/components/SmoothScroll";
 
@@ -31,8 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="grain">
         <LanguageProvider>
           <SmoothScroll />
-          <CustomCursor />
-          <LoadingScreen />
+<LoadingScreen />
           <Navbar />
           <main>{children}</main>
         </LanguageProvider>
