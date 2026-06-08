@@ -1,5 +1,4 @@
 "use client";
-import { use } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -11,8 +10,8 @@ import AnimatedSection from "@/components/AnimatedSection";
 import ProductCard from "@/components/ProductCard";
 import Footer from "@/components/Footer";
 
-export default function ProductPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function ProductPage({ params }: { params: { id: string } }) {
+  const { id } = params;
   const product = getProductById(id);
   if (!product) notFound();
 
