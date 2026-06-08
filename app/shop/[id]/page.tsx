@@ -23,6 +23,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
   return (
     <div className="bg-dark-1 min-h-screen pt-20">
       <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
+
         {/* Back link */}
         <Link
           href="/shop"
@@ -31,54 +32,64 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
           ← {t("product", "back")}
         </Link>
 
-        {/* Product */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          {/* Image / Video */}
+        {/* Main grid — 3D viewer left, info right */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[70vh]">
+
+          {/* LEFT — 3D viewer placeholder */}
           <AnimatedSection direction="left">
-            <div className="relative aspect-[4/3] bg-[#f0ede8] border border-white/5 overflow-hidden group">
-              <motion.div
-                className="w-full h-full"
-                whileHover={{ scale: 1.03 }}
-                transition={{ duration: 0.5 }}
-              >
-                <Image
-                  src={`/products/${product.id}.jpg`}
-                  alt={product.name}
-                  fill
-                  className="object-contain p-6"
-                  onError={(e) => { (e.target as HTMLImageElement).src = `/products/${product.id}.svg`; }}
-                  unoptimized
-                />
-              </motion.div>
-              <div className="absolute inset-0 border border-gold/0 group-hover:border-gold/30 transition-all duration-500 pointer-events-none" />
+            <div className="relative aspect-square bg-dark-2 border border-white/8 overflow-hidden group flex items-center justify-center">
+
+              {/* Current photo until 3D model is ready */}
+              <Image
+                src={`/products/${product.id}.jpg`}
+                alt={product.name}
+                fill
+                className="object-contain p-10 transition-transform duration-700 group-hover:scale-[1.04]"
+                onError={(e) => { (e.target as HTMLImageElement).src = `/products/${product.id}.svg`; }}
+                unoptimized
+              />
+
               {/* Corner accents */}
-              <div className="absolute top-4 left-4 w-8 h-8 border-l border-t border-gold/40" />
-              <div className="absolute bottom-4 right-4 w-8 h-8 border-r border-b border-gold/40" />
+              <div className="absolute top-5 left-5 w-8 h-8 border-l border-t border-gold/40 pointer-events-none" />
+              <div className="absolute top-5 right-5 w-8 h-8 border-r border-t border-gold/40 pointer-events-none" />
+              <div className="absolute bottom-5 left-5 w-8 h-8 border-l border-b border-gold/40 pointer-events-none" />
+              <div className="absolute bottom-5 right-5 w-8 h-8 border-r border-b border-gold/40 pointer-events-none" />
+
+              {/* "3D coming soon" badge */}
+              <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-dark-1/80 backdrop-blur-sm border border-gold/20 px-4 py-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-gold/60 animate-pulse" />
+                <span className="text-[9px] tracking-[0.4em] uppercase font-sans text-white/40">3D View — Coming Soon</span>
+              </div>
             </div>
           </AnimatedSection>
 
-          {/* Info */}
-          <AnimatedSection direction="right" delay={0.2}>
-            <div className="flex flex-col justify-center h-full">
-              <p className="text-gold text-xs tracking-[0.5em] uppercase font-sans mb-4">{product.category}</p>
-              <h1 className="font-serif text-5xl md:text-6xl font-bold text-white tracking-widest mb-4">
+          {/* RIGHT — product info */}
+          <AnimatedSection direction="right" delay={0.15}>
+            <div className="flex flex-col justify-center">
+
+              <p className="text-gold text-[10px] tracking-[0.6em] uppercase font-sans mb-3">{product.category}</p>
+
+              <h1 className="font-serif text-5xl md:text-6xl font-bold text-white tracking-widest mb-4 leading-none">
                 {product.name}
               </h1>
-              <div className="h-px bg-white/10 w-16 mb-6" />
-              <p className="font-serif text-3xl text-gold font-semibold mb-8">
+
+              <div className="h-px bg-gold/20 w-16 mb-6" />
+
+              <p className="font-serif text-3xl text-gold font-semibold mb-6">
                 {product.price} {t("shop", "currency")}
               </p>
+
               <p className="text-white/50 font-sans text-sm leading-relaxed mb-8">
                 {product.description[lang]}
               </p>
 
-              {/* Details */}
-              <div className="mb-8">
-                <p className="text-xs tracking-[0.3em] uppercase text-white/30 font-sans mb-4">{t("product", "details")}</p>
-                <ul className="space-y-2">
+              {/* Details list */}
+              <div className="mb-10 border-t border-white/5 pt-6">
+                <p className="text-[10px] tracking-[0.4em] uppercase text-white/25 font-sans mb-5">{t("product", "details")}</p>
+                <ul className="space-y-3">
                   {product.details.map((d) => (
                     <li key={d} className="flex items-center gap-3 text-white/50 text-xs font-sans">
-                      <span className="w-1 h-1 bg-gold rounded-full" />
+                      <span className="w-1 h-1 bg-gold/70 rounded-full flex-shrink-0" />
                       {d}
                     </li>
                   ))}
@@ -87,7 +98,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
 
               <motion.button
                 onClick={() => addItem(product)}
-                className="btn-luxury text-center text-xs w-full md:w-auto md:px-16"
+                className="btn-luxury text-center text-xs w-full md:w-64"
                 whileTap={{ scale: 0.98 }}
               >
                 <span>{t("product", "addToCart")}</span>
@@ -97,7 +108,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
         </div>
 
         {/* Related */}
-        <div className="mt-24">
+        <div className="mt-28">
           <AnimatedSection>
             <p className="text-gold text-xs tracking-[0.5em] uppercase font-sans mb-2">— ALSO —</p>
             <h2 className="font-serif text-3xl font-bold text-white mb-10">{t("product", "related")}</h2>
@@ -110,6 +121,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
             ))}
           </div>
         </div>
+
       </div>
       <Footer />
     </div>
