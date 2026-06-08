@@ -35,7 +35,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* Image / Video */}
           <AnimatedSection direction="left">
-            <div className="relative aspect-[4/3] bg-dark-2 border border-white/5 overflow-hidden group">
+            <div className="relative aspect-[4/3] bg-[#f0ede8] border border-white/5 overflow-hidden group">
               <motion.div
                 className="w-full h-full"
                 whileHover={{ scale: 1.03 }}
@@ -45,7 +45,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                   src={`/products/${product.id}.jpg`}
                   alt={product.name}
                   fill
-                  className="object-cover object-center"
+                  className="object-contain p-6"
                   onError={(e) => { (e.target as HTMLImageElement).src = `/products/${product.id}.svg`; }}
                   unoptimized
                 />
