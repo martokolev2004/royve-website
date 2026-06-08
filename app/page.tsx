@@ -109,7 +109,7 @@ export default function HomePage() {
       </div>
 
       {/* ── CINEMATIC BAND ── */}
-      <section className="relative h-[70vh] overflow-hidden flex items-center justify-center">
+      <section className="relative h-[40vh] overflow-hidden">
         <video
           autoPlay muted loop playsInline
           className="absolute inset-0 w-full h-full object-cover"
@@ -119,27 +119,10 @@ export default function HomePage() {
         </video>
         <div className="absolute inset-0 bg-gradient-to-t from-dark-1 via-transparent to-dark-1/60" />
         <div className="absolute inset-0 bg-gradient-to-r from-dark-1/50 via-transparent to-dark-1/50" />
-
-        <AnimatedSection className="relative z-10 text-center px-6 max-w-2xl mx-auto">
-          <motion.div
-            className="h-px bg-gold/40 w-16 mx-auto mb-8"
-            initial={{ width: 0 }} whileInView={{ width: 64 }}
-            viewport={{ once: true }} transition={{ duration: 1, ease: "easeOut" }}
-          />
-          <p className="font-serif text-3xl md:text-5xl font-light text-white/90 leading-relaxed mb-8 italic">
-            &ldquo;{t("brand", "story")}&rdquo;
-          </p>
-          <p className="text-gold/60 text-[10px] tracking-[0.6em] uppercase font-sans">ROYVÉ EYEWEAR</p>
-          <motion.div
-            className="h-px bg-gold/40 w-16 mx-auto mt-8"
-            initial={{ width: 0 }} whileInView={{ width: 64 }}
-            viewport={{ once: true }} transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-          />
-        </AnimatedSection>
       </section>
 
       {/* ── FEATURED PRODUCTS ── */}
-      <section className="py-24 px-6 lg:px-12 max-w-7xl mx-auto">
+      <section className="py-16 px-6 lg:px-12 max-w-7xl mx-auto">
         <AnimatedSection className="text-center mb-16">
           <p className="text-gold text-xs tracking-[0.5em] uppercase font-sans mb-4">— COLLECTION —</p>
           <h2 className="font-serif text-4xl md:text-5xl font-bold text-white">{t("shop", "title")}</h2>
