@@ -5,6 +5,7 @@ import { LanguageProvider } from "@/context/LanguageContext";
 import Navbar from "@/components/Navbar";
 import CustomCursor from "@/components/CustomCursor";
 import LoadingScreen from "@/components/LoadingScreen";
+import SmoothScroll from "@/components/SmoothScroll";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -24,15 +25,12 @@ export const metadata: Metadata = {
   keywords: ["eyewear", "sunglasses", "luxury", "royvé"],
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="bg" className={`${playfair.variable} ${inter.variable}`}>
       <body className="grain">
         <LanguageProvider>
+          <SmoothScroll />
           <CustomCursor />
           <LoadingScreen />
           <Navbar />
