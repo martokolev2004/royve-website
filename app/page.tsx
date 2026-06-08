@@ -157,17 +157,73 @@ export default function HomePage() {
         </AnimatedSection>
       </section>
 
-      {/* ── BRAND STORY ── */}
-      <section className="py-24 bg-dark-2 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-dark-1 via-dark-2 to-dark-1 pointer-events-none" />
-        <div className="relative z-10 max-w-4xl mx-auto px-6 lg:px-12 text-center">
-          <AnimatedSection>
-            <p className="text-gold text-xs tracking-[0.5em] uppercase font-sans mb-8">— BRAND —</p>
-            <blockquote className="font-serif text-2xl md:text-4xl text-white/80 leading-relaxed font-light italic">
-              &ldquo;{t("brand", "story")}&rdquo;
-            </blockquote>
-            <div className="h-px bg-gold/30 w-24 mx-auto mt-10" />
+      {/* ── EDITORIAL GRID ── */}
+      <section className="py-16 px-6 lg:px-12 max-w-7xl mx-auto">
+        <AnimatedSection className="mb-10 text-center">
+          <p className="text-gold text-xs tracking-[0.5em] uppercase font-sans">— THE BRAND —</p>
+        </AnimatedSection>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-auto md:h-[80vh]">
+          {/* Left — tall portrait */}
+          <AnimatedSection direction="left" className="relative overflow-hidden group min-h-[50vw] md:min-h-0">
+            <video
+              autoPlay muted loop playsInline
+              className="absolute w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+              style={{ filter: "brightness(0.75) contrast(1.05)", objectPosition: "center 25%" }}
+            >
+              <source src="/brand/model.mp4" type="video/mp4" />
+            </video>
+            <div className="absolute inset-0 bg-gradient-to-t from-dark-1/80 via-transparent to-dark-1/30" />
+            <div className="absolute bottom-8 left-8 right-8">
+              <p className="text-gold/70 text-[9px] tracking-[0.5em] uppercase font-sans mb-2">ROYVÉ AMBER</p>
+              <p className="font-serif text-xl text-white font-light">Bold. Unapologetic.</p>
+            </div>
+            <div className="absolute top-4 left-4 w-6 h-6 border-l border-t border-gold/40" />
+            <div className="absolute bottom-4 right-4 w-6 h-6 border-r border-b border-gold/40" />
           </AnimatedSection>
+
+          {/* Right — two stacked panels */}
+          <div className="grid grid-rows-2 gap-4 min-h-[100vw] md:min-h-0">
+            {/* Top right */}
+            <AnimatedSection direction="right" className="relative overflow-hidden group">
+              <video
+                autoPlay muted loop playsInline
+                className="absolute w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                style={{ filter: "brightness(0.7) contrast(1.1)", objectPosition: "center 35%" }}
+              >
+                <source src="/brand/flatlay.mp4" type="video/mp4" />
+              </video>
+              <div className="absolute inset-0 bg-gradient-to-b from-dark-1/40 via-transparent to-dark-1/60" />
+              <div className="absolute bottom-6 left-6 right-6">
+                <p className="text-gold/70 text-[9px] tracking-[0.5em] uppercase font-sans mb-1">ROYVÉ AZURE</p>
+                <p className="font-serif text-lg text-white font-light">Rimless luxury.</p>
+              </div>
+              <div className="absolute top-4 left-4 w-6 h-6 border-l border-t border-gold/40" />
+              <div className="absolute bottom-4 right-4 w-6 h-6 border-r border-b border-gold/40" />
+            </AnimatedSection>
+
+            {/* Bottom right — brand statement */}
+            <AnimatedSection direction="right" delay={0.15} className="relative overflow-hidden group">
+              <video
+                autoPlay muted loop playsInline
+                className="absolute w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                style={{ filter: "brightness(0.55) contrast(1.1)", objectPosition: "center 60%" }}
+              >
+                <source src="/brand/hero2.mp4" type="video/mp4" />
+              </video>
+              <div className="absolute inset-0 bg-gradient-to-t from-dark-1/70 via-dark-1/20 to-transparent" />
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8">
+                <div className="h-px bg-gold/40 w-10 mb-5" />
+                <p className="font-serif text-2xl md:text-3xl text-white font-light italic leading-snug">
+                  Not for everyone.
+                </p>
+                <p className="text-gold/60 text-[9px] tracking-[0.6em] uppercase font-sans mt-4">ROYVÉ EYEWEAR</p>
+                <div className="h-px bg-gold/40 w-10 mt-5" />
+              </div>
+              <div className="absolute top-4 left-4 w-6 h-6 border-l border-t border-gold/40" />
+              <div className="absolute bottom-4 right-4 w-6 h-6 border-r border-b border-gold/40" />
+            </AnimatedSection>
+          </div>
         </div>
       </section>
 
