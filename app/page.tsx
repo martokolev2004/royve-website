@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { useLang } from "@/context/LanguageContext";
@@ -108,124 +107,34 @@ export default function HomePage() {
         </motion.div>
       </div>
 
-      {/* ── EDITORIAL: THE LOOK ── */}
-      <section className="py-16 px-6 lg:px-12 max-w-7xl mx-auto">
-        <AnimatedSection className="text-center mb-10">
-          <p className="text-gold/60 text-[10px] tracking-[0.6em] uppercase font-sans mb-3">EDITORIAL</p>
-          <h2 className="font-serif text-4xl md:text-6xl font-light text-white tracking-[0.2em]">THE LOOK</h2>
+      {/* ── CINEMATIC BAND ── */}
+      <section className="relative h-[70vh] overflow-hidden flex items-center justify-center">
+        <video
+          autoPlay muted loop playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ filter: "brightness(0.35) contrast(1.1)" }}
+        >
+          <source src="/brand/hero1.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-t from-dark-1 via-transparent to-dark-1/60" />
+        <div className="absolute inset-0 bg-gradient-to-r from-dark-1/50 via-transparent to-dark-1/50" />
+
+        <AnimatedSection className="relative z-10 text-center px-6 max-w-2xl mx-auto">
+          <motion.div
+            className="h-px bg-gold/40 w-16 mx-auto mb-8"
+            initial={{ width: 0 }} whileInView={{ width: 64 }}
+            viewport={{ once: true }} transition={{ duration: 1, ease: "easeOut" }}
+          />
+          <p className="font-serif text-3xl md:text-5xl font-light text-white/90 leading-relaxed mb-8 italic">
+            &ldquo;{t("brand", "story")}&rdquo;
+          </p>
+          <p className="text-gold/60 text-[10px] tracking-[0.6em] uppercase font-sans">ROYVÉ EYEWEAR</p>
+          <motion.div
+            className="h-px bg-gold/40 w-16 mx-auto mt-8"
+            initial={{ width: 0 }} whileInView={{ width: 64 }}
+            viewport={{ once: true }} transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
+          />
         </AnimatedSection>
-
-        {/* Desktop grid */}
-        <div className="hidden md:grid grid-cols-3 gap-3" style={{ height: "680px" }}>
-          {/* Left tall: model + amber lifestyle */}
-          <AnimatedSection direction="left" className="relative overflow-hidden bg-dark-2 group">
-            <video
-              autoPlay muted loop playsInline
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              style={{ filter: "brightness(0.8) contrast(1.05)" }}
-            >
-              <source src="/brand/hero2.mp4" type="video/mp4" />
-            </video>
-            <div className="absolute inset-0 bg-gradient-to-t from-dark-1/80 via-transparent to-transparent" />
-            <p className="absolute bottom-5 left-5 text-white/50 text-[10px] tracking-[0.4em] uppercase font-sans">EDITORIAL</p>
-          </AnimatedSection>
-
-          {/* Center col: flatlay SVG top + branding card bottom */}
-          <div className="grid grid-rows-2 gap-3">
-            <AnimatedSection delay={0.1} className="relative overflow-hidden bg-dark-2 group">
-              <Image
-                src="/products/amber.svg"
-                alt="Summer Essentials"
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                unoptimized
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-dark-1/70 via-transparent to-transparent" />
-              <p className="absolute bottom-4 left-4 text-white/50 text-[10px] tracking-[0.4em] uppercase font-sans">SUMMER ESSENTIALS</p>
-            </AnimatedSection>
-
-            {/* Branding card */}
-            <AnimatedSection delay={0.2} className="relative overflow-hidden bg-dark-2 flex flex-col items-center justify-center border border-white/5">
-              <div className="text-center px-6">
-                <div className="w-10 h-10 border border-gold/40 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.7">
-                    <rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#c9a84c" stroke="none"/>
-                  </svg>
-                </div>
-                <p className="text-gold/60 text-sm tracking-[0.15em] font-sans mb-3">@royve.eyewear</p>
-                <div className="h-px w-12 bg-gold/30 mx-auto mb-3" />
-                <p className="text-white/25 text-[9px] tracking-[0.4em] uppercase font-sans">LUXURY IN EVERY DETAIL.</p>
-              </div>
-            </AnimatedSection>
-          </div>
-
-          {/* Right col: azure SVG top + hero1 video bottom */}
-          <div className="grid grid-rows-2 gap-3">
-            <AnimatedSection delay={0.15} className="relative overflow-hidden bg-dark-2 group">
-              <Image
-                src="/products/azure.svg"
-                alt="Azure"
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                unoptimized
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-dark-1/50 via-transparent to-transparent" />
-            </AnimatedSection>
-
-            <AnimatedSection delay={0.25} className="relative overflow-hidden bg-dark-2 group">
-              <video
-                autoPlay muted loop playsInline
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                style={{ filter: "brightness(0.75) contrast(1.05)" }}
-              >
-                <source src="/brand/hero1.mp4" type="video/mp4" />
-              </video>
-              <div className="absolute inset-0 bg-gradient-to-t from-dark-1/60 via-transparent to-transparent" />
-            </AnimatedSection>
-          </div>
-        </div>
-
-        {/* Mobile grid: 2-col masonry-style */}
-        <div className="md:hidden grid grid-cols-2 gap-2">
-          {/* Row 1: model video tall + azure */}
-          <div className="relative overflow-hidden bg-dark-2 aspect-[3/4]">
-            <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.8)" }}>
-              <source src="/brand/hero2.mp4" type="video/mp4" />
-            </video>
-            <div className="absolute inset-0 bg-gradient-to-t from-dark-1/70 via-transparent to-transparent" />
-            <p className="absolute bottom-3 left-3 text-white/40 text-[9px] tracking-widest uppercase font-sans">EDITORIAL</p>
-          </div>
-          <div className="grid grid-rows-2 gap-2">
-            <div className="relative overflow-hidden bg-dark-2 aspect-square">
-              <Image src="/products/amber.svg" alt="Amber" fill className="object-cover" unoptimized />
-              <div className="absolute inset-0 bg-gradient-to-t from-dark-1/50 to-transparent" />
-            </div>
-            <div className="relative overflow-hidden bg-dark-2 aspect-square">
-              <Image src="/products/azure.svg" alt="Azure" fill className="object-cover" unoptimized />
-              <div className="absolute inset-0 bg-gradient-to-t from-dark-1/50 to-transparent" />
-            </div>
-          </div>
-
-          {/* Row 2: hero1 video full width */}
-          <div className="col-span-2 relative overflow-hidden bg-dark-2 aspect-video">
-            <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" style={{ filter: "brightness(0.75)" }}>
-              <source src="/brand/hero1.mp4" type="video/mp4" />
-            </video>
-            <div className="absolute inset-0 bg-gradient-to-t from-dark-1/60 via-transparent to-transparent" />
-          </div>
-
-          {/* Row 3: instagram card */}
-          <div className="col-span-2 bg-dark-2 border border-white/5 flex flex-col items-center justify-center py-8">
-            <div className="w-8 h-8 border border-gold/40 rounded-lg flex items-center justify-center mb-3">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.7">
-                <rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#c9a84c" stroke="none"/>
-              </svg>
-            </div>
-            <p className="text-gold/60 text-xs tracking-[0.15em] font-sans mb-2">@royve.eyewear</p>
-            <div className="h-px w-10 bg-gold/30 mb-2" />
-            <p className="text-white/25 text-[9px] tracking-[0.4em] uppercase font-sans">LUXURY IN EVERY DETAIL.</p>
-          </div>
-        </div>
       </section>
 
       {/* ── FEATURED PRODUCTS ── */}
