@@ -36,38 +36,20 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
           {/* Image / Video */}
           <AnimatedSection direction="left">
             <div className="relative aspect-[4/3] bg-dark-2 border border-white/5 overflow-hidden group">
-              {product.id === "amber" ? (
-                <video
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  className="absolute object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                  style={{
-                    filter: "brightness(0.85) contrast(1.05)",
-                    width: "155%",
-                    height: "155%",
-                    top: "-15%",
-                    left: "-15%",
-                  }}
-                >
-                  <source src="/brand/product.mp4" type="video/mp4" />
-                </video>
-              ) : (
-                <motion.div
-                  className="w-full h-full"
-                  whileHover={{ scale: 1.03 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <Image
-                    src={`/products/${product.id}.svg`}
-                    alt={product.name}
-                    fill
-                    className="object-cover"
-                    unoptimized
-                  />
-                </motion.div>
-              )}
+              <motion.div
+                className="w-full h-full"
+                whileHover={{ scale: 1.03 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Image
+                  src={`/products/${product.id}.jpg`}
+                  alt={product.name}
+                  fill
+                  className="object-cover object-center"
+                  onError={(e) => { (e.target as HTMLImageElement).src = `/products/${product.id}.svg`; }}
+                  unoptimized
+                />
+              </motion.div>
               <div className="absolute inset-0 border border-gold/0 group-hover:border-gold/30 transition-all duration-500 pointer-events-none" />
               {/* Corner accents */}
               <div className="absolute top-4 left-4 w-8 h-8 border-l border-t border-gold/40" />
