@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -24,7 +23,6 @@ type FormData = z.infer<typeof schema>;
 
 export default function CheckoutPage() {
   const { t } = useLang();
-  const router = useRouter();
   const { items, total, clearCart } = useCartStore();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -40,7 +38,7 @@ export default function CheckoutPage() {
     setSubmitting(true);
     setError("");
     try {
-      const res = await fetch("/api/orders", {
+      const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -54,9 +52,9 @@ export default function CheckoutPage() {
         }),
       });
       if (!res.ok) throw new Error("Failed");
-      const { orderId } = await res.json();
+      const { url } = await res.json();
       clearCart();
-      router.push(`/success?order=${orderId}`);
+      window.location.href = url;
     } catch {
       setError("Грешка при изпращане. Опитайте отново. / Error submitting. Please try again.");
       setSubmitting(false);
