@@ -43,7 +43,14 @@ export default function ProductPage({ params }: { params: { id: string } }) {
           <AnimatedSection direction="right" delay={0.15}>
             <div className="flex flex-col justify-center">
 
-              <p className="text-gold text-[10px] tracking-[0.6em] uppercase font-sans mb-3">{product.category}</p>
+              <div className="flex items-center gap-3 mb-3">
+                <p className="text-gold text-[10px] tracking-[0.6em] uppercase font-sans">{product.category}</p>
+                {product.bestSeller && (
+                  <span className="bg-dark-1 border border-gold text-gold text-[9px] font-bold tracking-widest uppercase px-2 py-1">
+                    {t("shop", "bestSeller")}
+                  </span>
+                )}
+              </div>
 
               <h1 className="font-serif text-5xl md:text-6xl font-bold text-white tracking-widest mb-4 leading-none">
                 {product.name}

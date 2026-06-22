@@ -3,6 +3,7 @@ export interface Product {
   name: string;
   price: number;
   originalPrice?: number;
+  bestSeller?: boolean;
   category: "Classic" | "Rimless" | "Sport";
   description: { bg: string; en: string };
   details: string[];
@@ -44,6 +45,7 @@ export const products: Product[] = [
     name: "EPOC",
     price: 49.99,
     originalPrice: 59.99,
+    bestSeller: true,
     category: "Rimless",
     description: {
       bg: "Без граници. Безободна конструкция с златна арматура и сини стъкла — лекота с характер.",
@@ -57,6 +59,7 @@ export const products: Product[] = [
     slug: "obsidian",
     name: "NYX",
     price: 49.99,
+    bestSeller: true,
     category: "Rimless",
     description: {
       bg: "Тъмнина без граници. Безободна конструкция с тъмни стъкла и златна арматура — мистерия в чист вид.",
