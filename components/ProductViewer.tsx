@@ -44,7 +44,7 @@ export default function ProductViewer({ images, alt }: ProductViewerProps) {
 
   return (
     <div
-      className="relative aspect-square bg-dark-2 border border-white/8 overflow-hidden group flex items-center justify-center select-none touch-none cursor-grab active:cursor-grabbing"
+      className="relative aspect-square bg-white border border-white/8 overflow-hidden group flex items-center justify-center select-none touch-none cursor-grab active:cursor-grabbing"
       onPointerDown={(e) => handleStart(e.clientX)}
       onPointerMove={(e) => handleMove(e.clientX)}
       onPointerUp={handleEnd}

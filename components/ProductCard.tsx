@@ -44,7 +44,7 @@ export default function ProductCard({ product }: Props) {
       className="group bg-dark-2 border border-white/5 hover:border-gold/30 transition-colors duration-500 overflow-hidden"
     >
       <Link href={`/shop/${product.id}`}>
-        <div className="relative overflow-hidden aspect-[4/3] bg-[#f0ede8]">
+        <div className="relative overflow-hidden aspect-[4/3] bg-white">
           <motion.div className="w-full h-full" whileHover={{ scale: 1.04 }} transition={{ duration: 0.5, ease: "easeOut" }}>
             <Image
               src={`/products/${product.id}.jpg`}
