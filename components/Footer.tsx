@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useLang } from "@/context/LanguageContext";
 
 export default function Footer() {
@@ -10,7 +11,9 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {/* Brand */}
           <div>
-            <span className="font-serif text-3xl font-bold text-gold-gradient block mb-4">ROYVÉ</span>
+            <div className="relative h-16 w-40 mb-4">
+              <Image src="/logo.png" alt="ROYVÉ" fill className="object-contain object-left" unoptimized />
+            </div>
             <p className="text-white/30 text-xs tracking-widest uppercase font-sans">NOT FOR EVERYONE.</p>
           </div>
 

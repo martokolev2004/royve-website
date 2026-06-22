@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function LoadingScreen() {
@@ -21,16 +22,12 @@ export default function LoadingScreen() {
         >
           <div className="text-center">
             <motion.div
-              initial={{ opacity: 0, letterSpacing: "0.3em" }}
-              animate={{ opacity: 1, letterSpacing: "0.5em" }}
+              className="relative h-32 w-56 mx-auto"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1.2, ease: "easeOut" }}
             >
-              <span
-                className="font-serif text-5xl font-bold text-gold-gradient"
-                style={{ fontFamily: "var(--font-playfair)" }}
-              >
-                ROYVÉ
-              </span>
+              <Image src="/logo.png" alt="ROYVÉ" fill className="object-contain" unoptimized priority />
             </motion.div>
             <motion.div
               className="mt-4 h-px bg-gold mx-auto"
@@ -38,14 +35,6 @@ export default function LoadingScreen() {
               animate={{ width: 120 }}
               transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
             />
-            <motion.p
-              className="mt-4 text-white/30 text-xs tracking-[0.4em] font-sans uppercase"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
-            >
-              EYEWEAR
-            </motion.p>
           </div>
         </motion.div>
       )}
