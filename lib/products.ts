@@ -2,6 +2,7 @@ export interface Product {
   id: string;
   name: string;
   price: number;
+  originalPrice?: number;
   category: "Classic" | "Rimless" | "Sport";
   description: { bg: string; en: string };
   details: string[];
@@ -14,7 +15,8 @@ export const products: Product[] = [
     id: "noir",
     slug: "noir",
     name: "NOIR",
-    price: 44.99,
+    price: 49.99,
+    originalPrice: 59.99,
     category: "Classic",
     description: {
       bg: "Абсолютен минимализъм. Черна рамка, черни стъкла — за тези, които не се нуждаят от обяснения.",
@@ -41,6 +43,7 @@ export const products: Product[] = [
     slug: "azure",
     name: "AZURE",
     price: 49.99,
+    originalPrice: 59.99,
     category: "Rimless",
     description: {
       bg: "Без граници. Безободна конструкция с златна арматура и сини стъкла — лекота с характер.",

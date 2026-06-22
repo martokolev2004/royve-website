@@ -51,9 +51,21 @@ export default function ProductPage({ params }: { params: { id: string } }) {
 
               <div className="h-px bg-gold/20 w-16 mb-6" />
 
-              <p className="font-serif text-3xl text-gold font-semibold mb-6">
-                {product.price} {t("shop", "currency")}
-              </p>
+              <div className="flex items-center gap-3 mb-6">
+                <p className="font-serif text-3xl text-gold font-semibold">
+                  {product.price} {t("shop", "currency")}
+                </p>
+                {product.originalPrice && (
+                  <>
+                    <p className="text-white/30 text-lg line-through font-sans">
+                      {product.originalPrice} {t("shop", "currency")}
+                    </p>
+                    <span className="bg-gold text-dark-1 text-[10px] font-bold tracking-widest uppercase px-2 py-1">
+                      -{Math.round(100 - (product.price / product.originalPrice) * 100)}%
+                    </span>
+                  </>
+                )}
+              </div>
 
               <p className="text-white/50 font-sans text-sm leading-relaxed mb-8">
                 {product.description[lang]}

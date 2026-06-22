@@ -55,6 +55,11 @@ export default function ProductCard({ product }: Props) {
               unoptimized
             />
           </motion.div>
+          {product.originalPrice && (
+            <span className="absolute top-3 left-3 bg-gold text-dark-1 text-[10px] font-bold tracking-widest uppercase px-2 py-1">
+              -{Math.round(100 - (product.price / product.originalPrice) * 100)}%
+            </span>
+          )}
           <div className="absolute inset-0 border-2 border-gold/0 group-hover:border-gold/25 transition-all duration-500 pointer-events-none" />
         </div>
       </Link>
@@ -69,7 +74,12 @@ export default function ProductCard({ product }: Props) {
             </Link>
             <p className="text-xs text-white/30 tracking-[0.2em] uppercase font-sans mt-1">{product.category}</p>
           </div>
-          <span className="font-serif text-gold text-lg font-semibold">{product.price} €</span>
+          <div className="text-right">
+            {product.originalPrice && (
+              <span className="block text-white/30 text-xs line-through font-sans">{product.originalPrice} €</span>
+            )}
+            <span className="font-serif text-gold text-lg font-semibold">{product.price} €</span>
+          </div>
         </div>
         <p className="text-white/40 text-xs font-sans leading-relaxed line-clamp-2 mt-2 mb-4">
           {product.description[lang]}
