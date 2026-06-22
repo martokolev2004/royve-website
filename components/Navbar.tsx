@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLang } from "@/context/LanguageContext";
@@ -29,8 +28,8 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between h-20">
         {/* Logo */}
-        <Link href="/" className="relative h-12 w-32 flex items-center">
-          <Image src="/logo.png" alt="ROYVÉ" fill className="object-contain object-left" unoptimized priority />
+        <Link href="/" className="font-serif text-2xl font-bold tracking-widest text-gold-gradient">
+          ROYVÉ
         </Link>
 
         {/* Desktop nav */}
