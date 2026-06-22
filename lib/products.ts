@@ -15,7 +15,7 @@ export const products: Product[] = [
     id: "noir",
     slug: "noir",
     name: "NOIR",
-    price: 49.99,
+    price: 44.99,
     originalPrice: 59.99,
     category: "Classic",
     description: {
