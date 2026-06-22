@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { motion } from "framer-motion";
@@ -8,6 +7,7 @@ import { getProductById, products } from "@/lib/products";
 import { useCartStore } from "@/lib/store";
 import AnimatedSection from "@/components/AnimatedSection";
 import ProductCard from "@/components/ProductCard";
+import ProductViewer from "@/components/ProductViewer";
 import Footer from "@/components/Footer";
 
 export default function ProductPage({ params }: { params: { id: string } }) {
@@ -34,32 +34,9 @@ export default function ProductPage({ params }: { params: { id: string } }) {
         {/* Main grid — 3D viewer left, info right */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[70vh]">
 
-          {/* LEFT — 3D viewer placeholder */}
+          {/* LEFT — interactive viewer */}
           <AnimatedSection direction="left">
-            <div className="relative aspect-square bg-dark-2 border border-white/8 overflow-hidden group flex items-center justify-center">
-
-              {/* Current photo until 3D model is ready */}
-              <Image
-                src={`/products/${product.id}.jpg`}
-                alt={product.name}
-                fill
-                className="object-contain p-10 transition-transform duration-700 group-hover:scale-[1.04]"
-                onError={(e) => { (e.target as HTMLImageElement).src = `/products/${product.id}.svg`; }}
-                unoptimized
-              />
-
-              {/* Corner accents */}
-              <div className="absolute top-5 left-5 w-8 h-8 border-l border-t border-gold/40 pointer-events-none" />
-              <div className="absolute top-5 right-5 w-8 h-8 border-r border-t border-gold/40 pointer-events-none" />
-              <div className="absolute bottom-5 left-5 w-8 h-8 border-l border-b border-gold/40 pointer-events-none" />
-              <div className="absolute bottom-5 right-5 w-8 h-8 border-r border-b border-gold/40 pointer-events-none" />
-
-              {/* "3D coming soon" badge */}
-              <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-dark-1/80 backdrop-blur-sm border border-gold/20 px-4 py-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-gold/60 animate-pulse" />
-                <span className="text-[9px] tracking-[0.4em] uppercase font-sans text-white/40">3D View — Coming Soon</span>
-              </div>
-            </div>
+            <ProductViewer images={product.images} alt={product.name} />
           </AnimatedSection>
 
           {/* RIGHT — product info */}
