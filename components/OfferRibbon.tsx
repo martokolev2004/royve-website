@@ -39,7 +39,7 @@ export default function OfferRibbon() {
             <p className="text-white/50 text-xs font-sans leading-relaxed mb-5">
               {t("promo", "message")}
             </p>
-            <Link href="/shop" className="btn-luxury block text-center text-[10px]">
+            <Link href="/shop" onClick={() => setOpen(false)} className="btn-luxury block text-center text-[10px]">
               <span>{t("promo", "cta")}</span>
             </Link>
           </motion.div>
