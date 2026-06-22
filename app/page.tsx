@@ -159,7 +159,7 @@ export default function HomePage() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-dark-1/80 via-transparent to-dark-1/20" />
             <div className="absolute bottom-8 left-8 right-8">
-              <p className="text-gold/70 text-[9px] tracking-[0.5em] uppercase font-sans mb-2">ROYVÉ AMBER</p>
+              <p className="text-gold/70 text-[9px] tracking-[0.5em] uppercase font-sans mb-2">ROYVÉ ORO</p>
               <p className="font-serif text-xl text-white font-light">Bold. Unapologetic.</p>
             </div>
             <div className="absolute top-4 left-4 w-6 h-6 border-l border-t border-gold/40" />
@@ -179,7 +179,7 @@ export default function HomePage() {
               />
               <div className="absolute inset-0 bg-gradient-to-b from-dark-1/30 via-transparent to-dark-1/60" />
               <div className="absolute bottom-6 left-6 right-6">
-                <p className="text-gold/70 text-[9px] tracking-[0.5em] uppercase font-sans mb-1">ROYVÉ AZURE</p>
+                <p className="text-gold/70 text-[9px] tracking-[0.5em] uppercase font-sans mb-1">ROYVÉ EPOC</p>
                 <p className="font-serif text-lg text-white font-light">Rimless luxury.</p>
               </div>
               <div className="absolute top-4 left-4 w-6 h-6 border-l border-t border-gold/40" />

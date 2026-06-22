@@ -14,7 +14,7 @@ export const products: Product[] = [
   {
     id: "noir",
     slug: "noir",
-    name: "NOIR",
+    name: "VANTA",
     price: 44.99,
     originalPrice: 59.99,
     category: "Classic",
@@ -28,7 +28,7 @@ export const products: Product[] = [
   {
     id: "amber",
     slug: "amber",
-    name: "AMBER",
+    name: "ORO",
     price: 44.99,
     category: "Classic",
     description: {
@@ -41,7 +41,7 @@ export const products: Product[] = [
   {
     id: "azure",
     slug: "azure",
-    name: "AZURE",
+    name: "EPOC",
     price: 49.99,
     originalPrice: 59.99,
     category: "Rimless",
@@ -55,7 +55,7 @@ export const products: Product[] = [
   {
     id: "obsidian",
     slug: "obsidian",
-    name: "OBSIDIAN",
+    name: "NYX",
     price: 49.99,
     category: "Rimless",
     description: {
