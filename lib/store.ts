@@ -13,8 +13,18 @@ interface CartStore {
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
+  subtotal: () => number;
+  bundleSavings: () => number;
+  bundleCount: () => number;
   total: () => number;
   itemCount: () => number;
+}
+
+const BUNDLE_SIZE = 2;
+const BUNDLE_PRICE = 80;
+
+function round2(n: number): number {
+  return Math.round(n * 100) / 100;
 }
 
 export const useCartStore = create<CartStore>()(
@@ -51,11 +61,31 @@ export const useCartStore = create<CartStore>()(
         }));
       },
       clearCart: () => set({ items: [] }),
-      total: () =>
-        get().items.reduce(
-          (sum, item) => sum + item.product.price * item.quantity,
-          0
+      subtotal: () =>
+        round2(
+          get().items.reduce(
+            (sum, item) => sum + item.product.price * item.quantity,
+            0
+          )
         ),
+      bundleCount: () => {
+        const unitCount = get().itemCount();
+        return Math.floor(unitCount / BUNDLE_SIZE);
+      },
+      bundleSavings: () => {
+        const units = get()
+          .items.flatMap((i) => Array(i.quantity).fill(i.product.price))
+          .sort((a, b) => b - a);
+        const bundles = Math.floor(units.length / BUNDLE_SIZE);
+        let savings = 0;
+        for (let b = 0; b < bundles; b++) {
+          const pair = units.slice(b * BUNDLE_SIZE, b * BUNDLE_SIZE + BUNDLE_SIZE);
+          const pairSum = pair.reduce((s, v) => s + v, 0);
+          if (pairSum > BUNDLE_PRICE) savings += pairSum - BUNDLE_PRICE;
+        }
+        return round2(savings);
+      },
+      total: () => round2(get().subtotal() - get().bundleSavings()),
       itemCount: () =>
         get().items.reduce((sum, item) => sum + item.quantity, 0),
     }),

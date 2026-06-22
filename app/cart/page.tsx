@@ -9,7 +9,7 @@ import Footer from "@/components/Footer";
 
 export default function CartPage() {
   const { t } = useLang();
-  const { items, removeItem, updateQuantity, total } = useCartStore();
+  const { items, removeItem, updateQuantity, subtotal, bundleSavings, total } = useCartStore();
 
   return (
     <div className="bg-dark-1 min-h-screen pt-20">
@@ -102,6 +102,18 @@ export default function CartPage() {
                   ))}
                 </div>
                 <div className="h-px bg-white/10 mb-6" />
+                {bundleSavings() > 0 && (
+                  <>
+                    <div className="flex justify-between text-xs font-sans text-white/40 mb-2">
+                      <span>{t("cart", "subtotal")}</span>
+                      <span>{subtotal()} €</span>
+                    </div>
+                    <div className="flex justify-between text-xs font-sans text-gold mb-6">
+                      <span>{t("cart", "bundleDiscount")}</span>
+                      <span>−{bundleSavings()} €</span>
+                    </div>
+                  </>
+                )}
                 <div className="flex justify-between items-center mb-8">
                   <span className="text-xs tracking-[0.3em] uppercase font-sans text-white/60">{t("cart", "total")}</span>
                   <span className="font-serif text-2xl text-gold font-bold">{total()} €</span>

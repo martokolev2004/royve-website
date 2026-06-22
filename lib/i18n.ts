@@ -27,6 +27,8 @@ export const translations = {
   cart: {
     title: { bg: "КОЛИЧКА", en: "CART" },
     empty: { bg: "Количката е празна", en: "Cart is empty" },
+    subtotal: { bg: "СУМА", en: "SUBTOTAL" },
+    bundleDiscount: { bg: "ОТСТЪПКА 2 ЗА 80€", en: "2-FOR-€80 DISCOUNT" },
     total: { bg: "ОБЩО", en: "TOTAL" },
     checkout: { bg: "ПОРЪЧАЙ", en: "CHECKOUT" },
     continue: { bg: "ПРОДЪЛЖИ ПАЗАРУВАНЕТО", en: "CONTINUE SHOPPING" },

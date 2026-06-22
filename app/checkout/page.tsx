@@ -23,7 +23,7 @@ type FormData = z.infer<typeof schema>;
 
 export default function CheckoutPage() {
   const { t } = useLang();
-  const { items, total, clearCart } = useCartStore();
+  const { items, subtotal, bundleSavings, total, clearCart } = useCartStore();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -45,10 +45,8 @@ export default function CheckoutPage() {
           ...data,
           items: items.map((i) => ({
             name: i.product.name,
-            price: i.product.price,
             quantity: i.quantity,
           })),
-          total: total(),
         }),
       });
       if (!res.ok) throw new Error("Failed");
@@ -223,6 +221,18 @@ export default function CheckoutPage() {
                     ))}
                   </div>
                   <div className="h-px bg-white/10 mb-6" />
+                  {bundleSavings() > 0 && (
+                    <>
+                      <div className="flex justify-between text-xs font-sans text-white/40 mb-2">
+                        <span>{t("cart", "subtotal")}</span>
+                        <span>{subtotal()} €</span>
+                      </div>
+                      <div className="flex justify-between text-xs font-sans text-gold mb-6">
+                        <span>{t("cart", "bundleDiscount")}</span>
+                        <span>−{bundleSavings()} €</span>
+                      </div>
+                    </>
+                  )}
                   <div className="flex justify-between items-center mb-8">
                     <span className="text-xs tracking-[0.3em] uppercase font-sans text-white/60">{t("cart", "total")}</span>
                     <span className="font-serif text-2xl text-gold font-bold">{total()} €</span>

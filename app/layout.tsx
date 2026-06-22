@@ -5,7 +5,7 @@ import { LanguageProvider } from "@/context/LanguageContext";
 import Navbar from "@/components/Navbar";
 import LoadingScreen from "@/components/LoadingScreen";
 import SmoothScroll from "@/components/SmoothScroll";
-import PromoPopup from "@/components/PromoPopup";
+import OfferRibbon from "@/components/OfferRibbon";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -33,7 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <SmoothScroll />
 <LoadingScreen />
           <Navbar />
-          <PromoPopup />
+          <OfferRibbon />
           <main>{children}</main>
         </LanguageProvider>
       </body>
