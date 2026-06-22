@@ -47,7 +47,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                 <p className="text-gold text-[10px] tracking-[0.6em] uppercase font-sans">{product.category}</p>
                 {product.bestSeller && (
                   <span className="bg-dark-1 border border-gold text-gold text-[9px] font-bold tracking-widest uppercase px-2 py-1">
-                    {t("shop", "bestSeller")}
+                    Best Seller
                   </span>
                 )}
               </div>

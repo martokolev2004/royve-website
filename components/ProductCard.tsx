@@ -62,7 +62,7 @@ export default function ProductCard({ product }: Props) {
           )}
           {product.bestSeller && (
             <span className="absolute top-3 right-3 bg-dark-1/90 border border-gold text-gold text-[10px] font-bold tracking-widest uppercase px-2 py-1">
-              {t("shop", "bestSeller")}
+              Best Seller
             </span>
           )}
           <div className="absolute inset-0 border-2 border-gold/0 group-hover:border-gold/25 transition-all duration-500 pointer-events-none" />

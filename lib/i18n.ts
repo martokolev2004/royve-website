@@ -17,7 +17,6 @@ export const translations = {
     all: { bg: "ВСИЧКИ", en: "ALL" },
     addBtn: { bg: "ДОБАВИ", en: "ADD" },
     currency: { bg: "€", en: "€" },
-    bestSeller: { bg: "БЕСТСЕЛЪР", en: "BEST SELLER" },
   },
   product: {
     addToCart: { bg: "ДОБАВИ В КОЛИЧКАТА", en: "ADD TO CART" },
