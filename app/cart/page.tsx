@@ -43,12 +43,13 @@ export default function CartPage() {
                     transition={{ duration: 0.3 }}
                     className="flex gap-5 bg-dark-2 border border-white/5 p-4 hover:border-gold/20 transition-colors"
                   >
-                    <div className="relative w-24 h-18 bg-dark-1 flex-shrink-0 overflow-hidden" style={{ height: "72px" }}>
+                    <div className="relative w-24 bg-white flex-shrink-0 overflow-hidden" style={{ height: "72px" }}>
                       <Image
-                        src={`/products/${item.product.id}.svg`}
+                        src={`/products/${item.product.id}.jpg`}
                         alt={item.product.name}
                         fill
-                        className="object-cover"
+                        className="object-contain p-1.5"
+                        onError={(e) => { (e.target as HTMLImageElement).src = `/products/${item.product.id}.svg`; }}
                         unoptimized
                       />
                     </div>
