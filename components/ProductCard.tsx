@@ -50,7 +50,7 @@ export default function ProductCard({ product }: Props) {
               src={product.images[0]}
               alt={product.name}
               fill
-              className="object-contain p-4"
+              className={`object-contain ${["obsidian", "krypt", "azure2"].includes(product.id) ? "p-2" : "p-4"}`}
               unoptimized
             />
           </motion.div>
