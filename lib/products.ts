@@ -80,7 +80,7 @@ export const products: Product[] = [
       en: "Sharp form. Dark identity. Black cat-eye frame for those who need no approval.",
     },
     details: ["Черна ацетатна рамка", "Котешка форма", "Тъмни поляризирани стъкла", "UV400 защита", "Включва луксозна кутия"],
-    images: ["/products/krypt-1.jpg", "/products/krypt-2.jpg"],
+    images: ["/products/krypt-2.jpg", "/products/krypt-1.jpg"],
   },
   {
     id: "sahra",
@@ -94,7 +94,7 @@ export const products: Product[] = [
       en: "Warmth without limits. Gold rimless frame with amber gradient lenses — luxury in pure form.",
     },
     details: ["Безободна конструкция", "Златна метална арматура", "Кехлибарени градиентни стъкла", "UV400 защита", "Включва луксозна кутия"],
-    images: ["/products/sahra-1.jpg", "/products/sahra-2.jpg"],
+    images: ["/products/sahra-2.jpg", "/products/sahra-1.jpg"],
   },
   {
     id: "monarch",
@@ -108,7 +108,7 @@ export const products: Product[] = [
       en: "Wide presence. Thick black acetate frame — for those who claim the space that belongs to them.",
     },
     details: ["Широка черна ацетатна рамка", "Тъмни поляризирани стъкла", "UV400 защита", "Включва луксозна кутия"],
-    images: ["/products/monarch-1.jpg", "/products/monarch-2.jpg"],
+    images: ["/products/monarch-front.jpg", "/products/monarch-1.jpg"],
   },
   {
     id: "azure2",
