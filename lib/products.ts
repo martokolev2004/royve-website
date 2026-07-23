@@ -138,6 +138,20 @@ export const products: Product[] = [
     details: ["Безободна конструкция", "Тънка черна метална арматура", "Тъмни стъкла", "UV400 защита", "Включва луксозна кутия"],
     images: ["/products/velor-1.jpg", "/products/velor-2.jpg"],
   },
+  {
+    id: "octave",
+    slug: "octave",
+    name: "OCTAVE",
+    price: 44.99,
+    originalPrice: 54.99,
+    category: "Classic",
+    description: {
+      bg: "Осмоъгълна елегантност. Златна метална рамка с тъмни стъкла — геометрия, която командва внимание.",
+      en: "Octagonal elegance. Gold metal frame with dark lenses — geometry that commands attention.",
+    },
+    details: ["Осмоъгълна метална рамка", "Златна арматура", "Тъмни поляризирани стъкла", "UV400 защита", "Включва луксозна кутия"],
+    images: ["/products/octave-1.jpg", "/products/octave-2.jpg"],
+  },
 ];
 
 export function getProductById(id: string): Product | undefined {
