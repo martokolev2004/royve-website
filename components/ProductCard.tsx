@@ -47,11 +47,10 @@ export default function ProductCard({ product }: Props) {
         <div className="relative overflow-hidden aspect-[4/3] bg-white">
           <motion.div className="w-full h-full" whileHover={{ scale: 1.04 }} transition={{ duration: 0.5, ease: "easeOut" }}>
             <Image
-              src={`/products/${product.id}.jpg`}
+              src={product.images[0]}
               alt={product.name}
               fill
               className="object-contain p-4"
-              onError={(e) => { (e.target as HTMLImageElement).src = `/products/${product.id}.svg`; }}
               unoptimized
             />
           </motion.div>
