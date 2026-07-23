@@ -94,7 +94,7 @@ export const products: Product[] = [
       en: "Warmth without limits. Gold rimless frame with amber gradient lenses — luxury in pure form.",
     },
     details: ["Безободна конструкция", "Златна метална арматура", "Кехлибарени градиентни стъкла", "UV400 защита", "Включва луксозна кутия"],
-    images: ["/products/sahra-1.jpg", "/products/sahra-1.jpg"],
+    images: ["/products/sahra-1.jpg", "/products/sahra-2.jpg"],
   },
   {
     id: "monarch",
@@ -108,7 +108,7 @@ export const products: Product[] = [
       en: "Wide presence. Thick black acetate frame — for those who claim the space that belongs to them.",
     },
     details: ["Широка черна ацетатна рамка", "Тъмни поляризирани стъкла", "UV400 защита", "Включва луксозна кутия"],
-    images: ["/products/monarch-1.jpg", "/products/monarch-1.jpg"],
+    images: ["/products/monarch-1.jpg", "/products/monarch-2.jpg"],
   },
   {
     id: "azure2",
@@ -122,7 +122,7 @@ export const products: Product[] = [
       en: "Blue without boundaries. Thin metal rimless frame with blue lenses — lightness with character.",
     },
     details: ["Безободна конструкция", "Тънка метална арматура", "Сини стъкла", "UV400 защита", "Включва луксозна кутия"],
-    images: ["/products/azure2-1.jpg", "/products/azure2-1.jpg"],
+    images: ["/products/azure2-1.jpg", "/products/azure2-2.jpg"],
   },
   {
     id: "velor",
@@ -136,7 +136,7 @@ export const products: Product[] = [
       en: "Dark precision. Black thin metal rimless frame — minimalism with maximum impact.",
     },
     details: ["Безободна конструкция", "Тънка черна метална арматура", "Тъмни стъкла", "UV400 защита", "Включва луксозна кутия"],
-    images: ["/products/velor-1.jpg", "/products/velor-1.jpg"],
+    images: ["/products/velor-1.jpg", "/products/velor-2.jpg"],
   },
 ];
 
