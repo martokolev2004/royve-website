@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 import { useLang } from "@/context/LanguageContext";
 import { getProductById, products } from "@/lib/products";
 import { useCartStore } from "@/lib/store";
@@ -13,6 +14,10 @@ import Footer from "@/components/Footer";
 export default function ProductPage({ params }: { params: { id: string } }) {
   const { id } = params;
   const product = getProductById(id);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
   if (!product) notFound();
 
   const { t, lang } = useLang();
