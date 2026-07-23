@@ -40,8 +40,8 @@ export const products: Product[] = [
     images: ["/products/amber-1.jpg", "/products/amber-2.jpg"],
   },
   {
-    id: "azure",
-    slug: "azure",
+    id: "epoc",
+    slug: "epoc",
     name: "EPOC",
     price: 49.99,
     originalPrice: 59.99,
@@ -111,8 +111,8 @@ export const products: Product[] = [
     images: ["/products/monarch-front.jpg", "/products/monarch-1.jpg"],
   },
   {
-    id: "azure2",
-    slug: "azure2",
+    id: "azure",
+    slug: "azure",
     name: "AZURE",
     price: 44.99,
     originalPrice: 54.99,
