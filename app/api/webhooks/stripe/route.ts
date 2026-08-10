@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
 
         await resend.emails.send({
           from: "ROYVÉ Orders <orders@royve.eu>",
-          to: process.env.ORDER_EMAIL || "orders@royve.com",
+          to: process.env.ORDER_EMAIL || "royve.eyewear@gmail.com",
           subject: `Платена поръчка #${order.id} — ${order.customerName}`,
           text: `
 НОВА ПЛАТЕНА ПОРЪЧКА — ROYVÉ Eyewear
