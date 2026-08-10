@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
           .join("\n");
 
         await resend.emails.send({
-          from: "ROYVÉ Orders <orders@royve.com>",
+          from: "ROYVÉ Orders <orders@royve.eu>",
           to: process.env.ORDER_EMAIL || "orders@royve.com",
           subject: `Платена поръчка #${order.id} — ${order.customerName}`,
           text: `
