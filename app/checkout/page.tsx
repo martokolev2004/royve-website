@@ -34,22 +34,15 @@ export default function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [selectedLocker, setSelectedLocker] = useState<BoxNowLocker | null>(null);
-  const [widgetReady, setWidgetReady] = useState(false);
 
   useEffect(() => {
-    // Configure BoxNow widget callback
-    (window as unknown as Record<string, unknown>)._bn_map_widget_config = {
-      partnerId: 17321,
-      parentElement: "#boxnowmap",
-      type: "popup",
-      autoclose: true,
-      afterSelect: (selected: { boxnowLockerId: string; boxnowLockerAddressLine1: string; boxnowLockerName?: string }) => {
-        setSelectedLocker({
-          id: selected.boxnowLockerId,
-          address: selected.boxnowLockerAddressLine1,
-          name: selected.boxnowLockerName || selected.boxnowLockerAddressLine1,
-        });
-      },
+    // Register React callback so the inline script's afterSelect can reach it
+    (window as unknown as Record<string, unknown>).__boxnowAfterSelect = (selected: { boxnowLockerId: string; boxnowLockerAddressLine1: string; boxnowLockerName?: string }) => {
+      setSelectedLocker({
+        id: selected.boxnowLockerId,
+        address: selected.boxnowLockerAddressLine1,
+        name: selected.boxnowLockerName || selected.boxnowLockerAddressLine1,
+      });
     };
   }, []);
 
@@ -85,10 +78,21 @@ export default function CheckoutPage() {
 
   return (
     <div className="bg-dark-1 min-h-screen pt-20">
+      {/* Set BoxNow config before script loads */}
+      <Script id="boxnow-config" strategy="beforeInteractive">{`
+        window._bn_map_widget_config = {
+          partnerId: 17321,
+          parentElement: "#boxnowmap",
+          type: "popup",
+          autoclose: true,
+          afterSelect: function(selected) {
+            window.__boxnowAfterSelect && window.__boxnowAfterSelect(selected);
+          }
+        };
+      `}</Script>
       <Script
         src="https://widgetcdn.boxnow.bg/map-widget/client/v5.js"
-        strategy="lazyOnload"
-        onLoad={() => setWidgetReady(true)}
+        strategy="afterInteractive"
       />
       <div id="boxnowmap" />
 
@@ -175,8 +179,7 @@ export default function CheckoutPage() {
                         <p className="text-white/40 text-xs font-sans mb-4">{t("checkout", "boxnowDesc")}</p>
                         <button
                           type="button"
-                          className={`boxnow-widget-button btn-luxury text-xs ${!widgetReady ? "opacity-50 cursor-not-allowed" : ""}`}
-                          disabled={!widgetReady}
+                          className="boxnow-widget-button btn-luxury text-xs"
                         >
                           <span>{t("checkout", "selectLocker")}</span>
                         </button>
