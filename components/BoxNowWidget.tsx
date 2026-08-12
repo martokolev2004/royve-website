@@ -79,23 +79,21 @@ export default function BoxNowWidget({ partnerId, onSelect }: Props) {
       </button>
 
       {open && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center"
-          style={{ background: "rgba(0,0,0,0.8)" }}
-        >
-          <div className="relative w-full max-w-4xl mx-4" style={{ height: "80vh" }}>
+        <div className="fixed inset-0 z-50 flex flex-col" style={{ background: "rgba(0,0,0,0.95)" }}>
+          <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 flex-shrink-0">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 bg-[#00c853] flex items-center justify-center text-white text-[10px] font-bold">BN</div>
+              <span className="text-white text-xs tracking-widest uppercase font-sans">Избери BOX NOW автомат</span>
+            </div>
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="absolute -top-10 right-0 text-white/60 hover:text-white text-xs tracking-widest uppercase font-sans transition-colors"
+              className="text-white/50 hover:text-white text-xs tracking-widest uppercase font-sans transition-colors px-3 py-1 border border-white/20 hover:border-white/50"
             >
               ✕ Затвори
             </button>
-            <div
-              ref={containerRef}
-              style={{ width: "100%", height: "100%", background: "#111" }}
-            />
           </div>
+          <div ref={containerRef} style={{ flex: 1, minHeight: 0, background: "#111" }} />
         </div>
       )}
     </>
