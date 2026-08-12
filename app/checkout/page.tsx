@@ -80,18 +80,8 @@ function CheckoutForm() {
         if (watchedAddress && watchedAddress.length >= 5) params.set("address", watchedAddress);
         const res = await fetch(`/api/boxnow-locations?${params}`);
         const data = await res.json();
-        setLockers(data);
-        // Extract user coords from geocode if available
-        if (watchedAddress && watchedAddress.length >= 5) {
-          const geoRes = await fetch(
-            `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(watchedAddress + ", " + watchedCity + ", Bulgaria")}&format=json&limit=1&countrycodes=bg`,
-            { headers: { "User-Agent": "royve-eyewear/1.0 orders@royve.eu" } }
-          );
-          const geoData = await geoRes.json();
-          if (geoData.length > 0) {
-            setUserCoords({ lat: parseFloat(geoData[0].lat), lng: parseFloat(geoData[0].lon) });
-          }
-        }
+        setLockers(data.lockers || []);
+        if (data.cityCenter) setUserCoords(data.cityCenter);
       } catch {
         setLockers([]);
       } finally {
