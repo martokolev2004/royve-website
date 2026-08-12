@@ -11,6 +11,9 @@ import { useLang } from "@/context/LanguageContext";
 import { useCartStore } from "@/lib/store";
 import AnimatedSection from "@/components/AnimatedSection";
 import Footer from "@/components/Footer";
+import dynamic from "next/dynamic";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const BoxNowMap = dynamic(() => import("@/components/BoxNowMap"), { ssr: false }) as any;
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -25,18 +28,14 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-interface BoxNowLocker {
-  id: string;
-  address: string;
-  name: string;
-}
-
-interface BoxNowAPILocation {
+interface BNLocker {
   id: string;
   name: string;
   addressLine1: string;
-  postalCode: string;
+  postalCode?: string;
   note?: string;
+  lat?: string;
+  lng?: string;
 }
 
 const CARD_STYLE = {
@@ -58,9 +57,10 @@ function CheckoutForm() {
   const elements = useElements();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const [selectedLocker, setSelectedLocker] = useState<BoxNowLocker | null>(null);
-  const [lockers, setLockers] = useState<BoxNowAPILocation[]>([]);
+  const [selectedLocker, setSelectedLocker] = useState<BNLocker | null>(null);
+  const [lockers, setLockers] = useState<BNLocker[]>([]);
   const [loadingLockers, setLoadingLockers] = useState(false);
+  const [userCoords, setUserCoords] = useState<{ lat: number; lng: number } | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>({ resolver: zodResolver(schema) });
@@ -81,6 +81,17 @@ function CheckoutForm() {
         const res = await fetch(`/api/boxnow-locations?${params}`);
         const data = await res.json();
         setLockers(data);
+        // Extract user coords from geocode if available
+        if (watchedAddress && watchedAddress.length >= 5) {
+          const geoRes = await fetch(
+            `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(watchedAddress + ", " + watchedCity + ", Bulgaria")}&format=json&limit=1&countrycodes=bg`,
+            { headers: { "User-Agent": "royve-eyewear/1.0 orders@royve.eu" } }
+          );
+          const geoData = await geoRes.json();
+          if (geoData.length > 0) {
+            setUserCoords({ lat: parseFloat(geoData[0].lat), lng: parseFloat(geoData[0].lon) });
+          }
+        }
       } catch {
         setLockers([]);
       } finally {
@@ -188,7 +199,7 @@ function CheckoutForm() {
                   <div>
                     <p className="text-[#00c853] text-[10px] tracking-widest uppercase font-sans mb-0.5">✓ Избран автомат</p>
                     <p className="text-white text-xs font-sans">{selectedLocker.name}</p>
-                    <p className="text-white/40 text-xs font-sans mt-0.5">{selectedLocker.address}</p>
+                    <p className="text-white/40 text-xs font-sans mt-0.5">{selectedLocker.addressLine1}</p>
                   </div>
                   <button
                     type="button"
@@ -211,19 +222,30 @@ function CheckoutForm() {
                   )}
 
                   {!loadingLockers && lockers.length > 0 && (
-                    <div className="space-y-2">
-                      {lockers.map((locker) => (
-                        <button
-                          key={locker.id}
-                          type="button"
-                          onClick={() => setSelectedLocker({ id: locker.id, address: locker.addressLine1, name: locker.name })}
-                          className="w-full text-left px-4 py-3 border border-white/10 hover:border-gold/40 hover:bg-gold/5 transition-all duration-200 group"
-                        >
-                          <p className="text-white text-xs font-sans group-hover:text-gold transition-colors">{locker.name}</p>
-                          <p className="text-white/40 text-[11px] font-sans mt-0.5">{locker.addressLine1}{locker.note ? ` — ${locker.note}` : ""}</p>
-                        </button>
-                      ))}
-                    </div>
+                    <>
+                      <div className="mb-3 overflow-hidden border border-white/10">
+                        <BoxNowMap
+                          lockers={lockers}
+                          selected={null}
+                          onSelect={(l: BNLocker) => setSelectedLocker(l)}
+                          userLat={userCoords?.lat}
+                          userLng={userCoords?.lng}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        {lockers.map((locker) => (
+                          <button
+                            key={locker.id}
+                            type="button"
+                            onClick={() => setSelectedLocker(locker)}
+                            className="w-full text-left px-4 py-3 border border-white/10 hover:border-gold/40 hover:bg-gold/5 transition-all duration-200 group"
+                          >
+                            <p className="text-xs font-sans transition-colors text-white group-hover:text-gold">{locker.name}</p>
+                            <p className="text-white/40 text-[11px] font-sans mt-0.5">{locker.addressLine1}{locker.note ? ` — ${locker.note}` : ""}</p>
+                          </button>
+                        ))}
+                      </div>
+                    </>
                   )}
 
                   {!loadingLockers && lockers.length === 0 && watchedCity && watchedCity.length >= 2 && (
@@ -296,7 +318,7 @@ function CheckoutForm() {
             {selectedLocker && (
               <div className="flex items-start gap-2 mb-4 text-xs font-sans text-[#00c853]">
                 <span className="flex-shrink-0">✓</span>
-                <span>BOX NOW: {selectedLocker.name}</span>
+                <span>BOX NOW: {selectedLocker.addressLine1}</span>
               </div>
             )}
             <div className="flex justify-between items-center mb-8">
