@@ -172,34 +172,22 @@ export default function CheckoutPage() {
                   <h2 className="text-xs tracking-[0.4em] uppercase text-gold font-sans mb-6">
                     — {t("checkout", "payment")} —
                   </h2>
-                  <div className="bg-dark-2 border border-white/5 p-6 relative overflow-hidden">
-                    <div className="absolute top-3 right-3">
-                      <span className="text-[10px] tracking-[0.3em] uppercase font-sans text-gold/60 bg-gold/10 px-2 py-1 border border-gold/20">
-                        {t("checkout", "paymentSoon")}
-                      </span>
+                  <div className="bg-dark-2 border border-white/5 p-6 flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center shrink-0">
+                      <svg className="w-5 h-5 text-gold/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                      </svg>
                     </div>
-                    {/* Fake card input UI */}
-                    <div className="space-y-4 opacity-50 pointer-events-none select-none">
-                      <div>
-                        <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">Card Number</label>
-                        <div className="luxury-input flex items-center gap-2 text-white/20">
-                          <span>•••• •••• •••• ••••</span>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">Expiry</label>
-                          <div className="luxury-input text-white/20">MM / YY</div>
-                        </div>
-                        <div>
-                          <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">CVV</label>
-                          <div className="luxury-input text-white/20">•••</div>
-                        </div>
-                      </div>
+                    <div>
+                      <p className="text-white/70 text-xs font-sans tracking-widest uppercase">
+                        {lang === "bg" ? "Сигурно плащане чрез Stripe" : "Secure payment via Stripe"}
+                      </p>
+                      <p className="text-white/30 text-xs font-sans mt-1">
+                        {lang === "bg"
+                          ? "След потвърждение ще бъдете пренасочени към страницата за плащане"
+                          : "After confirmation you will be redirected to the payment page"}
+                      </p>
                     </div>
-                    <p className="text-white/30 text-xs font-sans mt-4 tracking-wide">
-                      Stripe интеграция — очаква се / Stripe integration coming soon
-                    </p>
                   </div>
                 </AnimatedSection>
 
