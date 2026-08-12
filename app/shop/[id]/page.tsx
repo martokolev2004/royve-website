@@ -21,7 +21,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
   if (!product) notFound();
 
   const { t, lang } = useLang();
-  const { addItem, items, updateQuantity, removeItem } = useCartStore();
+  const { addItem, items, updateQuantity } = useCartStore();
   const cartItem = items.find((i) => i.product.id === product.id);
   const related = products.filter((p) => p.id !== product.id).slice(0, 3);
 
