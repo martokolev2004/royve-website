@@ -59,7 +59,19 @@ function CheckoutForm() {
     };
   }, []);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({ resolver: zodResolver(schema) });
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>({ resolver: zodResolver(schema) });
+  const watchedCity = watch("city");
+  const watchedPostal = watch("postalCode");
+
+  function openBoxNow() {
+    const location = (watchedPostal?.trim() || watchedCity?.trim() || "");
+    const w = window as unknown as { _bn_map_widget_config?: Record<string, unknown> };
+    if (w._bn_map_widget_config) {
+      w._bn_map_widget_config.zip = location || undefined;
+      w._bn_map_widget_config.gps = !location;
+    }
+    document.querySelector<HTMLButtonElement>(".boxnow-trigger")?.click();
+  }
 
   async function onSubmit(data: FormData) {
     if (!stripe || !elements || items.length === 0) return;
@@ -160,6 +172,9 @@ function CheckoutForm() {
                 <div className="w-8 h-8 bg-[#00c853] flex items-center justify-center text-white text-xs font-bold">BN</div>
                 <h3 className="text-xs tracking-[0.4em] uppercase text-white/60 font-sans">BOX NOW — {t("checkout", "boxnow")}</h3>
               </div>
+              {/* Hidden real trigger that the widget binds to */}
+              <button type="button" className="boxnow-widget-button boxnow-trigger hidden" aria-hidden="true" />
+
               {selectedLocker ? (
                 <div className="flex items-center justify-between bg-dark-2 border border-gold/20 px-4 py-3">
                   <div>
@@ -173,7 +188,7 @@ function CheckoutForm() {
               ) : (
                 <div>
                   <p className="text-white/40 text-xs font-sans mb-4">{t("checkout", "boxnowDesc")}</p>
-                  <button type="button" className="boxnow-widget-button btn-luxury text-xs">
+                  <button type="button" onClick={openBoxNow} className="btn-luxury text-xs">
                     <span>{t("checkout", "selectLocker")}</span>
                   </button>
                 </div>
@@ -273,7 +288,7 @@ export default function CheckoutPage() {
           parentElement: "#boxnowmap",
           type: "popup",
           autoclose: true,
-          buttonSelector: ".boxnow-widget-button",
+          buttonSelector: ".boxnow-trigger",
           afterSelect: function(s) {
             window.__boxnowAfterSelect && window.__boxnowAfterSelect(s);
           }
