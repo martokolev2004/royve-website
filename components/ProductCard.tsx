@@ -90,21 +90,21 @@ export default function ProductCard({ product }: Props) {
           {product.description[lang]}
         </p>
         {cartItem ? (
-          <div className="flex items-center border border-gold/40 w-full">
+          <div className="relative border border-gold w-full flex items-center overflow-hidden" style={{ height: "46px" }}>
             <motion.button
               onClick={(e) => { e.preventDefault(); updateQuantity(product.id, cartItem.quantity - 1); }}
-              className="w-10 h-10 flex items-center justify-center text-gold text-lg hover:bg-gold/10 transition-colors font-serif flex-shrink-0"
+              className="relative z-10 w-11 h-full flex items-center justify-center text-gold hover:text-dark-1 hover:bg-gold text-xl font-serif transition-all duration-200 flex-shrink-0"
               whileTap={{ scale: 0.9 }}
             >
               −
             </motion.button>
-            <div className="flex-1 flex flex-col items-center justify-center h-10">
-              <span className="text-white font-serif text-base leading-none">{cartItem.quantity}</span>
-              <span className="text-gold/60 text-[8px] tracking-widest uppercase font-sans mt-0.5">{t("product", "inCart")}</span>
+            <div className="flex-1 flex flex-col items-center justify-center h-full border-x border-gold/30">
+              <span className="text-gold font-serif text-lg leading-none">{cartItem.quantity}</span>
+              <span className="text-gold/50 text-[8px] tracking-[0.2em] uppercase font-sans mt-0.5">{t("product", "inCart")}</span>
             </div>
             <motion.button
               onClick={(e) => { e.preventDefault(); addItem(product); }}
-              className="w-10 h-10 flex items-center justify-center text-gold text-lg hover:bg-gold/10 transition-colors font-serif flex-shrink-0"
+              className="relative z-10 w-11 h-full flex items-center justify-center text-gold hover:text-dark-1 hover:bg-gold text-xl font-serif transition-all duration-200 flex-shrink-0"
               whileTap={{ scale: 0.9 }}
             >
               +
