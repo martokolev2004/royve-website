@@ -99,11 +99,6 @@ function CheckoutForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      {/* Load BoxNow widget script once */}
-      <BoxNowWidget
-        partnerId={17321}
-        onSelect={(locker: BNSelected) => setSelectedLocker(locker)}
-      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div className="lg:col-span-2 space-y-8">
@@ -171,13 +166,10 @@ function CheckoutForm() {
               ) : (
                 <div>
                   <p className="text-white/40 text-xs font-sans mb-4">{t("checkout", "boxnowDesc")}</p>
-                  <button
-                    type="button"
-                    className="boxnow-map-widget-button w-full py-3 text-xs tracking-[0.3em] uppercase font-sans font-semibold"
-                    style={{ background: "#00c853", color: "#fff", border: "none", cursor: "pointer" }}
-                  >
-                    Избери BOX NOW автомат
-                  </button>
+                  <BoxNowWidget
+                    partnerId={17321}
+                    onSelect={(locker: BNSelected) => setSelectedLocker(locker)}
+                  />
                 </div>
               )}
             </div>
