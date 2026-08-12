@@ -43,10 +43,7 @@ export default function CheckoutPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...data,
-          items: items.map((i) => ({
-            name: i.product.name,
-            quantity: i.quantity,
-          })),
+          items: items.map((i) => ({ name: i.product.name, quantity: i.quantity })),
         }),
       });
       if (!res.ok) throw new Error("Failed");
@@ -79,114 +76,40 @@ export default function CheckoutPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
               {/* Form fields */}
               <div className="lg:col-span-2 space-y-8">
-                {/* Customer info */}
                 <AnimatedSection>
                   <h2 className="text-xs tracking-[0.4em] uppercase text-gold font-sans mb-6">
                     — {t("checkout", "title")} —
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Full name */}
                     <div className="md:col-span-2">
-                      <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">
-                        {t("checkout", "fullName")}
-                      </label>
-                      <input
-                        {...register("fullName")}
-                        className="luxury-input"
-                        placeholder={t("checkout", "fullName")}
-                      />
+                      <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">{t("checkout", "fullName")}</label>
+                      <input {...register("fullName")} className="luxury-input" placeholder={t("checkout", "fullName")} />
                       {errors.fullName && <p className="text-red-400 text-xs mt-1">{errors.fullName.message}</p>}
                     </div>
-
-                    {/* Email */}
                     <div>
-                      <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">
-                        {t("checkout", "email")}
-                      </label>
-                      <input
-                        {...register("email")}
-                        type="email"
-                        className="luxury-input"
-                        placeholder="email@example.com"
-                      />
+                      <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">{t("checkout", "email")}</label>
+                      <input {...register("email")} type="email" className="luxury-input" placeholder="email@example.com" />
                       {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>}
                     </div>
-
-                    {/* Phone */}
                     <div>
-                      <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">
-                        {t("checkout", "phone")}
-                      </label>
-                      <input
-                        {...register("phone")}
-                        type="tel"
-                        className="luxury-input"
-                        placeholder="+359 ..."
-                      />
+                      <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">{t("checkout", "phone")}</label>
+                      <input {...register("phone")} type="tel" className="luxury-input" placeholder="+359 ..." />
                       {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone.message}</p>}
                     </div>
-
-                    {/* Address */}
                     <div className="md:col-span-2">
-                      <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">
-                        {t("checkout", "address")}
-                      </label>
-                      <input
-                        {...register("address")}
-                        className="luxury-input"
-                        placeholder={t("checkout", "address")}
-                      />
+                      <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">{t("checkout", "address")}</label>
+                      <input {...register("address")} className="luxury-input" placeholder={t("checkout", "address")} />
                       {errors.address && <p className="text-red-400 text-xs mt-1">{errors.address.message}</p>}
                     </div>
-
-                    {/* City */}
                     <div>
-                      <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">
-                        {t("checkout", "city")}
-                      </label>
-                      <input
-                        {...register("city")}
-                        className="luxury-input"
-                        placeholder={t("checkout", "city")}
-                      />
+                      <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">{t("checkout", "city")}</label>
+                      <input {...register("city")} className="luxury-input" placeholder={t("checkout", "city")} />
                       {errors.city && <p className="text-red-400 text-xs mt-1">{errors.city.message}</p>}
                     </div>
-
-                    {/* Postal code */}
                     <div>
-                      <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">
-                        {t("checkout", "postalCode")}
-                      </label>
-                      <input
-                        {...register("postalCode")}
-                        className="luxury-input"
-                        placeholder="1000"
-                      />
+                      <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">{t("checkout", "postalCode")}</label>
+                      <input {...register("postalCode")} className="luxury-input" placeholder="1000" />
                       {errors.postalCode && <p className="text-red-400 text-xs mt-1">{errors.postalCode.message}</p>}
-                    </div>
-                  </div>
-                </AnimatedSection>
-
-                {/* Payment section */}
-                <AnimatedSection delay={0.1}>
-                  <h2 className="text-xs tracking-[0.4em] uppercase text-gold font-sans mb-6">
-                    — {t("checkout", "payment")} —
-                  </h2>
-                  <div className="bg-dark-2 border border-white/5 p-6 flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center shrink-0">
-                      <svg className="w-5 h-5 text-gold/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="text-white/70 text-xs font-sans tracking-widest uppercase">
-                        {lang === "bg" ? "Сигурно плащане чрез Stripe" : "Secure payment via Stripe"}
-                      </p>
-                      <p className="text-white/30 text-xs font-sans mt-1">
-                        {lang === "bg"
-                          ? "След потвърждение ще бъдете пренасочени към страницата за плащане"
-                          : "After confirmation you will be redirected to the payment page"}
-                      </p>
                     </div>
                   </div>
                 </AnimatedSection>
@@ -225,16 +148,13 @@ export default function CheckoutPage() {
                     <span className="text-xs tracking-[0.3em] uppercase font-sans text-white/60">{t("cart", "total")}</span>
                     <span className="font-serif text-2xl text-gold font-bold">{total()} €</span>
                   </div>
-
                   <motion.button
                     type="submit"
                     disabled={submitting}
                     className="btn-luxury w-full text-center text-xs disabled:opacity-50 disabled:cursor-not-allowed"
                     whileTap={{ scale: 0.98 }}
                   >
-                    <span>
-                      {submitting ? "..." : t("checkout", "confirm")}
-                    </span>
+                    <span>{submitting ? "..." : t("checkout", "confirm")}</span>
                   </motion.button>
                 </div>
               </AnimatedSection>
