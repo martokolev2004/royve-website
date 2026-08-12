@@ -21,7 +21,6 @@ function distance(lat1: number, lng1: number, lat2: number, lng2: number) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-// Known city centers in Bulgaria for geocoding fallback
 const CITY_CENTERS: Record<string, { lat: number; lng: number }> = {
   "софия": { lat: 42.6977, lng: 23.3219 },
   "пловдив": { lat: 42.1354, lng: 24.7453 },
@@ -43,8 +42,42 @@ function getCityCenter(city: string): { lat: number; lng: number } | null {
   return null;
 }
 
+async function geocodeAddress(street: string, city: string): Promise<{ lat: number; lng: number } | null> {
+  try {
+    const url = new URL("https://nominatim.openstreetmap.org/search");
+    url.searchParams.set("street", street);
+    url.searchParams.set("city", city);
+    url.searchParams.set("country", "Bulgaria");
+    url.searchParams.set("format", "json");
+    url.searchParams.set("limit", "1");
+
+    const res = await fetch(url.toString(), {
+      headers: { "User-Agent": "royve-eyewear/1.0 orders@royve.eu" },
+      next: { revalidate: 300 },
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data.length > 0) {
+      return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+    }
+  } catch {
+    // ignore
+  }
+  return null;
+}
+
+function sortByOrigin(lockers: BNLocation[], origin: { lat: number; lng: number }) {
+  const withCoords = lockers.filter((l) => l.lat && l.lng);
+  const withoutCoords = lockers.filter((l) => !l.lat || !l.lng);
+  const sorted = withCoords
+    .map((l) => ({ ...l, dist: distance(origin.lat, origin.lng, Number(l.lat), Number(l.lng)) }))
+    .sort((a, b) => a.dist - b.dist);
+  return [...sorted, ...withoutCoords].slice(0, 8);
+}
+
 export async function GET(req: NextRequest) {
   const city = req.nextUrl.searchParams.get("city") || "";
+  const address = req.nextUrl.searchParams.get("address") || "";
 
   try {
     const res = await fetch("https://locationapi-production.boxnow.bg/v1/apms_bg-BG.json", {
@@ -69,22 +102,22 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ lockers: [], cityCenter: null });
     }
 
+    // Try to geocode specific address for more accurate sorting
+    if (address && address.length >= 5) {
+      const coords = await geocodeAddress(address, city);
+      if (coords) {
+        return NextResponse.json({
+          lockers: sortByOrigin(inCity, coords),
+          cityCenter: coords,
+        });
+      }
+    }
+
+    // Fall back to known city center
     const cityCenter = getCityCenter(city);
-
-    // Sort by distance from city center if we have coordinates
     if (cityCenter) {
-      const withCoords = inCity.filter((l) => l.lat && l.lng);
-      const withoutCoords = inCity.filter((l) => !l.lat || !l.lng);
-
-      const sorted = withCoords
-        .map((l) => ({
-          ...l,
-          dist: distance(cityCenter.lat, cityCenter.lng, Number(l.lat), Number(l.lng)),
-        }))
-        .sort((a, b) => a.dist - b.dist);
-
       return NextResponse.json({
-        lockers: [...sorted, ...withoutCoords].slice(0, 8),
+        lockers: sortByOrigin(inCity, cityCenter),
         cityCenter,
       });
     }
