@@ -45,11 +45,10 @@ export default function CartPage() {
                   >
                     <div className="relative w-24 bg-white flex-shrink-0 overflow-hidden" style={{ height: "72px" }}>
                       <Image
-                        src={`/products/${item.product.id}.jpg`}
+                        src={item.product.images[0]}
                         alt={item.product.name}
                         fill
                         className="object-contain p-1.5"
-                        onError={(e) => { (e.target as HTMLImageElement).src = `/products/${item.product.id}.svg`; }}
                         unoptimized
                       />
                     </div>
