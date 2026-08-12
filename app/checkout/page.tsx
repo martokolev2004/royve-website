@@ -158,11 +158,6 @@ function CheckoutForm() {
                 <input {...register("phone")} type="tel" className="luxury-input" placeholder="+359 ..." />
                 {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone.message}</p>}
               </div>
-              <div className="md:col-span-2">
-                <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">{t("checkout", "address")}</label>
-                <input {...register("address")} className="luxury-input" placeholder={t("checkout", "address")} />
-                {errors.address && <p className="text-red-400 text-xs mt-1">{errors.address.message}</p>}
-              </div>
               <div>
                 <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">{t("checkout", "city")}</label>
                 <input {...register("city")} className="luxury-input" placeholder={t("checkout", "city")} />
@@ -172,6 +167,11 @@ function CheckoutForm() {
                 <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">{t("checkout", "postalCode")}</label>
                 <input {...register("postalCode")} className="luxury-input" placeholder="1000" />
                 {errors.postalCode && <p className="text-red-400 text-xs mt-1">{errors.postalCode.message}</p>}
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">{t("checkout", "address")}</label>
+                <input {...register("address")} className="luxury-input" placeholder={t("checkout", "address")} />
+                {errors.address && <p className="text-red-400 text-xs mt-1">{errors.address.message}</p>}
               </div>
             </div>
           </AnimatedSection>
