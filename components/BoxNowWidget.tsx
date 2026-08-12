@@ -44,7 +44,7 @@ export default function BoxNowWidget({ partnerId, onSelect }: Props) {
     };
 
     const script = document.createElement("script");
-    script.src = "https://widget-cdn.boxnow.gr/map-widget/client/v5.js";
+    script.src = "https://widget-cdn.boxnow.bg/map-widget/client/v5.js";
     script.async = true;
     script.defer = true;
     document.head.appendChild(script);
