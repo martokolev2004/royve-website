@@ -267,18 +267,24 @@ export default function CheckoutPage() {
 
   return (
     <div className="bg-dark-1 min-h-screen pt-20">
-      <Script id="boxnow-config" strategy="beforeInteractive">{`
+      <Script id="boxnow-config" strategy="afterInteractive">{`
         window._bn_map_widget_config = {
           partnerId: 17321,
           parentElement: "#boxnowmap",
           type: "popup",
           autoclose: true,
+          buttonSelector: ".boxnow-widget-button",
           afterSelect: function(s) {
             window.__boxnowAfterSelect && window.__boxnowAfterSelect(s);
           }
         };
+        (function(d){
+          var e = d.createElement("script");
+          e.src = "https://widgetcdn.boxnow.bg/map-widget/client/v5.js";
+          e.async = true;
+          d.getElementsByTagName("head")[0].appendChild(e);
+        })(document);
       `}</Script>
-      <Script src="https://widgetcdn.boxnow.bg/map-widget/client/v5.js" strategy="afterInteractive" />
       <div id="boxnowmap" />
 
       <div className="max-w-6xl mx-auto px-6 lg:px-12 py-16">
