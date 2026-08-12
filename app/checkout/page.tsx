@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,8 +12,10 @@ import { useCartStore } from "@/lib/store";
 import AnimatedSection from "@/components/AnimatedSection";
 import Footer from "@/components/Footer";
 import dynamic from "next/dynamic";
+import type { BNSelected } from "@/components/BoxNowWidget";
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const BoxNowMap = dynamic(() => import("@/components/BoxNowMap"), { ssr: false }) as any;
+const BoxNowWidget = dynamic(() => import("@/components/BoxNowWidget"), { ssr: false }) as any;
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -27,16 +29,6 @@ const schema = z.object({
 });
 
 type FormData = z.infer<typeof schema>;
-
-interface BNLocker {
-  id: string;
-  name: string;
-  addressLine1: string;
-  postalCode?: string;
-  note?: string;
-  lat?: string;
-  lng?: string;
-}
 
 const CARD_STYLE = {
   style: {
@@ -57,38 +49,9 @@ function CheckoutForm() {
   const elements = useElements();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const [selectedLocker, setSelectedLocker] = useState<BNLocker | null>(null);
-  const [lockers, setLockers] = useState<BNLocker[]>([]);
-  const [loadingLockers, setLoadingLockers] = useState(false);
-  const [userCoords, setUserCoords] = useState<{ lat: number; lng: number } | null>(null);
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [selectedLocker, setSelectedLocker] = useState<BNSelected | null>(null);
 
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>({ resolver: zodResolver(schema) });
-  const watchedCity = watch("city");
-  const watchedAddress = watch("address");
-
-  useEffect(() => {
-    if (!watchedCity || watchedCity.length < 2) {
-      setLockers([]);
-      return;
-    }
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(async () => {
-      setLoadingLockers(true);
-      try {
-        const params = new URLSearchParams({ city: watchedCity });
-        if (watchedAddress && watchedAddress.length >= 5) params.set("address", watchedAddress);
-        const res = await fetch(`/api/boxnow-locations?${params}`);
-        const data = await res.json();
-        setLockers(data.lockers || []);
-        if (data.cityCenter) setUserCoords(data.cityCenter);
-      } catch {
-        setLockers([]);
-      } finally {
-        setLoadingLockers(false);
-      }
-    }, 700);
-  }, [watchedCity, watchedAddress]);
+  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({ resolver: zodResolver(schema) });
 
   async function onSubmit(data: FormData) {
     if (!stripe || !elements || items.length === 0) return;
@@ -102,7 +65,7 @@ function CheckoutForm() {
         body: JSON.stringify({
           ...data,
           items: items.map((i) => ({ name: i.product.name, quantity: i.quantity })),
-          boxnowLocationId: selectedLocker?.id || null,
+          boxnowLocationId: selectedLocker?.boxnowLockerId || null,
         }),
       });
       if (!res.ok) throw new Error("Failed");
@@ -136,6 +99,12 @@ function CheckoutForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      {/* Load BoxNow widget script once */}
+      <BoxNowWidget
+        partnerId={17321}
+        onSelect={(locker: BNSelected) => setSelectedLocker(locker)}
+      />
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div className="lg:col-span-2 space-y-8">
 
@@ -188,64 +157,28 @@ function CheckoutForm() {
                 <div className="flex items-center justify-between bg-dark-2 border border-[#00c853]/30 px-4 py-3">
                   <div>
                     <p className="text-[#00c853] text-[10px] tracking-widest uppercase font-sans mb-0.5">✓ Избран автомат</p>
-                    <p className="text-white text-xs font-sans">{selectedLocker.name}</p>
-                    <p className="text-white/40 text-xs font-sans mt-0.5">{selectedLocker.addressLine1}</p>
+                    <p className="text-white text-xs font-sans">{selectedLocker.boxnowLockerAddressLine1}</p>
+                    <p className="text-white/40 text-xs font-sans mt-0.5">{selectedLocker.boxnowLockerPostalCode}</p>
                   </div>
                   <button
                     type="button"
-                    onClick={() => { setSelectedLocker(null); }}
+                    onClick={() => setSelectedLocker(null)}
                     className="text-white/30 hover:text-gold text-[10px] tracking-widest uppercase font-sans transition-colors ml-4 flex-shrink-0"
                   >
                     {t("checkout", "changeLocker")}
                   </button>
                 </div>
               ) : (
-                <>
-                  <p className="text-white/40 text-xs font-sans mb-4">
-                    {watchedCity && watchedCity.length >= 2
-                      ? `BOX NOW автомати в "${watchedCity}":`
-                      : t("checkout", "boxnowDesc")}
-                  </p>
-
-                  {loadingLockers && (
-                    <p className="text-white/30 text-xs font-sans tracking-widest">Търси автомати...</p>
-                  )}
-
-                  {!loadingLockers && lockers.length > 0 && (
-                    <>
-                      <div className="mb-3 overflow-hidden border border-white/10">
-                        <BoxNowMap
-                          lockers={lockers}
-                          selected={null}
-                          onSelect={(l: BNLocker) => setSelectedLocker(l)}
-                          userLat={userCoords?.lat}
-                          userLng={userCoords?.lng}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        {lockers.map((locker) => (
-                          <button
-                            key={locker.id}
-                            type="button"
-                            onClick={() => setSelectedLocker(locker)}
-                            className="w-full text-left px-4 py-3 border border-white/10 hover:border-gold/40 hover:bg-gold/5 transition-all duration-200 group"
-                          >
-                            <p className="text-xs font-sans transition-colors text-white group-hover:text-gold">{locker.name}</p>
-                            <p className="text-white/40 text-[11px] font-sans mt-0.5">{locker.addressLine1}{locker.note ? ` — ${locker.note}` : ""}</p>
-                          </button>
-                        ))}
-                      </div>
-                    </>
-                  )}
-
-                  {!loadingLockers && lockers.length === 0 && watchedCity && watchedCity.length >= 2 && (
-                    <p className="text-white/30 text-xs font-sans">Няма намерени автомати в тази локация.</p>
-                  )}
-
-                  {(!watchedCity || watchedCity.length < 2) && (
-                    <p className="text-white/20 text-xs font-sans tracking-wide">↑ Напиши град за да видиш наличните автомати</p>
-                  )}
-                </>
+                <div>
+                  <p className="text-white/40 text-xs font-sans mb-4">{t("checkout", "boxnowDesc")}</p>
+                  <button
+                    type="button"
+                    className="boxnow-map-widget-button w-full py-3 text-xs tracking-[0.3em] uppercase font-sans font-semibold"
+                    style={{ background: "#00c853", color: "#fff", border: "none", cursor: "pointer" }}
+                  >
+                    Избери BOX NOW автомат
+                  </button>
+                </div>
               )}
             </div>
           </AnimatedSection>
@@ -308,7 +241,7 @@ function CheckoutForm() {
             {selectedLocker && (
               <div className="flex items-start gap-2 mb-4 text-xs font-sans text-[#00c853]">
                 <span className="flex-shrink-0">✓</span>
-                <span>BOX NOW: {selectedLocker.addressLine1}</span>
+                <span>BOX NOW: {selectedLocker.boxnowLockerAddressLine1}</span>
               </div>
             )}
             <div className="flex justify-between items-center mb-8">
