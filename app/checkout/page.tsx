@@ -1,6 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import Script from "next/script";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -21,11 +22,36 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
+interface BoxNowLocker {
+  id: string;
+  address: string;
+  name: string;
+}
+
 export default function CheckoutPage() {
   const { t } = useLang();
   const { items, subtotal, bundleSavings, total, clearCart } = useCartStore();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [selectedLocker, setSelectedLocker] = useState<BoxNowLocker | null>(null);
+  const [widgetReady, setWidgetReady] = useState(false);
+
+  useEffect(() => {
+    // Configure BoxNow widget callback
+    (window as unknown as Record<string, unknown>)._bn_map_widget_config = {
+      partnerId: 17321,
+      parentElement: "#boxnowmap",
+      type: "popup",
+      autoclose: true,
+      afterSelect: (selected: { boxnowLockerId: string; boxnowLockerAddressLine1: string; boxnowLockerName?: string }) => {
+        setSelectedLocker({
+          id: selected.boxnowLockerId,
+          address: selected.boxnowLockerAddressLine1,
+          name: selected.boxnowLockerName || selected.boxnowLockerAddressLine1,
+        });
+      },
+    };
+  }, []);
 
   const {
     register,
@@ -44,6 +70,7 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           ...data,
           items: items.map((i) => ({ name: i.product.name, quantity: i.quantity })),
+          boxnowLocationId: selectedLocker?.id || null,
         }),
       });
       if (!res.ok) throw new Error("Failed");
@@ -58,6 +85,13 @@ export default function CheckoutPage() {
 
   return (
     <div className="bg-dark-1 min-h-screen pt-20">
+      <Script
+        src="https://widgetcdn.boxnow.bg/map-widget/client/v5.js"
+        strategy="lazyOnload"
+        onLoad={() => setWidgetReady(true)}
+      />
+      <div id="boxnowmap" />
+
       <div className="max-w-6xl mx-auto px-6 lg:px-12 py-16">
         <AnimatedSection>
           <p className="text-gold text-xs tracking-[0.5em] uppercase font-sans mb-4">— ROYVÉ —</p>
@@ -114,6 +148,43 @@ export default function CheckoutPage() {
                   </div>
                 </AnimatedSection>
 
+                {/* BoxNow section */}
+                <AnimatedSection>
+                  <div className="border border-white/10 p-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-8 h-8 bg-[#00c853] flex items-center justify-center text-white text-xs font-bold">BN</div>
+                      <h3 className="text-xs tracking-[0.4em] uppercase text-white/60 font-sans">BOX NOW — {t("checkout", "boxnow")}</h3>
+                    </div>
+
+                    {selectedLocker ? (
+                      <div className="flex items-center justify-between bg-dark-2 border border-gold/20 px-4 py-3">
+                        <div>
+                          <p className="text-white text-xs font-sans tracking-wide">{selectedLocker.name}</p>
+                          <p className="text-white/40 text-xs font-sans mt-0.5">{selectedLocker.address}</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setSelectedLocker(null)}
+                          className="text-white/30 hover:text-gold text-[10px] tracking-widest uppercase font-sans transition-colors ml-4"
+                        >
+                          {t("checkout", "changeLocker")}
+                        </button>
+                      </div>
+                    ) : (
+                      <div>
+                        <p className="text-white/40 text-xs font-sans mb-4">{t("checkout", "boxnowDesc")}</p>
+                        <button
+                          type="button"
+                          className={`boxnow-widget-button btn-luxury text-xs ${!widgetReady ? "opacity-50 cursor-not-allowed" : ""}`}
+                          disabled={!widgetReady}
+                        >
+                          <span>{t("checkout", "selectLocker")}</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </AnimatedSection>
+
                 {error && (
                   <p className="text-red-400 text-sm font-sans bg-red-400/10 border border-red-400/20 px-4 py-3">{error}</p>
                 )}
@@ -143,6 +214,12 @@ export default function CheckoutPage() {
                         <span>−{bundleSavings()} €</span>
                       </div>
                     </>
+                  )}
+                  {selectedLocker && (
+                    <div className="flex items-center gap-2 mb-4 text-xs font-sans text-[#00c853]">
+                      <span>✓</span>
+                      <span>BOX NOW: {selectedLocker.address}</span>
+                    </div>
                   )}
                   <div className="flex justify-between items-center mb-8">
                     <span className="text-xs tracking-[0.3em] uppercase font-sans text-white/60">{t("cart", "total")}</span>

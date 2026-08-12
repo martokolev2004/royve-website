@@ -48,6 +48,10 @@ export const translations = {
     paymentSoon: { bg: "Очаква се", en: "Coming Soon" },
     confirm: { bg: "ПОТВЪРДИ ПОРЪЧКАТА", en: "CONFIRM ORDER" },
     orderSummary: { bg: "ОБОБЩЕНИЕ НА ПОРЪЧКАТА", en: "ORDER SUMMARY" },
+    boxnow: { bg: "ДОСТАВКА ДО АВТОМАТ", en: "LOCKER DELIVERY" },
+    boxnowDesc: { bg: "Избери BOX NOW автомат близо до теб за доставка.", en: "Select a BOX NOW locker near you for delivery." },
+    selectLocker: { bg: "ИЗБЕРИ АВТОМАТ", en: "SELECT LOCKER" },
+    changeLocker: { bg: "ПРОМЕНИ", en: "CHANGE" },
   },
   success: {
     title: { bg: "ПОРЪЧКАТА Е ПРИЕТА", en: "ORDER CONFIRMED" },

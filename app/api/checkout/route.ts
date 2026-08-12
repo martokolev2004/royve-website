@@ -9,7 +9,7 @@ const BUNDLE_PRICE = 80;
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { fullName, email, phone, address, city, postalCode, items } = body;
+    const { fullName, email, phone, address, city, postalCode, items, boxnowLocationId } = body;
 
     if (!items || items.length === 0) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
@@ -86,6 +86,7 @@ export async function POST(req: NextRequest) {
         total,
         paymentStatus: "pending",
         stripeSessionId: session.id,
+        boxnowLocationId: boxnowLocationId || null,
       });
     } catch (dbErr) {
       console.error("DB save error:", dbErr);

@@ -27,7 +27,9 @@ async function ensureSchema(): Promise<void> {
       items JSONB NOT NULL,
       total NUMERIC NOT NULL,
       payment_status TEXT NOT NULL DEFAULT 'pending',
-      stripe_session_id TEXT
+      stripe_session_id TEXT,
+      boxnow_location_id TEXT,
+      boxnow_reference TEXT
     )
   `);
 }
@@ -45,14 +47,16 @@ export interface OrderData {
   total: number;
   paymentStatus?: string;
   stripeSessionId?: string;
+  boxnowLocationId?: string;
+  boxnowReference?: string;
 }
 
 export async function saveOrder(order: OrderData): Promise<void> {
   await ensureSchema();
   const db = getPool();
   await db.query(
-    `INSERT INTO orders (id, timestamp, customer_name, customer_email, customer_phone, delivery_address, city, postal_code, items, total, payment_status, stripe_session_id)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
+    `INSERT INTO orders (id, timestamp, customer_name, customer_email, customer_phone, delivery_address, city, postal_code, items, total, payment_status, stripe_session_id, boxnow_location_id, boxnow_reference)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
     [
       order.id,
       order.timestamp,
@@ -66,6 +70,8 @@ export async function saveOrder(order: OrderData): Promise<void> {
       order.total,
       order.paymentStatus || "pending",
       order.stripeSessionId || null,
+      order.boxnowLocationId || null,
+      order.boxnowReference || null,
     ]
   );
 }
@@ -98,5 +104,13 @@ export async function getOrderBySessionId(stripeSessionId: string): Promise<Orde
     total: Number(row.total),
     paymentStatus: row.payment_status,
     stripeSessionId: row.stripe_session_id,
+    boxnowLocationId: row.boxnow_location_id,
+    boxnowReference: row.boxnow_reference,
   };
+}
+
+export async function updateBoxNowReference(orderId: string, boxnowReference: string): Promise<void> {
+  await ensureSchema();
+  const db = getPool();
+  await db.query(`UPDATE orders SET boxnow_reference = $1 WHERE id = $2`, [boxnowReference, orderId]);
 }
