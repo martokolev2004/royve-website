@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Script from "next/script";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -54,8 +53,30 @@ function CheckoutForm() {
   const [selectedLocker, setSelectedLocker] = useState<BoxNowLocker | null>(null);
 
   useEffect(() => {
+    // Register React callback
     (window as unknown as Record<string, unknown>).__boxnowAfterSelect = (s: { boxnowLockerId: string; boxnowLockerAddressLine1: string; boxnowLockerName?: string }) => {
       setSelectedLocker({ id: s.boxnowLockerId, address: s.boxnowLockerAddressLine1, name: s.boxnowLockerName || s.boxnowLockerAddressLine1 });
+    };
+
+    // Set config THEN load script — button is already in DOM at this point
+    (window as unknown as Record<string, unknown>)._bn_map_widget_config = {
+      partnerId: 17321,
+      parentElement: "#boxnowmap",
+      type: "popup",
+      autoclose: true,
+      buttonSelector: ".boxnow-trigger",
+      afterSelect: (s: unknown) => {
+        (window as unknown as { __boxnowAfterSelect?: (s: unknown) => void }).__boxnowAfterSelect?.(s);
+      },
+    };
+
+    const script = document.createElement("script");
+    script.src = "https://widgetcdn.boxnow.bg/map-widget/client/v5.js";
+    script.async = true;
+    document.head.appendChild(script);
+
+    return () => {
+      document.head.removeChild(script);
     };
   }, []);
 
@@ -282,24 +303,6 @@ export default function CheckoutPage() {
 
   return (
     <div className="bg-dark-1 min-h-screen pt-20">
-      <Script id="boxnow-config" strategy="afterInteractive">{`
-        window._bn_map_widget_config = {
-          partnerId: 17321,
-          parentElement: "#boxnowmap",
-          type: "popup",
-          autoclose: true,
-          buttonSelector: ".boxnow-trigger",
-          afterSelect: function(s) {
-            window.__boxnowAfterSelect && window.__boxnowAfterSelect(s);
-          }
-        };
-        (function(d){
-          var e = d.createElement("script");
-          e.src = "https://widgetcdn.boxnow.bg/map-widget/client/v5.js";
-          e.async = true;
-          d.getElementsByTagName("head")[0].appendChild(e);
-        })(document);
-      `}</Script>
       <div id="boxnowmap" />
 
       <div className="max-w-6xl mx-auto px-6 lg:px-12 py-16">
