@@ -65,6 +65,7 @@ function CheckoutForm() {
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>({ resolver: zodResolver(schema) });
   const watchedCity = watch("city");
+  const watchedAddress = watch("address");
 
   useEffect(() => {
     if (!watchedCity || watchedCity.length < 2) {
@@ -75,7 +76,9 @@ function CheckoutForm() {
     debounceRef.current = setTimeout(async () => {
       setLoadingLockers(true);
       try {
-        const res = await fetch(`/api/boxnow-locations?city=${encodeURIComponent(watchedCity)}`);
+        const params = new URLSearchParams({ city: watchedCity });
+        if (watchedAddress && watchedAddress.length >= 5) params.set("address", watchedAddress);
+        const res = await fetch(`/api/boxnow-locations?${params}`);
         const data = await res.json();
         setLockers(data);
       } catch {
@@ -83,8 +86,8 @@ function CheckoutForm() {
       } finally {
         setLoadingLockers(false);
       }
-    }, 600);
-  }, [watchedCity]);
+    }, 700);
+  }, [watchedCity, watchedAddress]);
 
   async function onSubmit(data: FormData) {
     if (!stripe || !elements || items.length === 0) return;
