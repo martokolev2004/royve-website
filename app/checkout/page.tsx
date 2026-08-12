@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,6 +31,14 @@ interface BoxNowLocker {
   name: string;
 }
 
+interface BoxNowAPILocation {
+  id: string;
+  name: string;
+  addressLine1: string;
+  postalCode: string;
+  note?: string;
+}
+
 const CARD_STYLE = {
   style: {
     base: {
@@ -51,48 +59,32 @@ function CheckoutForm() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [selectedLocker, setSelectedLocker] = useState<BoxNowLocker | null>(null);
-
-  useEffect(() => {
-    // Register React callback
-    (window as unknown as Record<string, unknown>).__boxnowAfterSelect = (s: { boxnowLockerId: string; boxnowLockerAddressLine1: string; boxnowLockerName?: string }) => {
-      setSelectedLocker({ id: s.boxnowLockerId, address: s.boxnowLockerAddressLine1, name: s.boxnowLockerName || s.boxnowLockerAddressLine1 });
-    };
-
-    // Set config THEN load script — button is already in DOM at this point
-    (window as unknown as Record<string, unknown>)._bn_map_widget_config = {
-      partnerId: 17321,
-      parentElement: "#boxnowmap",
-      type: "popup",
-      autoclose: true,
-      buttonSelector: ".boxnow-trigger",
-      afterSelect: (s: unknown) => {
-        (window as unknown as { __boxnowAfterSelect?: (s: unknown) => void }).__boxnowAfterSelect?.(s);
-      },
-    };
-
-    const script = document.createElement("script");
-    script.src = "https://widgetcdn.boxnow.bg/map-widget/client/v5.js";
-    script.async = true;
-    document.head.appendChild(script);
-
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, []);
+  const [lockers, setLockers] = useState<BoxNowAPILocation[]>([]);
+  const [loadingLockers, setLoadingLockers] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>({ resolver: zodResolver(schema) });
   const watchedCity = watch("city");
-  const watchedPostal = watch("postalCode");
 
-  function openBoxNow() {
-    const location = (watchedPostal?.trim() || watchedCity?.trim() || "");
-    const w = window as unknown as { _bn_map_widget_config?: Record<string, unknown> };
-    if (w._bn_map_widget_config) {
-      w._bn_map_widget_config.zip = location || undefined;
-      w._bn_map_widget_config.gps = !location;
+  useEffect(() => {
+    if (!watchedCity || watchedCity.length < 2) {
+      setLockers([]);
+      return;
     }
-    document.querySelector<HTMLButtonElement>(".boxnow-trigger")?.click();
-  }
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(async () => {
+      setLoadingLockers(true);
+      try {
+        const res = await fetch(`/api/boxnow-locations?city=${encodeURIComponent(watchedCity)}`);
+        const data = await res.json();
+        setLockers(data);
+      } catch {
+        setLockers([]);
+      } finally {
+        setLoadingLockers(false);
+      }
+    }, 600);
+  }, [watchedCity]);
 
   async function onSubmit(data: FormData) {
     if (!stripe || !elements || items.length === 0) return;
@@ -100,7 +92,6 @@ function CheckoutForm() {
     setError("");
 
     try {
-      // Create PaymentIntent server-side
       const res = await fetch("/api/payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -110,21 +101,16 @@ function CheckoutForm() {
           boxnowLocationId: selectedLocker?.id || null,
         }),
       });
-      if (!res.ok) throw new Error("Failed to create payment");
+      if (!res.ok) throw new Error("Failed");
       const { clientSecret, orderId } = await res.json();
 
-      // Confirm card payment directly on site
       const cardNumber = elements.getElement(CardNumberElement);
       if (!cardNumber) throw new Error("Card element not found");
 
       const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: cardNumber,
-          billing_details: {
-            name: data.fullName,
-            email: data.email,
-            phone: data.phone,
-          },
+          billing_details: { name: data.fullName, email: data.email, phone: data.phone },
         },
       });
 
@@ -186,33 +172,65 @@ function CheckoutForm() {
             </div>
           </AnimatedSection>
 
-          {/* BoxNow */}
+          {/* BoxNow locker selection */}
           <AnimatedSection>
             <div className="border border-white/10 p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 bg-[#00c853] flex items-center justify-center text-white text-xs font-bold">BN</div>
+                <div className="w-8 h-8 bg-[#00c853] flex items-center justify-center text-white text-xs font-bold flex-shrink-0">BN</div>
                 <h3 className="text-xs tracking-[0.4em] uppercase text-white/60 font-sans">BOX NOW — {t("checkout", "boxnow")}</h3>
               </div>
-              {/* Hidden real trigger that the widget binds to */}
-              <button type="button" className="boxnow-widget-button boxnow-trigger hidden" aria-hidden="true" />
 
               {selectedLocker ? (
-                <div className="flex items-center justify-between bg-dark-2 border border-gold/20 px-4 py-3">
+                <div className="flex items-center justify-between bg-dark-2 border border-[#00c853]/30 px-4 py-3">
                   <div>
-                    <p className="text-white text-xs font-sans tracking-wide">{selectedLocker.name}</p>
+                    <p className="text-[#00c853] text-[10px] tracking-widest uppercase font-sans mb-0.5">✓ Избран автомат</p>
+                    <p className="text-white text-xs font-sans">{selectedLocker.name}</p>
                     <p className="text-white/40 text-xs font-sans mt-0.5">{selectedLocker.address}</p>
                   </div>
-                  <button type="button" onClick={() => setSelectedLocker(null)} className="text-white/30 hover:text-gold text-[10px] tracking-widest uppercase font-sans transition-colors ml-4">
+                  <button
+                    type="button"
+                    onClick={() => { setSelectedLocker(null); }}
+                    className="text-white/30 hover:text-gold text-[10px] tracking-widest uppercase font-sans transition-colors ml-4 flex-shrink-0"
+                  >
                     {t("checkout", "changeLocker")}
                   </button>
                 </div>
               ) : (
-                <div>
-                  <p className="text-white/40 text-xs font-sans mb-4">{t("checkout", "boxnowDesc")}</p>
-                  <button type="button" onClick={openBoxNow} className="btn-luxury text-xs">
-                    <span>{t("checkout", "selectLocker")}</span>
-                  </button>
-                </div>
+                <>
+                  <p className="text-white/40 text-xs font-sans mb-4">
+                    {watchedCity && watchedCity.length >= 2
+                      ? `BOX NOW автомати в "${watchedCity}":`
+                      : t("checkout", "boxnowDesc")}
+                  </p>
+
+                  {loadingLockers && (
+                    <p className="text-white/30 text-xs font-sans tracking-widest">Търси автомати...</p>
+                  )}
+
+                  {!loadingLockers && lockers.length > 0 && (
+                    <div className="space-y-2">
+                      {lockers.map((locker) => (
+                        <button
+                          key={locker.id}
+                          type="button"
+                          onClick={() => setSelectedLocker({ id: locker.id, address: locker.addressLine1, name: locker.name })}
+                          className="w-full text-left px-4 py-3 border border-white/10 hover:border-gold/40 hover:bg-gold/5 transition-all duration-200 group"
+                        >
+                          <p className="text-white text-xs font-sans group-hover:text-gold transition-colors">{locker.name}</p>
+                          <p className="text-white/40 text-[11px] font-sans mt-0.5">{locker.addressLine1}{locker.note ? ` — ${locker.note}` : ""}</p>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {!loadingLockers && lockers.length === 0 && watchedCity && watchedCity.length >= 2 && (
+                    <p className="text-white/30 text-xs font-sans">Няма намерени автомати в тази локация.</p>
+                  )}
+
+                  {(!watchedCity || watchedCity.length < 2) && (
+                    <p className="text-white/20 text-xs font-sans tracking-wide">↑ Напиши град за да видиш наличните автомати</p>
+                  )}
+                </>
               )}
             </div>
           </AnimatedSection>
@@ -273,8 +291,9 @@ function CheckoutForm() {
               </>
             )}
             {selectedLocker && (
-              <div className="flex items-center gap-2 mb-4 text-xs font-sans text-[#00c853]">
-                <span>✓</span><span>BOX NOW: {selectedLocker.address}</span>
+              <div className="flex items-start gap-2 mb-4 text-xs font-sans text-[#00c853]">
+                <span className="flex-shrink-0">✓</span>
+                <span>BOX NOW: {selectedLocker.name}</span>
               </div>
             )}
             <div className="flex justify-between items-center mb-8">
@@ -303,8 +322,6 @@ export default function CheckoutPage() {
 
   return (
     <div className="bg-dark-1 min-h-screen pt-20">
-      <div id="boxnowmap" />
-
       <div className="max-w-6xl mx-auto px-6 lg:px-12 py-16">
         <AnimatedSection>
           <p className="text-gold text-xs tracking-[0.5em] uppercase font-sans mb-4">— ROYVÉ —</p>
