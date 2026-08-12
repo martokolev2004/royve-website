@@ -339,6 +339,10 @@ export default function CheckoutPage() {
     <div className="bg-dark-1 min-h-screen pt-20">
       <div className="max-w-6xl mx-auto px-6 lg:px-12 py-16">
         <AnimatedSection>
+          <Link href="/cart" className="inline-flex items-center gap-2 text-white/30 hover:text-gold text-xs tracking-widest uppercase font-sans transition-colors duration-200 mb-8 group">
+            <span className="group-hover:-translate-x-1 transition-transform duration-200">←</span>
+            <span>Обратно към количката</span>
+          </Link>
           <p className="text-gold text-xs tracking-[0.5em] uppercase font-sans mb-4">— ROYVÉ —</p>
           <h1 className="font-serif text-5xl font-bold text-white tracking-widest mb-12">{t("checkout", "title")}</h1>
         </AnimatedSection>
