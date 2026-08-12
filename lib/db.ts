@@ -76,6 +76,12 @@ export async function saveOrder(order: OrderData): Promise<void> {
   );
 }
 
+export async function markOrderPaidById(orderId: string): Promise<void> {
+  await ensureSchema();
+  const db = getPool();
+  await db.query(`UPDATE orders SET payment_status = 'paid' WHERE id = $1`, [orderId]);
+}
+
 export async function markOrderPaid(stripeSessionId: string): Promise<void> {
   await ensureSchema();
   const db = getPool();
@@ -89,6 +95,30 @@ export async function getOrderBySessionId(stripeSessionId: string): Promise<Orde
   await ensureSchema();
   const db = getPool();
   const res = await db.query(`SELECT * FROM orders WHERE stripe_session_id = $1`, [stripeSessionId]);
+  if (res.rows.length === 0) return null;
+  const row = res.rows[0];
+  return {
+    id: row.id,
+    timestamp: row.timestamp,
+    customerName: row.customer_name,
+    customerEmail: row.customer_email,
+    customerPhone: row.customer_phone,
+    deliveryAddress: row.delivery_address,
+    city: row.city,
+    postalCode: row.postal_code,
+    items: row.items,
+    total: Number(row.total),
+    paymentStatus: row.payment_status,
+    stripeSessionId: row.stripe_session_id,
+    boxnowLocationId: row.boxnow_location_id,
+    boxnowReference: row.boxnow_reference,
+  };
+}
+
+export async function getOrderById(orderId: string): Promise<OrderData | null> {
+  await ensureSchema();
+  const db = getPool();
+  const res = await db.query(`SELECT * FROM orders WHERE id = $1`, [orderId]);
   if (res.rows.length === 0) return null;
   const row = res.rows[0];
   return {
