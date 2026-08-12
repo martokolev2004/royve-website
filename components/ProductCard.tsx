@@ -11,7 +11,8 @@ interface Props { product: Product }
 
 export default function ProductCard({ product }: Props) {
   const { t, lang } = useLang();
-  const addItem = useCartStore((s) => s.addItem);
+  const { addItem, items, updateQuantity } = useCartStore();
+  const cartItem = items.find((i) => i.product.id === product.id);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const x = useMotionValue(0);
@@ -88,13 +89,36 @@ export default function ProductCard({ product }: Props) {
         <p className="text-white/40 text-xs font-sans leading-relaxed line-clamp-2 mt-2 mb-4">
           {product.description[lang]}
         </p>
-        <motion.button
-          onClick={() => addItem(product)}
-          className="btn-luxury w-full text-center text-xs"
-          whileTap={{ scale: 0.97 }}
-        >
-          <span>{t("shop", "addBtn")}</span>
-        </motion.button>
+        {cartItem ? (
+          <div className="flex items-center border border-gold/40 w-full">
+            <motion.button
+              onClick={(e) => { e.preventDefault(); updateQuantity(product.id, cartItem.quantity - 1); }}
+              className="w-10 h-10 flex items-center justify-center text-gold text-lg hover:bg-gold/10 transition-colors font-serif flex-shrink-0"
+              whileTap={{ scale: 0.9 }}
+            >
+              −
+            </motion.button>
+            <div className="flex-1 flex flex-col items-center justify-center h-10">
+              <span className="text-white font-serif text-base leading-none">{cartItem.quantity}</span>
+              <span className="text-gold/60 text-[8px] tracking-widest uppercase font-sans mt-0.5">{t("product", "inCart")}</span>
+            </div>
+            <motion.button
+              onClick={(e) => { e.preventDefault(); addItem(product); }}
+              className="w-10 h-10 flex items-center justify-center text-gold text-lg hover:bg-gold/10 transition-colors font-serif flex-shrink-0"
+              whileTap={{ scale: 0.9 }}
+            >
+              +
+            </motion.button>
+          </div>
+        ) : (
+          <motion.button
+            onClick={() => addItem(product)}
+            className="btn-luxury w-full text-center text-xs"
+            whileTap={{ scale: 0.97 }}
+          >
+            <span>{t("shop", "addBtn")}</span>
+          </motion.button>
+        )}
       </div>
     </motion.div>
   );

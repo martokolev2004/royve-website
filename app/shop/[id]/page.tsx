@@ -21,7 +21,8 @@ export default function ProductPage({ params }: { params: { id: string } }) {
   if (!product) notFound();
 
   const { t, lang } = useLang();
-  const addItem = useCartStore((s) => s.addItem);
+  const { addItem, items, updateQuantity, removeItem } = useCartStore();
+  const cartItem = items.find((i) => i.product.id === product.id);
   const related = products.filter((p) => p.id !== product.id).slice(0, 3);
 
   return (
@@ -96,13 +97,36 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                 </ul>
               </div>
 
-              <motion.button
-                onClick={() => addItem(product)}
-                className="btn-luxury text-center text-xs w-full md:w-64"
-                whileTap={{ scale: 0.98 }}
-              >
-                <span>{t("product", "addToCart")}</span>
-              </motion.button>
+              {cartItem ? (
+                <div className="flex items-center gap-0 w-full md:w-64 border border-gold/40">
+                  <motion.button
+                    onClick={() => updateQuantity(product.id, cartItem.quantity - 1)}
+                    className="w-12 h-12 flex items-center justify-center text-gold text-xl hover:bg-gold/10 transition-colors font-serif"
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    −
+                  </motion.button>
+                  <div className="flex-1 flex flex-col items-center justify-center h-12">
+                    <span className="text-white font-serif text-lg leading-none">{cartItem.quantity}</span>
+                    <span className="text-gold/60 text-[9px] tracking-widest uppercase font-sans mt-0.5">{t("product", "inCart")}</span>
+                  </div>
+                  <motion.button
+                    onClick={() => addItem(product)}
+                    className="w-12 h-12 flex items-center justify-center text-gold text-xl hover:bg-gold/10 transition-colors font-serif"
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    +
+                  </motion.button>
+                </div>
+              ) : (
+                <motion.button
+                  onClick={() => addItem(product)}
+                  className="btn-luxury text-center text-xs w-full md:w-64"
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <span>{t("product", "addToCart")}</span>
+                </motion.button>
+              )}
             </div>
           </AnimatedSection>
         </div>

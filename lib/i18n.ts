@@ -20,6 +20,7 @@ export const translations = {
   },
   product: {
     addToCart: { bg: "ДОБАВИ В КОЛИЧКАТА", en: "ADD TO CART" },
+    inCart: { bg: "В КОЛИЧКАТА", en: "IN CART" },
     related: { bg: "СВЪРЗАНИ ПРОДУКТИ", en: "RELATED PRODUCTS" },
     back: { bg: "НАЗАД КЪМ МАГАЗИНА", en: "BACK TO SHOP" },
     details: { bg: "ДЕТАЙЛИ", en: "DETAILS" },
