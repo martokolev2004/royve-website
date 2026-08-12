@@ -218,8 +218,6 @@ function CheckoutForm() {
                           lockers={lockers}
                           selected={null}
                           onSelect={(l: BNLocker) => setSelectedLocker(l)}
-                          userLat={userCoords?.lat}
-                          userLng={userCoords?.lng}
                         />
                       </div>
                       <div className="space-y-2">
