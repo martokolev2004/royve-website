@@ -7,7 +7,7 @@ import ProductCard from "@/components/ProductCard";
 import AnimatedSection from "@/components/AnimatedSection";
 import Footer from "@/components/Footer";
 
-const categories = ["ALL", "Classic", "Rimless", "Sport"] as const;
+const categories = ["ALL", "Classic", "Rimless"] as const;
 
 export default function ShopPage() {
   const { t } = useLang();

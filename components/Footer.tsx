@@ -26,11 +26,12 @@ export default function Footer() {
           <div>
             <h4 className="text-xs tracking-[0.3em] text-gold uppercase mb-4 font-sans">{t("footer", "follow")}</h4>
             <div className="flex flex-col gap-2">
-              {["INSTAGRAM", "TIKTOK", "FACEBOOK"].map((s) => (
-                <a key={s} href="#" className="text-white/40 text-xs tracking-widest hover:text-gold transition-colors font-sans">
-                  {s}
-                </a>
-              ))}
+              <a href="https://www.instagram.com/royve.eyewear?igsh=Nmtxb2NiZ3J4eGp2" target="_blank" rel="noopener noreferrer" className="text-white/40 text-xs tracking-widest hover:text-gold transition-colors font-sans">
+                INSTAGRAM
+              </a>
+              <a href="https://www.tiktok.com/@royve.eyewear?_r=1&_t=ZN-98xdilAYnwM" target="_blank" rel="noopener noreferrer" className="text-white/40 text-xs tracking-widest hover:text-gold transition-colors font-sans">
+                TIKTOK
+              </a>
             </div>
           </div>
         </div>
