@@ -49,10 +49,10 @@ export const products: Product[] = [
     bestSeller: true,
     category: "Rimless",
     description: {
-      bg: "Без граници. Безободна конструкция с златна арматура и сини стъкла — лекота с характер.",
+      bg: "Без граници. Конструкция без рамка със златна арматура и сини стъкла — лекота с характер.",
       en: "No boundaries. Rimless construction with gold hardware and blue lenses — lightness with character.",
     },
-    details: ["Безободна конструкция", "Златна метална арматура", "Сини стъкла", "UV400 защита"],
+    details: ["Без рамка", "Златна метална арматура", "Сини стъкла", "UV400 защита"],
     images: ["/products/azure-1.jpg", "/products/azure-2.jpg"],
   },
   {
@@ -63,10 +63,10 @@ export const products: Product[] = [
     bestSeller: true,
     category: "Rimless",
     description: {
-      bg: "Тъмнина без граници. Безободна конструкция с тъмни стъкла и златна арматура — мистерия в чист вид.",
+      bg: "Тъмнина без граници. Конструкция без рамка с тъмни стъкла и златна арматура — мистерия в чист вид.",
       en: "Darkness without boundaries. Rimless construction with dark lenses and gold hardware — mystery in pure form.",
     },
-    details: ["Безободна конструкция", "Златна метална арматура", "Тъмни стъкла", "UV400 защита"],
+    details: ["Без рамка", "Златна метална арматура", "Тъмни стъкла", "UV400 защита"],
     images: ["/products/obsidian-1.jpg", "/products/obsidian-2.jpg"],
   },
   {
@@ -92,10 +92,10 @@ export const products: Product[] = [
     originalPrice: 59.99,
     category: "Rimless",
     description: {
-      bg: "Топлина без граници. Златна безободна рамка с кехлибарен градиент — лукс в чист вид.",
+      bg: "Топлина без граници. Златна рамка без ободи с кехлибарен градиент — лукс в чист вид.",
       en: "Warmth without limits. Gold rimless frame with amber gradient lenses — luxury in pure form.",
     },
-    details: ["Безободна конструкция", "Златна метална арматура", "Кехлибарени градиентни стъкла", "UV400 защита", "Включва луксозна кутия"],
+    details: ["Без рамка", "Златна метална арматура", "Кехлибарени градиентни стъкла", "UV400 защита", "Включва луксозна кутия"],
     images: ["/products/sahra-2.jpg", "/products/sahra-1.jpg"],
   },
   {
@@ -120,10 +120,10 @@ export const products: Product[] = [
     originalPrice: 54.99,
     category: "Rimless",
     description: {
-      bg: "Синева без граници. Тънка метална безободна рамка с сини стъкла — лекота с характер.",
+      bg: "Синева без граници. Тънка метална рамка без ободи със сини стъкла — лекота с характер.",
       en: "Blue without boundaries. Thin metal rimless frame with blue lenses — lightness with character.",
     },
-    details: ["Безободна конструкция", "Тънка метална арматура", "Сини стъкла", "UV400 защита", "Включва луксозна кутия"],
+    details: ["Без рамка", "Тънка метална арматура", "Сини стъкла", "UV400 защита", "Включва луксозна кутия"],
     images: ["/products/azure2-1.jpg", "/products/azure2-2.jpg"],
   },
   {
@@ -134,10 +134,10 @@ export const products: Product[] = [
     originalPrice: 54.99,
     category: "Rimless",
     description: {
-      bg: "Тъмна прецизност. Черна тънка метална безободна рамка — минимализъм с максимален ефект.",
+      bg: "Тъмна прецизност. Черна тънка метална рамка без ободи — минимализъм с максимален ефект.",
       en: "Dark precision. Black thin metal rimless frame — minimalism with maximum impact.",
     },
-    details: ["Безободна конструкция", "Тънка черна метална арматура", "Тъмни стъкла", "UV400 защита", "Включва луксозна кутия"],
+    details: ["Без рамка", "Тънка черна метална арматура", "Тъмни стъкла", "UV400 защита", "Включва луксозна кутия"],
     images: ["/products/velor-1.jpg", "/products/velor-2.jpg"],
   },
   {
