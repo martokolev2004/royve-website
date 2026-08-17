@@ -97,7 +97,11 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                 </ul>
               </div>
 
-              {cartItem ? (
+              {product.soldOut ? (
+                <div className="w-full md:w-64 border border-white/10 py-4 text-center">
+                  <span className="text-white/30 text-xs tracking-[0.3em] uppercase font-sans">Sold Out</span>
+                </div>
+              ) : cartItem ? (
                 <div className="flex items-center gap-0 w-full md:w-64 border border-gold/40">
                   <motion.button
                     onClick={() => updateQuantity(product.id, cartItem.quantity - 1)}

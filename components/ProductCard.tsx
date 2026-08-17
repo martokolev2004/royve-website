@@ -60,7 +60,12 @@ export default function ProductCard({ product }: Props) {
               -{Math.round(100 - (product.price / product.originalPrice) * 100)}%
             </span>
           )}
-          {product.bestSeller && (
+          {product.soldOut && (
+            <span className="absolute top-3 right-3 bg-white/10 border border-white/30 text-white/60 text-[10px] font-bold tracking-widest uppercase px-2 py-1">
+              Sold Out
+            </span>
+          )}
+          {!product.soldOut && product.bestSeller && (
             <span className="absolute top-3 right-3 bg-dark-1/90 border border-gold text-gold text-[10px] font-bold tracking-widest uppercase px-2 py-1">
               Best Seller
             </span>
@@ -89,7 +94,11 @@ export default function ProductCard({ product }: Props) {
         <p className="text-white/40 text-xs font-sans leading-relaxed line-clamp-2 mt-2 mb-4">
           {product.description[lang]}
         </p>
-        {cartItem ? (
+        {product.soldOut ? (
+          <div className="w-full border border-white/10 py-3 text-center">
+            <span className="text-white/30 text-xs tracking-[0.3em] uppercase font-sans">Sold Out</span>
+          </div>
+        ) : cartItem ? (
           <div className="relative border border-gold w-full flex items-center overflow-hidden" style={{ height: "46px" }}>
             <motion.button
               onClick={(e) => { e.preventDefault(); updateQuantity(product.id, cartItem.quantity - 1); }}
