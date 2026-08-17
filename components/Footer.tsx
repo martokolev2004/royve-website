@@ -17,8 +17,8 @@ export default function Footer() {
           {/* Contact */}
           <div>
             <h4 className="text-xs tracking-[0.3em] text-gold uppercase mb-4 font-sans">{t("footer", "contact")}</h4>
-            <a href="mailto:hello@royve.com" className="text-white/40 text-sm hover:text-gold transition-colors">
-              hello@royve.com
+            <a href="mailto:royve.eyewear@gmail.com" className="text-white/40 text-sm hover:text-gold transition-colors">
+              royve.eyewear@gmail.com
             </a>
           </div>
 
