@@ -127,7 +127,7 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
-      <div className="max-w-5xl mx-auto px-6 py-10">
+      <div className="max-w-5xl mx-auto px-3 sm:px-6 py-6 sm:py-10">
         <div className="flex items-center justify-between mb-8">
           <div>
             <p className="text-gold text-xs tracking-[0.4em] uppercase font-sans mb-1">— ROYVÉ —</p>
@@ -139,28 +139,28 @@ export default function AdminPage() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
-          <div className="bg-[#111] border border-white/5 p-4">
-            <p className="text-white/30 text-[10px] tracking-widest uppercase font-sans mb-1">Платени поръчки</p>
-            <p className="font-serif text-2xl text-gold">{paidOrders.length}</p>
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-8">
+          <div className="bg-[#111] border border-white/5 p-3 sm:p-4">
+            <p className="text-white/30 text-[9px] sm:text-[10px] tracking-widest uppercase font-sans mb-1">Платени</p>
+            <p className="font-serif text-xl sm:text-2xl text-gold">{paidOrders.length}</p>
           </div>
-          <div className="bg-[#111] border border-white/5 p-4">
-            <p className="text-white/30 text-[10px] tracking-widest uppercase font-sans mb-1">Общо приходи</p>
-            <p className="font-serif text-2xl text-gold">{paidOrders.reduce((s, o) => s + o.total, 0).toFixed(2)} €</p>
+          <div className="bg-[#111] border border-white/5 p-3 sm:p-4">
+            <p className="text-white/30 text-[9px] sm:text-[10px] tracking-widest uppercase font-sans mb-1">Приходи</p>
+            <p className="font-serif text-xl sm:text-2xl text-gold">{paidOrders.reduce((s, o) => s + o.total, 0).toFixed(2)} €</p>
           </div>
-          <div className="bg-[#111] border border-white/5 p-4">
-            <p className="text-white/30 text-[10px] tracking-widest uppercase font-sans mb-1">Всички поръчки</p>
-            <p className="font-serif text-2xl text-white/50">{orders.length}</p>
+          <div className="bg-[#111] border border-white/5 p-3 sm:p-4">
+            <p className="text-white/30 text-[9px] sm:text-[10px] tracking-widest uppercase font-sans mb-1">Всички</p>
+            <p className="font-serif text-xl sm:text-2xl text-white/50">{orders.length}</p>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-0 mb-6 border-b border-white/10">
+        <div className="flex gap-0 mb-6 border-b border-white/10 overflow-x-auto">
           {(["orders", "inventory", "promos"] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`px-6 py-3 text-xs tracking-widest uppercase font-sans transition-colors border-b-2 -mb-px ${
+              className={`px-4 sm:px-6 py-3 text-xs tracking-widest uppercase font-sans transition-colors border-b-2 -mb-px flex-shrink-0 ${
                 tab === t ? "border-gold text-gold" : "border-transparent text-white/30 hover:text-white/60"
               }`}
             >
@@ -182,18 +182,21 @@ export default function AdminPage() {
                   onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
                   className="w-full text-left px-5 py-4 flex items-center justify-between gap-4"
                 >
-                  <div className="flex items-center gap-4 min-w-0">
+                  <div className="flex items-center gap-2 sm:gap-4 min-w-0">
                     <span className={`text-[10px] px-2 py-0.5 font-sans tracking-widest uppercase flex-shrink-0 ${
                       order.paymentStatus === "paid" ? "bg-green-500/20 text-green-400 border border-green-500/30" : "bg-white/5 text-white/30 border border-white/10"
                     }`}>
-                      {order.paymentStatus === "paid" ? "Платена" : "Чакаща"}
+                      {order.paymentStatus === "paid" ? "✓" : "…"}
                     </span>
-                    <span className="text-white text-xs font-sans truncate">{order.customerName}</span>
+                    <div className="min-w-0">
+                      <span className="text-white text-xs font-sans truncate block">{order.customerName}</span>
+                      <span className="text-white/30 text-[10px] font-sans truncate block sm:hidden">{new Date(order.timestamp).toLocaleDateString("bg-BG")}</span>
+                    </div>
                     <span className="text-white/30 text-xs font-sans truncate hidden md:block">{order.customerEmail}</span>
                   </div>
-                  <div className="flex items-center gap-4 flex-shrink-0">
+                  <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
                     <span className="text-gold font-serif text-sm">{order.total} €</span>
-                    <span className="text-white/20 text-xs font-sans">{new Date(order.timestamp).toLocaleDateString("bg-BG")}</span>
+                    <span className="text-white/20 text-xs font-sans hidden sm:block">{new Date(order.timestamp).toLocaleDateString("bg-BG")}</span>
                     <span className="text-white/30 text-xs">{expandedOrder === order.id ? "▲" : "▼"}</span>
                   </div>
                 </button>
@@ -241,9 +244,9 @@ export default function AdminPage() {
               const editVal = editQty[product.id] ?? qty;
               const changed = editVal !== qty;
               return (
-                <div key={product.id} className="border border-white/10 px-5 py-4 flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-4 min-w-0">
-                    <span className="font-serif text-white text-sm tracking-widest w-24 flex-shrink-0">{product.name}</span>
+                <div key={product.id} className="border border-white/10 px-3 sm:px-5 py-3 sm:py-4 flex items-center justify-between gap-2 sm:gap-4">
+                  <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+                    <span className="font-serif text-white text-sm tracking-widest w-20 sm:w-24 flex-shrink-0">{product.name}</span>
                     {qty === 0 && (
                       <span className="text-[10px] px-2 py-0.5 font-sans tracking-widest uppercase bg-red-500/10 text-red-400 border border-red-500/20">
                         Sold Out
@@ -255,26 +258,26 @@ export default function AdminPage() {
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1 sm:gap-3">
                     <button
                       onClick={() => setEditQty((p) => ({ ...p, [product.id]: Math.max(0, (p[product.id] ?? qty) - 1) }))}
-                      className="w-8 h-8 border border-white/20 text-white/60 hover:text-gold hover:border-gold/40 text-lg font-serif transition-colors flex items-center justify-center"
+                      className="w-9 h-9 border border-white/20 text-white/60 hover:text-gold hover:border-gold/40 text-lg font-serif transition-colors flex items-center justify-center flex-shrink-0"
                     >−</button>
                     <input
                       type="number"
                       min={0}
                       value={editVal}
                       onChange={(e) => setEditQty((p) => ({ ...p, [product.id]: Math.max(0, Number(e.target.value)) }))}
-                      className="w-14 text-center bg-transparent border border-white/20 text-white text-sm font-sans py-1 outline-none focus:border-gold/50"
+                      className="w-12 sm:w-14 text-center bg-transparent border border-white/20 text-white text-sm font-sans py-1 outline-none focus:border-gold/50"
                     />
                     <button
                       onClick={() => setEditQty((p) => ({ ...p, [product.id]: (p[product.id] ?? qty) + 1 }))}
-                      className="w-8 h-8 border border-white/20 text-white/60 hover:text-gold hover:border-gold/40 text-lg font-serif transition-colors flex items-center justify-center"
+                      className="w-9 h-9 border border-white/20 text-white/60 hover:text-gold hover:border-gold/40 text-lg font-serif transition-colors flex items-center justify-center flex-shrink-0"
                     >+</button>
                     <button
                       onClick={() => saveInventory(product.id)}
                       disabled={!changed}
-                      className={`px-4 py-1.5 text-[10px] tracking-widest uppercase font-sans transition-colors ${
+                      className={`px-3 sm:px-4 py-1.5 text-[10px] tracking-widest uppercase font-sans transition-colors flex-shrink-0 ${
                         changed
                           ? "border border-gold text-gold hover:bg-gold hover:text-black cursor-pointer"
                           : "border border-white/10 text-white/20 cursor-default"
@@ -295,13 +298,13 @@ export default function AdminPage() {
             {/* Add new */}
             <div className="border border-white/10 px-5 py-4">
               <p className="text-white/30 text-[10px] tracking-widest uppercase font-sans mb-3">Нов промокод</p>
-              <div className="flex items-center gap-3 flex-wrap">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
                 <input
                   type="text"
                   value={newPromoCode}
                   onChange={(e) => setNewPromoCode(e.target.value)}
                   placeholder="Код"
-                  className="bg-transparent border border-white/20 text-white text-sm font-sans px-3 py-2 outline-none focus:border-gold/50 w-44"
+                  className="bg-transparent border border-white/20 text-white text-sm font-sans px-3 py-2 outline-none focus:border-gold/50 flex-1 sm:w-44"
                 />
                 <div className="flex items-center gap-2">
                   <input
@@ -327,8 +330,8 @@ export default function AdminPage() {
             {/* List */}
             {promos.length === 0 && <p className="text-white/20 text-xs font-sans">Няма промокодове.</p>}
             {promos.map((promo) => (
-              <div key={promo.code} className="border border-white/10 px-5 py-4 flex items-center justify-between gap-4">
-                <div className="flex items-center gap-4 min-w-0">
+              <div key={promo.code} className="border border-white/10 px-3 sm:px-5 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
                   <span className="font-mono text-white text-sm tracking-widest">{promo.code}</span>
                   <span className="text-gold font-serif text-sm">{promo.discount}%</span>
                   <span className={`text-[10px] px-2 py-0.5 font-sans tracking-widest uppercase border ${
@@ -339,16 +342,16 @@ export default function AdminPage() {
                     {promo.active ? "Активен" : "Неактивен"}
                   </span>
                 </div>
-                <div className="flex items-center gap-3 flex-shrink-0">
+                <div className="flex items-center gap-2 flex-shrink-0">
                   <button
                     onClick={() => togglePromo(promo.code, !promo.active, promo.discount)}
-                    className="px-4 py-1.5 text-[10px] tracking-widest uppercase font-sans border border-white/20 text-white/40 hover:text-gold hover:border-gold/40 transition-colors"
+                    className="flex-1 sm:flex-none px-3 sm:px-4 py-2 text-[10px] tracking-widest uppercase font-sans border border-white/20 text-white/40 hover:text-gold hover:border-gold/40 transition-colors"
                   >
                     {promo.active ? "Деактивирай" : "Активирай"}
                   </button>
                   <button
                     onClick={() => deletePromo(promo.code)}
-                    className="px-4 py-1.5 text-[10px] tracking-widest uppercase font-sans border border-red-500/20 text-red-400/60 hover:text-red-400 hover:border-red-500/40 transition-colors"
+                    className="flex-1 sm:flex-none px-3 sm:px-4 py-2 text-[10px] tracking-widest uppercase font-sans border border-red-500/20 text-red-400/60 hover:text-red-400 hover:border-red-500/40 transition-colors"
                   >
                     Изтрий
                   </button>
