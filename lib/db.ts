@@ -12,7 +12,10 @@ function getPool(): Pool {
   return pool;
 }
 
-const PRODUCT_IDS = ["noir", "amber", "epoc", "obsidian", "krypt", "sahra", "monarch", "azure", "velor", "octave"];
+const INITIAL_STOCK: Record<string, number> = {
+  noir: 10, amber: 10, epoc: 10, obsidian: 10, krypt: 0,
+  sahra: 10, monarch: 10, azure: 10, velor: 10, octave: 10,
+};
 
 async function ensureSchema(): Promise<void> {
   const db = getPool();
@@ -22,11 +25,10 @@ async function ensureSchema(): Promise<void> {
       quantity INT NOT NULL DEFAULT 10
     )
   `);
-  // Seed initial stock of 10 for each product if not already there
-  for (const id of PRODUCT_IDS) {
+  for (const [id, qty] of Object.entries(INITIAL_STOCK)) {
     await db.query(
-      `INSERT INTO inventory (product_id, quantity) VALUES ($1, 10) ON CONFLICT (product_id) DO NOTHING`,
-      [id]
+      `INSERT INTO inventory (product_id, quantity) VALUES ($1, $2) ON CONFLICT (product_id) DO NOTHING`,
+      [id, qty]
     );
   }
   await db.query(`
