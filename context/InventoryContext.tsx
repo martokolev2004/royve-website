@@ -1,19 +1,24 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 
-const InventoryContext = createContext<Record<string, number>>({});
+interface InventoryState {
+  data: Record<string, number>;
+  loaded: boolean;
+}
+
+const InventoryContext = createContext<InventoryState>({ data: {}, loaded: false });
 
 export function InventoryProvider({ children }: { children: React.ReactNode }) {
-  const [inventory, setInventory] = useState<Record<string, number>>({});
+  const [state, setState] = useState<InventoryState>({ data: {}, loaded: false });
 
   useEffect(() => {
     fetch("/api/inventory")
       .then((r) => r.json())
-      .then(setInventory)
-      .catch(() => {});
+      .then((data) => setState({ data, loaded: true }))
+      .catch(() => setState({ data: {}, loaded: true }));
   }, []);
 
-  return <InventoryContext.Provider value={inventory}>{children}</InventoryContext.Provider>;
+  return <InventoryContext.Provider value={state}>{children}</InventoryContext.Provider>;
 }
 
 export function useInventory() {

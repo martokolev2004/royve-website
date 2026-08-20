@@ -13,10 +13,10 @@ interface Props { product: Product }
 export default function ProductCard({ product }: Props) {
   const { t, lang } = useLang();
   const { addItem, items, updateQuantity } = useCartStore();
-  const inventory = useInventory();
+  const { data: inventory, loaded: inventoryLoaded } = useInventory();
   const cartItem = items.find((i) => i.product.id === product.id);
-  const stock = inventory[product.id] ?? 10;
-  const isSoldOut = product.soldOut || stock === 0;
+  const stock = inventoryLoaded ? (inventory[product.id] ?? 0) : null;
+  const isSoldOut = product.soldOut || (stock !== null && stock === 0);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const x = useMotionValue(0);
@@ -116,8 +116,8 @@ export default function ProductCard({ product }: Props) {
               <span className="text-gold/50 text-[8px] tracking-[0.2em] uppercase font-sans mt-0.5">{t("product", "inCart")}</span>
             </div>
             <motion.button
-              onClick={(e) => { e.preventDefault(); if (cartItem && cartItem.quantity < stock) addItem(product); }}
-              disabled={cartItem ? cartItem.quantity >= stock : false}
+              onClick={(e) => { e.preventDefault(); if (cartItem && (stock === null || cartItem.quantity < stock)) addItem(product); }}
+              disabled={cartItem && stock !== null ? cartItem.quantity >= stock : false}
               className="relative z-10 w-11 h-full flex items-center justify-center text-gold hover:text-dark-1 hover:bg-gold text-xl font-serif transition-all duration-200 flex-shrink-0 disabled:opacity-30 disabled:cursor-not-allowed"
               whileTap={{ scale: 0.9 }}
             >
