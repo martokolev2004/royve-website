@@ -12,8 +12,23 @@ function getPool(): Pool {
   return pool;
 }
 
+const PRODUCT_IDS = ["noir", "amber", "epoc", "obsidian", "krypt", "sahra", "monarch", "azure", "velor", "octave"];
+
 async function ensureSchema(): Promise<void> {
   const db = getPool();
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS inventory (
+      product_id TEXT PRIMARY KEY,
+      quantity INT NOT NULL DEFAULT 10
+    )
+  `);
+  // Seed initial stock of 10 for each product if not already there
+  for (const id of PRODUCT_IDS) {
+    await db.query(
+      `INSERT INTO inventory (product_id, quantity) VALUES ($1, 10) ON CONFLICT (product_id) DO NOTHING`,
+      [id]
+    );
+  }
   await db.query(`
     CREATE TABLE IF NOT EXISTS orders (
       id TEXT PRIMARY KEY,
@@ -143,4 +158,54 @@ export async function updateBoxNowReference(orderId: string, boxnowReference: st
   await ensureSchema();
   const db = getPool();
   await db.query(`UPDATE orders SET boxnow_reference = $1 WHERE id = $2`, [boxnowReference, orderId]);
+}
+
+export async function getAllOrders(): Promise<OrderData[]> {
+  await ensureSchema();
+  const db = getPool();
+  const res = await db.query(`SELECT * FROM orders ORDER BY timestamp DESC`);
+  return res.rows.map((row) => ({
+    id: row.id,
+    timestamp: row.timestamp,
+    customerName: row.customer_name,
+    customerEmail: row.customer_email,
+    customerPhone: row.customer_phone,
+    deliveryAddress: row.delivery_address,
+    city: row.city,
+    postalCode: row.postal_code,
+    items: row.items,
+    total: Number(row.total),
+    paymentStatus: row.payment_status,
+    stripeSessionId: row.stripe_session_id,
+    boxnowLocationId: row.boxnow_location_id,
+    boxnowReference: row.boxnow_reference,
+  }));
+}
+
+export async function getInventory(): Promise<Record<string, number>> {
+  await ensureSchema();
+  const db = getPool();
+  const res = await db.query(`SELECT product_id, quantity FROM inventory`);
+  const map: Record<string, number> = {};
+  for (const row of res.rows) map[row.product_id] = Number(row.quantity);
+  return map;
+}
+
+export async function setInventory(productId: string, quantity: number): Promise<void> {
+  await ensureSchema();
+  const db = getPool();
+  await db.query(
+    `INSERT INTO inventory (product_id, quantity) VALUES ($1, $2)
+     ON CONFLICT (product_id) DO UPDATE SET quantity = $2`,
+    [productId, quantity]
+  );
+}
+
+export async function decreaseInventory(productId: string, amount: number): Promise<void> {
+  await ensureSchema();
+  const db = getPool();
+  await db.query(
+    `UPDATE inventory SET quantity = GREATEST(0, quantity - $1) WHERE product_id = $2`,
+    [amount, productId]
+  );
 }

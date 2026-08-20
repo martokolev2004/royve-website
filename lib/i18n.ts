@@ -77,8 +77,8 @@ export const translations = {
     eyebrow: { bg: "ОГРАНИЧЕНА ОФЕРТА", en: "LIMITED OFFER" },
     title: { bg: "2 ЧИФТА ЗА 80 €", en: "2 PAIRS FOR €80" },
     message: {
-      bg: "Вземи EPOC и VANTA заедно и спести. Само за ограничено време.",
-      en: "Get EPOC and VANTA together and save. For a limited time only.",
+      bg: "Вземи всеки 2 чифта очила и спести. Само за ограничено време.",
+      en: "Buy any 2 pairs of sunglasses and save. For a limited time only.",
     },
     cta: { bg: "РАЗГЛЕДАЙ ОФЕРТАТА", en: "SHOP THE OFFER" },
     dismiss: { bg: "ПРОДЪЛЖИ БЕЗ ОФЕРТАТА", en: "CONTINUE WITHOUT OFFER" },

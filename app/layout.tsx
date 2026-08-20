@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
+import { InventoryProvider } from "@/context/InventoryContext";
 import Navbar from "@/components/Navbar";
 import LoadingScreen from "@/components/LoadingScreen";
 import SmoothScroll from "@/components/SmoothScroll";
@@ -30,11 +31,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="bg" className={`${playfair.variable} ${inter.variable}`}>
       <body className="grain">
         <LanguageProvider>
+          <InventoryProvider>
           <SmoothScroll />
 <LoadingScreen />
           <Navbar />
           <OfferRibbon />
           <main>{children}</main>
+          </InventoryProvider>
         </LanguageProvider>
       </body>
     </html>

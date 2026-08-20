@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
-import { markOrderPaid, markOrderPaidById, getOrderBySessionId, getOrderById, updateBoxNowReference } from "@/lib/db";
+import { markOrderPaid, markOrderPaidById, getOrderBySessionId, getOrderById, updateBoxNowReference, decreaseInventory } from "@/lib/db";
 import type { OrderData } from "@/lib/db";
+import { products } from "@/lib/products";
 
 export async function POST(req: NextRequest) {
   const body = await req.text();
@@ -26,7 +27,7 @@ export async function POST(req: NextRequest) {
     try {
       await markOrderPaid(session.id);
       const order = await getOrderBySessionId(session.id);
-      if (order) await fulfill(order);
+      if (order) { await decreaseStockForOrder(order); await fulfill(order); }
     } catch (err) {
       console.error("Checkout webhook error:", err);
     }
@@ -39,7 +40,7 @@ export async function POST(req: NextRequest) {
       try {
         await markOrderPaidById(orderId);
         const order = await getOrderById(orderId);
-        if (order) await fulfill(order);
+        if (order) { await decreaseStockForOrder(order); await fulfill(order); }
       } catch (err) {
         console.error("PaymentIntent webhook error:", err);
       }
@@ -47,6 +48,15 @@ export async function POST(req: NextRequest) {
   }
 
   return NextResponse.json({ received: true });
+}
+
+async function decreaseStockForOrder(order: OrderData) {
+  for (const item of order.items) {
+    const product = products.find((p) => p.name === item.name);
+    if (product) {
+      await decreaseInventory(product.id, item.quantity);
+    }
+  }
 }
 
 async function fulfill(order: OrderData) {

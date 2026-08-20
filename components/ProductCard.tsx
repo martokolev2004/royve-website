@@ -5,6 +5,7 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { useLang } from "@/context/LanguageContext";
 import { useCartStore } from "@/lib/store";
+import { useInventory } from "@/context/InventoryContext";
 import { Product } from "@/lib/products";
 
 interface Props { product: Product }
@@ -12,7 +13,10 @@ interface Props { product: Product }
 export default function ProductCard({ product }: Props) {
   const { t, lang } = useLang();
   const { addItem, items, updateQuantity } = useCartStore();
+  const inventory = useInventory();
   const cartItem = items.find((i) => i.product.id === product.id);
+  const stock = inventory[product.id] ?? 10;
+  const isSoldOut = product.soldOut || stock === 0;
   const cardRef = useRef<HTMLDivElement>(null);
 
   const x = useMotionValue(0);
@@ -60,12 +64,12 @@ export default function ProductCard({ product }: Props) {
               -{Math.round(100 - (product.price / product.originalPrice) * 100)}%
             </span>
           )}
-          {product.soldOut && (
+          {isSoldOut && (
             <span className="absolute top-3 right-3 bg-white/10 border border-white/30 text-white/60 text-[10px] font-bold tracking-widest uppercase px-2 py-1">
               Sold Out
             </span>
           )}
-          {!product.soldOut && product.bestSeller && (
+          {!isSoldOut && product.bestSeller && (
             <span className="absolute top-3 right-3 bg-dark-1/90 border border-gold text-gold text-[10px] font-bold tracking-widest uppercase px-2 py-1">
               Best Seller
             </span>
@@ -94,7 +98,7 @@ export default function ProductCard({ product }: Props) {
         <p className="text-white/40 text-xs font-sans leading-relaxed line-clamp-2 mt-2 mb-4">
           {product.description[lang]}
         </p>
-        {product.soldOut ? (
+        {isSoldOut ? (
           <div className="w-full border border-white/10 py-3 text-center">
             <span className="text-white/30 text-xs tracking-[0.3em] uppercase font-sans">Sold Out</span>
           </div>
@@ -112,8 +116,9 @@ export default function ProductCard({ product }: Props) {
               <span className="text-gold/50 text-[8px] tracking-[0.2em] uppercase font-sans mt-0.5">{t("product", "inCart")}</span>
             </div>
             <motion.button
-              onClick={(e) => { e.preventDefault(); addItem(product); }}
-              className="relative z-10 w-11 h-full flex items-center justify-center text-gold hover:text-dark-1 hover:bg-gold text-xl font-serif transition-all duration-200 flex-shrink-0"
+              onClick={(e) => { e.preventDefault(); if (cartItem && cartItem.quantity < stock) addItem(product); }}
+              disabled={cartItem ? cartItem.quantity >= stock : false}
+              className="relative z-10 w-11 h-full flex items-center justify-center text-gold hover:text-dark-1 hover:bg-gold text-xl font-serif transition-all duration-200 flex-shrink-0 disabled:opacity-30 disabled:cursor-not-allowed"
               whileTap={{ scale: 0.9 }}
             >
               +
