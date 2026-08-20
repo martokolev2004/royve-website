@@ -19,24 +19,30 @@ interface Order {
   boxnowReference?: string;
 }
 
+interface PromoCode { code: string; discount: number; active: boolean }
+
 const PASSWORD = "Roy29Rodi";
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false);
   const [pw, setPw] = useState("");
-  const [tab, setTab] = useState<"orders" | "inventory">("orders");
+  const [tab, setTab] = useState<"orders" | "inventory" | "promos">("orders");
   const [orders, setOrders] = useState<Order[]>([]);
   const [inventory, setInventory] = useState<Record<string, number>>({});
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [editQty, setEditQty] = useState<Record<string, number>>({});
+  const [promos, setPromos] = useState<PromoCode[]>([]);
+  const [newPromoCode, setNewPromoCode] = useState("");
+  const [newPromoDiscount, setNewPromoDiscount] = useState(10);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     const headers = { "x-admin-password": PASSWORD };
-    const [ordersRes, invRes] = await Promise.all([
+    const [ordersRes, invRes, promosRes] = await Promise.all([
       fetch("/api/admin/orders", { headers }),
       fetch("/api/admin/inventory", { headers }),
+      fetch("/api/admin/promo-codes", { headers }),
     ]);
     if (ordersRes.ok) setOrders(await ordersRes.json());
     if (invRes.ok) {
@@ -44,6 +50,7 @@ export default function AdminPage() {
       setInventory(inv);
       setEditQty(inv);
     }
+    if (promosRes.ok) setPromos(await promosRes.json());
     setLoading(false);
   }, []);
 
@@ -55,6 +62,37 @@ export default function AdminPage() {
       body: JSON.stringify({ productId, quantity: qty }),
     });
     setInventory((prev) => ({ ...prev, [productId]: qty }));
+  }
+
+  async function addPromo() {
+    if (!newPromoCode.trim()) return;
+    await fetch("/api/admin/promo-codes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-admin-password": PASSWORD },
+      body: JSON.stringify({ code: newPromoCode.trim(), discount: newPromoDiscount, active: true }),
+    });
+    setNewPromoCode("");
+    setNewPromoDiscount(10);
+    const res = await fetch("/api/admin/promo-codes", { headers: { "x-admin-password": PASSWORD } });
+    if (res.ok) setPromos(await res.json());
+  }
+
+  async function togglePromo(code: string, active: boolean, discount: number) {
+    await fetch("/api/admin/promo-codes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-admin-password": PASSWORD },
+      body: JSON.stringify({ code, discount, active }),
+    });
+    setPromos((prev) => prev.map((p) => p.code === code ? { ...p, active } : p));
+  }
+
+  async function deletePromo(code: string) {
+    await fetch("/api/admin/promo-codes", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json", "x-admin-password": PASSWORD },
+      body: JSON.stringify({ code }),
+    });
+    setPromos((prev) => prev.filter((p) => p.code !== code));
   }
 
   if (!authed) {
@@ -118,7 +156,7 @@ export default function AdminPage() {
 
         {/* Tabs */}
         <div className="flex gap-0 mb-6 border-b border-white/10">
-          {(["orders", "inventory"] as const).map((t) => (
+          {(["orders", "inventory", "promos"] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -126,7 +164,7 @@ export default function AdminPage() {
                 tab === t ? "border-gold text-gold" : "border-transparent text-white/30 hover:text-white/60"
               }`}
             >
-              {t === "orders" ? "Поръчки" : "Наличност"}
+              {t === "orders" ? "Поръчки" : t === "inventory" ? "Наличност" : "Промокодове"}
             </button>
           ))}
         </div>
@@ -248,6 +286,75 @@ export default function AdminPage() {
                 </div>
               );
             })}
+          </div>
+        )}
+
+        {/* Promo Codes */}
+        {tab === "promos" && !loading && (
+          <div className="space-y-4">
+            {/* Add new */}
+            <div className="border border-white/10 px-5 py-4">
+              <p className="text-white/30 text-[10px] tracking-widest uppercase font-sans mb-3">Нов промокод</p>
+              <div className="flex items-center gap-3 flex-wrap">
+                <input
+                  type="text"
+                  value={newPromoCode}
+                  onChange={(e) => setNewPromoCode(e.target.value)}
+                  placeholder="Код"
+                  className="bg-transparent border border-white/20 text-white text-sm font-sans px-3 py-2 outline-none focus:border-gold/50 w-44"
+                />
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    min={1}
+                    max={100}
+                    value={newPromoDiscount}
+                    onChange={(e) => setNewPromoDiscount(Math.max(1, Math.min(100, Number(e.target.value))))}
+                    className="bg-transparent border border-white/20 text-white text-sm font-sans px-3 py-2 outline-none focus:border-gold/50 w-20 text-center"
+                  />
+                  <span className="text-white/40 text-xs font-sans">%</span>
+                </div>
+                <button
+                  onClick={addPromo}
+                  disabled={!newPromoCode.trim()}
+                  className="px-5 py-2 border border-gold text-gold text-xs tracking-widest uppercase font-sans hover:bg-gold hover:text-black transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  Добави
+                </button>
+              </div>
+            </div>
+
+            {/* List */}
+            {promos.length === 0 && <p className="text-white/20 text-xs font-sans">Няма промокодове.</p>}
+            {promos.map((promo) => (
+              <div key={promo.code} className="border border-white/10 px-5 py-4 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-4 min-w-0">
+                  <span className="font-mono text-white text-sm tracking-widest">{promo.code}</span>
+                  <span className="text-gold font-serif text-sm">{promo.discount}%</span>
+                  <span className={`text-[10px] px-2 py-0.5 font-sans tracking-widest uppercase border ${
+                    promo.active
+                      ? "bg-green-500/10 text-green-400 border-green-500/20"
+                      : "bg-white/5 text-white/30 border-white/10"
+                  }`}>
+                    {promo.active ? "Активен" : "Неактивен"}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3 flex-shrink-0">
+                  <button
+                    onClick={() => togglePromo(promo.code, !promo.active, promo.discount)}
+                    className="px-4 py-1.5 text-[10px] tracking-widest uppercase font-sans border border-white/20 text-white/40 hover:text-gold hover:border-gold/40 transition-colors"
+                  >
+                    {promo.active ? "Деактивирай" : "Активирай"}
+                  </button>
+                  <button
+                    onClick={() => deletePromo(promo.code)}
+                    className="px-4 py-1.5 text-[10px] tracking-widest uppercase font-sans border border-red-500/20 text-red-400/60 hover:text-red-400 hover:border-red-500/40 transition-colors"
+                  >
+                    Изтрий
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>

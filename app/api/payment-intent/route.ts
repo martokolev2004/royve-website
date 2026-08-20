@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { getStripe } from "@/lib/stripe";
 import { saveOrder } from "@/lib/db";
 import { products } from "@/lib/products";
-import { applyPromo } from "@/lib/promoCodes";
+import { getActivePromoCode } from "@/lib/db";
 
 const BUNDLE_PRICE = 80;
 
@@ -41,12 +41,11 @@ export async function POST(req: NextRequest) {
     }
     total = Math.round(total * 100) / 100;
 
-    let promoDiscount = 0;
     if (promoCode) {
-      const promoResult = applyPromo(total, promoCode);
-      if (promoResult) {
-        promoDiscount = promoResult.discountAmount;
-        total = promoResult.discountedTotal;
+      const promo = await getActivePromoCode(promoCode);
+      if (promo) {
+        const discountAmount = Math.round(total * promo.discount) / 100;
+        total = Math.round((total - discountAmount) * 100) / 100;
       }
     }
 

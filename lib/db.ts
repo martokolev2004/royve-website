@@ -32,6 +32,17 @@ async function ensureSchema(): Promise<void> {
     );
   }
   await db.query(`
+    CREATE TABLE IF NOT EXISTS promo_codes (
+      code TEXT PRIMARY KEY,
+      discount INT NOT NULL,
+      active BOOLEAN NOT NULL DEFAULT true
+    )
+  `);
+  await db.query(`
+    INSERT INTO promo_codes (code, discount, active) VALUES ('MartinKolev04', 50, true)
+    ON CONFLICT (code) DO NOTHING
+  `);
+  await db.query(`
     CREATE TABLE IF NOT EXISTS orders (
       id TEXT PRIMARY KEY,
       timestamp TIMESTAMPTZ NOT NULL,
@@ -201,6 +212,38 @@ export async function setInventory(productId: string, quantity: number): Promise
      ON CONFLICT (product_id) DO UPDATE SET quantity = $2`,
     [productId, quantity]
   );
+}
+
+export interface PromoCodeRow { code: string; discount: number; active: boolean }
+
+export async function getPromoCodes(): Promise<PromoCodeRow[]> {
+  await ensureSchema();
+  const db = getPool();
+  const res = await db.query(`SELECT code, discount, active FROM promo_codes ORDER BY code`);
+  return res.rows;
+}
+
+export async function upsertPromoCode(code: string, discount: number, active: boolean): Promise<void> {
+  await ensureSchema();
+  const db = getPool();
+  await db.query(
+    `INSERT INTO promo_codes (code, discount, active) VALUES ($1, $2, $3)
+     ON CONFLICT (code) DO UPDATE SET discount = $2, active = $3`,
+    [code, discount, active]
+  );
+}
+
+export async function deletePromoCode(code: string): Promise<void> {
+  await ensureSchema();
+  const db = getPool();
+  await db.query(`DELETE FROM promo_codes WHERE code = $1`, [code]);
+}
+
+export async function getActivePromoCode(code: string): Promise<PromoCodeRow | null> {
+  await ensureSchema();
+  const db = getPool();
+  const res = await db.query(`SELECT code, discount, active FROM promo_codes WHERE code = $1 AND active = true`, [code]);
+  return res.rows[0] ?? null;
 }
 
 export async function decreaseInventory(productId: string, amount: number): Promise<void> {

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PROMO_CODES } from "@/lib/promoCodes";
+import { getActivePromoCode } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   const { code } = await req.json();
-  const promo = PROMO_CODES[code];
+  const promo = await getActivePromoCode(code);
   if (!promo) return NextResponse.json({ valid: false });
   return NextResponse.json({ valid: true, discount: promo.discount });
 }
