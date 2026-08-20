@@ -74,7 +74,7 @@ async function fulfill(order: OrderData) {
   const itemsList = order.items.map((i) => `${i.name} × ${i.quantity} — ${i.price * i.quantity} €`).join("\n");
   const deliveryInfo = order.boxnowLocationId
     ? `📦 ДОСТАВКА: BOX NOW АВТОМАТ\nАвтомат ID: ${order.boxnowLocationId}\nBOX NOW реф: ${boxnowRef || "грешка"}`
-    : `🚚 ДОСТАВКА: ЕКОНТ (КУРИЕР)\nАдрес: ${order.deliveryAddress}, ${order.city} ${order.postalCode}`;
+    : `Адрес: ${order.deliveryAddress}, ${order.city} ${order.postalCode}`;
 
   await resend.emails.send({
     from: "ROYVÉ Orders <orders@royve.eu>",
