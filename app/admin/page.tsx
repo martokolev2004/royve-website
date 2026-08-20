@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { products } from "@/lib/products";
 
 interface OrderItem { name: string; price: number; quantity: number }
