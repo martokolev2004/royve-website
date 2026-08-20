@@ -1,5 +1,6 @@
 "use client";
 import { useState, useCallback } from "react";
+import Image from "next/image";
 import { products } from "@/lib/products";
 
 interface OrderItem { name: string; price: number; quantity: number }
@@ -245,8 +246,11 @@ export default function AdminPage() {
               const changed = editVal !== qty;
               return (
                 <div key={product.id} className="border border-white/10 px-3 sm:px-5 py-3 sm:py-4 flex items-center justify-between gap-2 sm:gap-4">
-                  <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-                    <span className="font-serif text-white text-sm tracking-widest w-20 sm:w-24 flex-shrink-0">{product.name}</span>
+                  <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                    <div className="w-12 h-10 sm:w-14 sm:h-12 bg-white flex-shrink-0 overflow-hidden relative">
+                      <Image src={product.images[0]} alt={product.name} fill className="object-contain p-1" unoptimized />
+                    </div>
+                    <span className="font-serif text-white text-sm tracking-widest w-16 sm:w-24 flex-shrink-0">{product.name}</span>
                     {qty === 0 && (
                       <span className="text-[10px] px-2 py-0.5 font-sans tracking-widest uppercase bg-red-500/10 text-red-400 border border-red-500/20">
                         Sold Out
