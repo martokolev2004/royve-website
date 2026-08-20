@@ -49,10 +49,15 @@ export default function BoxNowWidget({ partnerId, onSelect }: Props) {
     return () => window.removeEventListener("message", handleMessage);
   }, []);
 
-  // Create iframe only when container is visible
+  // Lock body scroll while open; create/destroy iframe
   useEffect(() => {
-    if (!open || !containerRef.current) return;
-    if (iframeRef.current) return; // already created
+    if (!open) {
+      document.body.style.overflow = "";
+      return;
+    }
+    document.body.style.overflow = "hidden";
+
+    if (!containerRef.current) return;
 
     const iframe = document.createElement("iframe");
     iframe.src = `https://map.boxnow.bg/popup.html?countryCode=bg&language=bg&partnerId=${partnerId}&autoselect=no&autoclose=yes&gps=yes`;
@@ -64,6 +69,7 @@ export default function BoxNowWidget({ partnerId, onSelect }: Props) {
     return () => {
       iframe.remove();
       iframeRef.current = null;
+      document.body.style.overflow = "";
     };
   }, [open, partnerId]);
 
