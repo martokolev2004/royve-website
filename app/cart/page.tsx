@@ -16,7 +16,7 @@ export default function CartPage() {
       <div className="max-w-5xl mx-auto px-6 lg:px-12 py-16">
         <AnimatedSection>
           <p className="text-gold text-xs tracking-[0.5em] uppercase font-sans mb-4">— ROYVÉ —</p>
-          <h1 className="font-serif text-5xl font-bold text-white tracking-widest mb-12">
+          <h1 className="font-serif text-4xl sm:text-5xl font-bold text-white tracking-widest mb-8 sm:mb-12">
             {t("cart", "title")}
           </h1>
         </AnimatedSection>
@@ -29,7 +29,7 @@ export default function CartPage() {
             </Link>
           </AnimatedSection>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-12">
             {/* Items list */}
             <div className="lg:col-span-2 space-y-4">
               <AnimatePresence>
@@ -43,7 +43,7 @@ export default function CartPage() {
                     transition={{ duration: 0.3 }}
                     className="flex gap-5 bg-dark-2 border border-white/5 p-4 hover:border-gold/20 transition-colors"
                   >
-                    <div className="relative w-24 bg-white flex-shrink-0 overflow-hidden" style={{ height: "72px" }}>
+                    <div className="relative w-24 bg-white flex-shrink-0 overflow-hidden" style={{ height: "88px" }}>
                       <Image
                         src={item.product.images[0]}
                         alt={item.product.name}
@@ -64,21 +64,21 @@ export default function CartPage() {
                         <div className="flex items-center gap-3">
                           <button
                             onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                            className="w-7 h-7 border border-white/20 text-white/60 hover:border-gold hover:text-gold transition-colors text-sm"
+                            className="w-10 h-10 border border-white/20 text-white/60 hover:border-gold hover:text-gold transition-colors text-lg"
                           >
                             −
                           </button>
                           <span className="text-white text-sm font-sans w-6 text-center">{item.quantity}</span>
                           <button
                             onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                            className="w-7 h-7 border border-white/20 text-white/60 hover:border-gold hover:text-gold transition-colors text-sm"
+                            className="w-10 h-10 border border-white/20 text-white/60 hover:border-gold hover:text-gold transition-colors text-lg"
                           >
                             +
                           </button>
                         </div>
                         <button
                           onClick={() => removeItem(item.product.id)}
-                          className="text-white/20 hover:text-red-400 text-xs tracking-widest uppercase font-sans transition-colors"
+                          className="text-white/20 hover:text-red-400 text-xs tracking-widest uppercase font-sans transition-colors py-2 px-1"
                         >
                           {t("cart", "remove")}
                         </button>

@@ -21,11 +21,11 @@ export default function OfferRibbon() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="bg-dark-2 border border-gold/30 border-r-0 p-6 w-64 mr-0 relative"
+            className="bg-dark-2 border border-gold/30 border-r-0 p-5 w-[min(256px,80vw)] mr-0 relative"
           >
             <button
               onClick={() => setDismissed(true)}
-              className="absolute top-2 right-2 text-white/30 hover:text-gold text-xs"
+              className="absolute top-2 right-2 text-white/30 hover:text-gold w-8 h-8 flex items-center justify-center"
               aria-label="Dismiss"
             >
               ✕
@@ -33,13 +33,13 @@ export default function OfferRibbon() {
             <p className="text-gold text-[9px] tracking-[0.4em] uppercase font-sans mb-2">
               — {t("promo", "eyebrow")} —
             </p>
-            <h3 className="font-serif text-xl font-bold text-white tracking-widest mb-3">
+            <h3 className="font-serif text-lg font-bold text-white tracking-widest mb-3">
               {t("promo", "title")}
             </h3>
             <p className="text-white/50 text-xs font-sans leading-relaxed mb-5">
               {t("promo", "message")}
             </p>
-            <Link href="/shop" onClick={() => setOpen(false)} className="btn-luxury block text-center text-[10px]">
+            <Link href="/shop" onClick={() => setOpen(false)} className="btn-luxury block text-center text-xs">
               <span>{t("promo", "cta")}</span>
             </Link>
           </motion.div>
@@ -49,7 +49,7 @@ export default function OfferRibbon() {
       {/* Tab */}
       <button
         onClick={() => setOpen((o) => !o)}
-        className="bg-gold text-dark-1 px-3 py-5 flex flex-col items-center gap-2 hover:bg-gold/90 transition-colors"
+        className="bg-gold text-dark-1 px-2.5 py-5 flex flex-col items-center gap-2 hover:bg-gold/90 transition-colors"
         style={{ writingMode: "vertical-rl" }}
       >
         <span className="text-[11px] font-bold tracking-[0.3em] uppercase font-sans">

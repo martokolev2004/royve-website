@@ -38,7 +38,7 @@ export default function ProductPage({ params }: { params: { id: string } }) {
         </Link>
 
         {/* Main grid — 3D viewer left, info right */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[70vh]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center min-h-[70vh]">
 
           {/* LEFT — interactive viewer */}
           <AnimatedSection direction="left">
@@ -58,13 +58,13 @@ export default function ProductPage({ params }: { params: { id: string } }) {
                 )}
               </div>
 
-              <h1 className="font-serif text-5xl md:text-6xl font-bold text-white tracking-widest mb-4 leading-none">
+              <h1 className="font-serif text-4xl md:text-6xl font-bold text-white tracking-widest mb-4 leading-none">
                 {product.name}
               </h1>
 
               <div className="h-px bg-gold/20 w-16 mb-6" />
 
-              <div className="flex items-center gap-3 mb-6">
+              <div className="flex flex-wrap items-center gap-3 mb-6">
                 <p className="font-serif text-3xl text-gold font-semibold">
                   {product.price} {t("shop", "currency")}
                 </p>

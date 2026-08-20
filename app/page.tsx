@@ -62,7 +62,7 @@ export default function HomePage() {
           </motion.div>
 
           <motion.p
-            className="text-white/40 text-xs md:text-sm tracking-[0.4em] uppercase font-sans mt-6 mb-12"
+            className="text-white/40 text-[10px] md:text-sm tracking-[0.25em] md:tracking-[0.4em] uppercase font-sans mt-6 mb-12 px-4"
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 3.2, duration: 0.8 }}
           >
@@ -167,7 +167,7 @@ export default function HomePage() {
           </AnimatedSection>
 
           {/* Right — two stacked panels */}
-          <div className="grid grid-rows-2 gap-4 min-h-[100vw] md:min-h-0">
+          <div className="grid grid-rows-2 gap-4 min-h-[60vw] md:min-h-0">
             {/* Top right — flatlay */}
             <AnimatedSection direction="right" className="relative overflow-hidden group">
               <Image

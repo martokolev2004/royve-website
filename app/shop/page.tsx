@@ -29,7 +29,7 @@ export default function ShopPage() {
         <div className="relative z-10 max-w-7xl mx-auto text-center">
           <AnimatedSection>
             <p className="text-gold text-xs tracking-[0.5em] uppercase font-sans mb-4">— ROYVÉ EYEWEAR —</p>
-            <h1 className="font-serif text-5xl md:text-7xl font-bold text-white tracking-widest mb-4">
+            <h1 className="font-serif text-4xl md:text-7xl font-bold text-white tracking-widest mb-4">
               {t("shop", "title")}
             </h1>
             <div className="h-px bg-gold/30 w-24 mx-auto mt-6" />
@@ -44,7 +44,7 @@ export default function ShopPage() {
             <button
               key={cat}
               onClick={() => setFilter(cat)}
-              className={`px-6 py-2 text-xs tracking-[0.3em] uppercase font-sans border transition-all duration-300 ${
+              className={`px-5 py-3 text-xs tracking-[0.3em] uppercase font-sans border transition-all duration-300 ${
                 filter === cat
                   ? "border-gold text-gold bg-gold/10"
                   : "border-white/10 text-white/40 hover:border-white/30 hover:text-white/60"
