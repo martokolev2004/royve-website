@@ -82,6 +82,10 @@ export default function AdminPage() {
   }
 
   const paidOrders = orders.filter((o) => o.paymentStatus === "paid");
+  const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const visibleOrders = orders.filter(
+    (o) => o.paymentStatus === "paid" || new Date(o.timestamp).getTime() >= sevenDaysAgo
+  );
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
@@ -132,8 +136,8 @@ export default function AdminPage() {
         {/* Orders */}
         {tab === "orders" && !loading && (
           <div className="space-y-2">
-            {orders.length === 0 && <p className="text-white/20 text-xs font-sans">Няма поръчки.</p>}
-            {orders.map((order) => (
+            {visibleOrders.length === 0 && <p className="text-white/20 text-xs font-sans">Няма поръчки.</p>}
+            {visibleOrders.map((order) => (
               <div key={order.id} className="border border-white/10 hover:border-white/20 transition-colors">
                 <button
                   type="button"
