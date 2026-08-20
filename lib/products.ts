@@ -75,7 +75,6 @@ export const products: Product[] = [
     name: "KRYPT",
     price: 39.99,
     originalPrice: 49.99,
-    soldOut: true,
     category: "Classic",
     description: {
       bg: "Остра форма. Тъмна идентичност. Черна котешка рамка за тези, които не се нуждаят от одобрение.",
