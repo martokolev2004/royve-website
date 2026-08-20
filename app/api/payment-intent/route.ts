@@ -3,13 +3,14 @@ import { v4 as uuidv4 } from "uuid";
 import { getStripe } from "@/lib/stripe";
 import { saveOrder } from "@/lib/db";
 import { products } from "@/lib/products";
+import { applyPromo } from "@/lib/promoCodes";
 
 const BUNDLE_PRICE = 80;
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { fullName, email, phone, address, city, postalCode, items, boxnowLocationId } = body;
+    const { fullName, email, phone, address, city, postalCode, items, boxnowLocationId, promoCode } = body;
 
     if (!items || items.length === 0) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
@@ -39,6 +40,15 @@ export async function POST(req: NextRequest) {
       i++;
     }
     total = Math.round(total * 100) / 100;
+
+    let promoDiscount = 0;
+    if (promoCode) {
+      const promoResult = applyPromo(total, promoCode);
+      if (promoResult) {
+        promoDiscount = promoResult.discountAmount;
+        total = promoResult.discountedTotal;
+      }
+    }
 
     const stripe = getStripe();
     const paymentIntent = await stripe.paymentIntents.create({

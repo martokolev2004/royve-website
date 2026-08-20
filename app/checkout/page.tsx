@@ -50,8 +50,35 @@ function CheckoutForm() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [selectedLocker, setSelectedLocker] = useState<BNSelected | null>(null);
+  const [promoInput, setPromoInput] = useState("");
+  const [promoCode, setPromoCode] = useState<string | null>(null);
+  const [promoDiscount, setPromoDiscount] = useState(0);
+  const [promoError, setPromoError] = useState("");
+  const [promoLoading, setPromoLoading] = useState(false);
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({ resolver: zodResolver(schema) });
+
+  async function applyPromoCode() {
+    if (!promoInput.trim()) return;
+    setPromoLoading(true);
+    setPromoError("");
+    const res = await fetch("/api/validate-promo", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code: promoInput.trim() }),
+    });
+    const data = await res.json();
+    setPromoLoading(false);
+    if (data.valid) {
+      setPromoCode(promoInput.trim());
+      setPromoDiscount(data.discount);
+      setPromoError("");
+    } else {
+      setPromoCode(null);
+      setPromoDiscount(0);
+      setPromoError("Невалиден промокод.");
+    }
+  }
 
   async function onSubmit(data: FormData) {
     if (!stripe || !elements || items.length === 0) return;
@@ -66,6 +93,7 @@ function CheckoutForm() {
           ...data,
           items: items.map((i) => ({ name: i.product.name, quantity: i.quantity })),
           boxnowLocationId: selectedLocker?.boxnowLockerId || null,
+          promoCode: promoCode || null,
         }),
       });
       if (!res.ok) throw new Error("Failed");
@@ -175,6 +203,48 @@ function CheckoutForm() {
             </div>
           </AnimatedSection>
 
+          {/* Promo code */}
+          <AnimatedSection>
+            <div className="border border-white/10 p-6">
+              <h3 className="text-xs tracking-[0.4em] uppercase text-white/40 font-sans mb-4">— ПРОМОКОД —</h3>
+              {promoCode ? (
+                <div className="flex items-center justify-between bg-dark-2 border border-gold/30 px-4 py-3">
+                  <div>
+                    <p className="text-gold text-[10px] tracking-widest uppercase font-sans mb-0.5">✓ Промокодът е приложен</p>
+                    <p className="text-white text-xs font-sans">{promoCode} — {promoDiscount}% отстъпка</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => { setPromoCode(null); setPromoDiscount(0); setPromoInput(""); }}
+                    className="text-white/30 hover:text-gold text-[10px] tracking-widest uppercase font-sans transition-colors ml-4 flex-shrink-0"
+                  >
+                    Премахни
+                  </button>
+                </div>
+              ) : (
+                <div className="flex gap-3">
+                  <input
+                    type="text"
+                    value={promoInput}
+                    onChange={(e) => { setPromoInput(e.target.value); setPromoError(""); }}
+                    onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), applyPromoCode())}
+                    placeholder="Въведи промокод"
+                    className="luxury-input flex-1"
+                  />
+                  <button
+                    type="button"
+                    onClick={applyPromoCode}
+                    disabled={promoLoading || !promoInput.trim()}
+                    className="px-5 border border-gold text-gold text-xs tracking-widest uppercase font-sans hover:bg-gold hover:text-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    {promoLoading ? "..." : "Приложи"}
+                  </button>
+                </div>
+              )}
+              {promoError && <p className="text-red-400 text-xs mt-2 font-sans">{promoError}</p>}
+            </div>
+          </AnimatedSection>
+
           {/* Card payment */}
           <AnimatedSection>
             <div className="border border-white/10 p-6">
@@ -236,10 +306,30 @@ function CheckoutForm() {
                 <span>BOX NOW: {selectedLocker.boxnowLockerAddressLine1}</span>
               </div>
             )}
-            <div className="flex justify-between items-center mb-8">
-              <span className="text-xs tracking-[0.3em] uppercase font-sans text-white/60">{t("cart", "total")}</span>
-              <span className="font-serif text-2xl text-gold font-bold">{total()} €</span>
-            </div>
+            {promoCode && (() => {
+              const promoAmount = Math.round(total() * promoDiscount) / 100;
+              const finalTotal = Math.round((total() - promoAmount) * 100) / 100;
+              return (
+                <>
+                  <div className="flex justify-between text-xs font-sans text-white/40 mb-2">
+                    <span>Преди промокод</span><span>{total()} €</span>
+                  </div>
+                  <div className="flex justify-between text-xs font-sans text-gold mb-4">
+                    <span>Промокод ({promoDiscount}%)</span><span>−{promoAmount.toFixed(2)} €</span>
+                  </div>
+                  <div className="flex justify-between items-center mb-8">
+                    <span className="text-xs tracking-[0.3em] uppercase font-sans text-white/60">{t("cart", "total")}</span>
+                    <span className="font-serif text-2xl text-gold font-bold">{finalTotal.toFixed(2)} €</span>
+                  </div>
+                </>
+              );
+            })()}
+            {!promoCode && (
+              <div className="flex justify-between items-center mb-8">
+                <span className="text-xs tracking-[0.3em] uppercase font-sans text-white/60">{t("cart", "total")}</span>
+                <span className="font-serif text-2xl text-gold font-bold">{total()} €</span>
+              </div>
+            )}
             <motion.button
               type="submit"
               disabled={submitting || !stripe}
