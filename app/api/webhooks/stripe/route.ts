@@ -73,8 +73,8 @@ async function fulfill(order: OrderData) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   const itemsList = order.items.map((i) => `${i.name} × ${i.quantity} — ${i.price * i.quantity} €`).join("\n");
   const deliveryInfo = order.boxnowLocationId
-    ? `ДОСТАВКА (BOX NOW)\nАвтомат ID: ${order.boxnowLocationId}\nБОX NOW реф: ${boxnowRef || "грешка"}`
-    : `ДОСТАВКА\nАдрес: ${order.deliveryAddress}, ${order.city} ${order.postalCode}`;
+    ? `📦 ДОСТАВКА: BOX NOW АВТОМАТ\nАвтомат ID: ${order.boxnowLocationId}\nBOX NOW реф: ${boxnowRef || "грешка"}`
+    : `🚚 ДОСТАВКА: ЕКОНТ (КУРИЕР)\nАдрес: ${order.deliveryAddress}, ${order.city} ${order.postalCode}`;
 
   await resend.emails.send({
     from: "ROYVÉ Orders <orders@royve.eu>",
