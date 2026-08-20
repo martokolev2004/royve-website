@@ -45,7 +45,7 @@ export default function ProductCard({ product }: Props) {
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d", perspective: 800 }}
+      style={{ rotateX, rotateY, transformStyle: "preserve-3d", perspective: 800, maxWidth: "100%" }}
       className="group bg-dark-2 border border-white/5 hover:border-gold/30 transition-colors duration-500 overflow-hidden"
     >
       <Link href={`/shop/${product.id}`}>

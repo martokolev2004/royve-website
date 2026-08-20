@@ -94,7 +94,7 @@ export default function HomePage() {
       </section>
 
       {/* ── MARQUEE ── */}
-      <div className="border-y border-white/8 bg-dark-1 overflow-hidden py-3">
+      <div className="border-y border-white/8 bg-dark-1 overflow-hidden py-3 max-w-full">
         <motion.div
           className="flex gap-12 whitespace-nowrap"
           animate={{ x: ["0%", "-50%"] }}

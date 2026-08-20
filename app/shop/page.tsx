@@ -37,7 +37,7 @@ export default function ShopPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-16">
         {/* Filter */}
         <AnimatedSection className="flex flex-wrap justify-center gap-3 mb-16">
           {categories.map((cat) => (
