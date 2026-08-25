@@ -51,6 +51,7 @@ export default function MetaPixel({ enabled }: { enabled: boolean }) {
         `}
       </Script>
       <noscript>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           height="1"
           width="1"
