@@ -8,68 +8,73 @@ interface ProductViewerProps {
 }
 
 export default function ProductViewer({ images, alt }: ProductViewerProps) {
-  const [angle, setAngle] = useState(0);
-  const [dragging, setDragging] = useState(false);
-  const lastX = useRef(0);
+  const [index, setIndex] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+  const mouseStartX = useRef<number | null>(null);
 
-  const front = images[0];
-  const sideRight = images[1] || images[0];
-  const back = images[2] || images[1] || images[0];
-  const sideLeft = images[3] || images[1] || images[0];
-
-  // Normalize angle to 0–360
-  const norm = ((angle % 360) + 360) % 360;
-
-  let src = front;
-  let flip = false;
-  if (norm > 30 && norm <= 90) {
-    src = sideRight; flip = false;
-  } else if (norm > 90 && norm <= 150) {
-    src = back; flip = false;
-  } else if (norm > 150 && norm <= 210) {
-    src = back; flip = false;
-  } else if (norm > 210 && norm <= 270) {
-    src = sideLeft; flip = false;
-  } else if (norm > 270 && norm < 330) {
-    src = sideLeft; flip = true;
+  function prev() {
+    setIndex((i) => (i - 1 + images.length) % images.length);
+  }
+  function next() {
+    setIndex((i) => (i + 1) % images.length);
   }
 
-  function handleStart(x: number) {
-    setDragging(true);
-    lastX.current = x;
+  function handleTouchStart(e: React.TouchEvent) {
+    touchStartX.current = e.touches[0].clientX;
   }
-  function handleMove(x: number) {
-    if (!dragging) return;
-    const delta = x - lastX.current;
-    lastX.current = x;
-    setAngle((a) => a + delta * 0.6);
+  function handleTouchEnd(e: React.TouchEvent) {
+    if (touchStartX.current === null) return;
+    const delta = e.changedTouches[0].clientX - touchStartX.current;
+    if (Math.abs(delta) > 40) delta < 0 ? next() : prev();
+    touchStartX.current = null;
   }
-  function handleEnd() {
-    setDragging(false);
+
+  function handleMouseDown(e: React.MouseEvent) {
+    mouseStartX.current = e.clientX;
+  }
+  function handleMouseUp(e: React.MouseEvent) {
+    if (mouseStartX.current === null) return;
+    const delta = e.clientX - mouseStartX.current;
+    if (Math.abs(delta) > 40) delta < 0 ? next() : prev();
+    mouseStartX.current = null;
   }
 
   return (
     <div
-      className="relative aspect-square bg-white border border-white/8 overflow-hidden group flex items-center justify-center select-none touch-none cursor-grab active:cursor-grabbing"
-      onPointerDown={(e) => handleStart(e.clientX)}
-      onPointerMove={(e) => handleMove(e.clientX)}
-      onPointerUp={handleEnd}
-      onPointerLeave={handleEnd}
+      className="relative aspect-square bg-white border border-white/8 overflow-hidden group flex items-center justify-center select-none cursor-grab active:cursor-grabbing"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
     >
-      <div
-        className="relative w-full h-full transition-transform duration-150"
-        style={{ transform: flip ? "scaleX(-1)" : "scaleX(1)" }}
-      >
+      <div className="relative w-full h-full">
         <Image
-          src={src}
-          alt={alt}
+          src={images[index]}
+          alt={`${alt} ${index + 1}`}
           fill
-          className="object-contain p-10"
-          onError={(e) => { (e.target as HTMLImageElement).src = `${front.replace(/-\d\.jpg$/, "")}.svg`; }}
+          className="object-contain p-10 transition-opacity duration-200"
           unoptimized
           draggable={false}
         />
       </div>
+
+      {/* Arrow buttons */}
+      {images.length > 1 && (
+        <>
+          <button
+            onClick={(e) => { e.stopPropagation(); prev(); }}
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center bg-dark-1/60 border border-white/10 text-white/50 hover:text-gold hover:border-gold/40 transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm"
+          >
+            ‹
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); next(); }}
+            className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center bg-dark-1/60 border border-white/10 text-white/50 hover:text-gold hover:border-gold/40 transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm"
+          >
+            ›
+          </button>
+        </>
+      )}
 
       {/* Corner accents */}
       <div className="absolute top-5 left-5 w-8 h-8 border-l border-t border-gold/40 pointer-events-none" />
@@ -77,11 +82,17 @@ export default function ProductViewer({ images, alt }: ProductViewerProps) {
       <div className="absolute bottom-5 left-5 w-8 h-8 border-l border-b border-gold/40 pointer-events-none" />
       <div className="absolute bottom-5 right-5 w-8 h-8 border-r border-b border-gold/40 pointer-events-none" />
 
-      {/* Drag-to-rotate hint */}
-      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-dark-1/80 backdrop-blur-sm border border-gold/20 px-4 py-2 pointer-events-none">
-        <span className="w-1.5 h-1.5 rounded-full bg-gold/60 animate-pulse" />
-        <span className="text-[9px] tracking-[0.4em] uppercase font-sans text-white/40">Drag to Rotate</span>
-      </div>
+      {/* Dot indicators */}
+      {images.length > 1 && (
+        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2 pointer-events-none">
+          {images.map((_, i) => (
+            <span
+              key={i}
+              className={`rounded-full transition-all duration-200 ${i === index ? "w-4 h-1 bg-gold" : "w-1 h-1 bg-white/30"}`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
