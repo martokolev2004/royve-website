@@ -25,7 +25,7 @@ export const products: Product[] = [
       en: "Absolute minimalism. Black frame, black lenses — for those who need no explanation.",
     },
     details: ["Черна ацетатна рамка", "Черни поляризирани стъкла", "UV400 защита", "Включва луксозна кутия"],
-    images: ["/products/noir-1.jpg", "/products/noir-2.jpg"],
+    images: ["/products/vanta-1.jpg", "/products/vanta-2.jpg", "/products/vanta-3.jpg", "/products/vanta-4.jpg"],
   },
   {
     id: "amber",
@@ -38,7 +38,7 @@ export const products: Product[] = [
       en: "Warmth within cold aesthetics. Black frame with amber lenses — contrast that speaks for itself.",
     },
     details: ["Черна ацетатна рамка", "Кехлибарени стъкла", "UV400 защита", "Включва луксозна кутия"],
-    images: ["/products/amber-1.jpg", "/products/amber-2.jpg"],
+    images: ["/products/oro-1.jpg", "/products/oro-2.jpg", "/products/oro-3.jpg", "/products/oro-4.jpg"],
   },
   {
     id: "epoc",
@@ -53,7 +53,7 @@ export const products: Product[] = [
       en: "No boundaries. Rimless construction with gold hardware and blue lenses — lightness with character.",
     },
     details: ["Без рамка", "Златна метална арматура", "Сини стъкла", "UV400 защита"],
-    images: ["/products/azure-1.jpg", "/products/azure-2.jpg"],
+    images: ["/products/epoc-1.jpg", "/products/epoc-2.jpg", "/products/epoc-3.jpg", "/products/epoc-4.jpg"],
   },
   {
     id: "obsidian",
@@ -67,7 +67,7 @@ export const products: Product[] = [
       en: "Darkness without boundaries. Rimless construction with dark lenses and gold hardware — mystery in pure form.",
     },
     details: ["Без рамка", "Златна метална арматура", "Тъмни стъкла", "UV400 защита"],
-    images: ["/products/obsidian-1.jpg", "/products/obsidian-2.jpg"],
+    images: ["/products/nyx-1.jpg", "/products/nyx-2.jpg", "/products/nyx-3.jpg", "/products/nyx-4.jpg"],
   },
   {
     id: "krypt",
@@ -81,7 +81,7 @@ export const products: Product[] = [
       en: "Sharp form. Dark identity. Black cat-eye frame for those who need no approval.",
     },
     details: ["Черна ацетатна рамка", "Котешка форма", "Тъмни поляризирани стъкла", "UV400 защита", "Включва луксозна кутия"],
-    images: ["/products/krypt-2.jpg", "/products/krypt-1.jpg"],
+    images: ["/products/krypt-1.jpg", "/products/krypt-2.jpg", "/products/krypt-3.jpg"],
   },
   {
     id: "sahra",
@@ -95,7 +95,7 @@ export const products: Product[] = [
       en: "Warmth without limits. Gold rimless frame with amber gradient lenses — luxury in pure form.",
     },
     details: ["Без рамка", "Златна метална арматура", "Кехлибарени градиентни стъкла", "UV400 защита", "Включва луксозна кутия"],
-    images: ["/products/sahra-2.jpg", "/products/sahra-1.jpg"],
+    images: ["/products/sahra-1.jpg", "/products/sahra-2.jpg", "/products/sahra-3.jpg", "/products/sahra-4.jpg"],
   },
   {
     id: "monarch",
@@ -109,7 +109,7 @@ export const products: Product[] = [
       en: "Wide presence. Thick black acetate frame — for those who claim the space that belongs to them.",
     },
     details: ["Широка черна ацетатна рамка", "Тъмни поляризирани стъкла", "UV400 защита", "Включва луксозна кутия"],
-    images: ["/products/monarch-front.jpg", "/products/monarch-1.jpg"],
+    images: ["/products/monarch-1.jpg", "/products/monarch-2.jpg", "/products/monarch-3.jpg", "/products/monarch-4.jpg"],
   },
   {
     id: "azure",
@@ -123,7 +123,7 @@ export const products: Product[] = [
       en: "Blue without boundaries. Thin metal rimless frame with blue lenses — lightness with character.",
     },
     details: ["Без рамка", "Тънка метална арматура", "Сини стъкла", "UV400 защита", "Включва луксозна кутия"],
-    images: ["/products/azure2-1.jpg", "/products/azure2-2.jpg"],
+    images: ["/products/azure-new-1.jpg", "/products/azure-new-2.jpg", "/products/azure-new-3.jpg", "/products/azure-new-4.jpg"],
   },
   {
     id: "velor",
@@ -137,7 +137,7 @@ export const products: Product[] = [
       en: "Dark precision. Black thin metal rimless frame — minimalism with maximum impact.",
     },
     details: ["Без рамка", "Тънка черна метална арматура", "Тъмни стъкла", "UV400 защита", "Включва луксозна кутия"],
-    images: ["/products/velor-1.jpg", "/products/velor-2.jpg"],
+    images: ["/products/velor-1.jpg", "/products/velor-2.jpg", "/products/velor-3.jpg", "/products/velor-4.jpg"],
   },
   {
     id: "octave",
@@ -151,7 +151,7 @@ export const products: Product[] = [
       en: "Octagonal elegance. Gold metal frame with dark lenses — geometry that commands attention.",
     },
     details: ["Осмоъгълна метална рамка", "Златна арматура", "Тъмни поляризирани стъкла", "UV400 защита", "Включва луксозна кутия"],
-    images: ["/products/octave-1.jpg", "/products/octave-2.jpg"],
+    images: ["/products/octave-1.jpg", "/products/octave-2.jpg", "/products/octave-3.jpg"],
   },
 ];
 
