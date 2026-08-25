@@ -13,19 +13,25 @@ export default function ProductViewer({ images, alt }: ProductViewerProps) {
   const lastX = useRef(0);
 
   const front = images[0];
-  const side = images[1] || images[0];
+  const sideRight = images[1] || images[0];
+  const back = images[2] || images[1] || images[0];
+  const sideLeft = images[3] || images[1] || images[0];
 
   // Normalize angle to 0–360
   const norm = ((angle % 360) + 360) % 360;
 
   let src = front;
   let flip = false;
-  if (norm > 45 && norm <= 180) {
-    src = side;
-    flip = false;
-  } else if (norm > 180 && norm < 315) {
-    src = side;
-    flip = true;
+  if (norm > 30 && norm <= 90) {
+    src = sideRight; flip = false;
+  } else if (norm > 90 && norm <= 150) {
+    src = back; flip = false;
+  } else if (norm > 150 && norm <= 210) {
+    src = back; flip = false;
+  } else if (norm > 210 && norm <= 270) {
+    src = sideLeft; flip = false;
+  } else if (norm > 270 && norm < 330) {
+    src = sideLeft; flip = true;
   }
 
   function handleStart(x: number) {
