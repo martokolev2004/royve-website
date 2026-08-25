@@ -10,6 +10,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 import ProductCard from "@/components/ProductCard";
 import ProductViewer from "@/components/ProductViewer";
 import Footer from "@/components/Footer";
+import { trackEvent } from "@/components/MetaPixel";
 
 export default function ProductPage({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -18,6 +19,11 @@ export default function ProductPage({ params }: { params: { id: string } }) {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
+
+  useEffect(() => {
+    if (!product) return;
+    trackEvent("ViewContent", { content_ids: [product.id], content_name: product.name, value: product.price, currency: "EUR", content_type: "product" });
+  }, [product]);
   if (!product) notFound();
 
   const { t, lang } = useLang();

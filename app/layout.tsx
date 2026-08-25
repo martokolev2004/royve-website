@@ -7,6 +7,8 @@ import Navbar from "@/components/Navbar";
 import LoadingScreen from "@/components/LoadingScreen";
 import SmoothScroll from "@/components/SmoothScroll";
 import OfferRibbon from "@/components/OfferRibbon";
+import CookieConsent from "@/components/CookieConsent";
+import TrackingProvider from "@/components/TrackingProvider";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -32,11 +34,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="grain">
         <LanguageProvider>
           <InventoryProvider>
-          <SmoothScroll />
-<LoadingScreen />
-          <Navbar />
-          <OfferRibbon />
-          <main>{children}</main>
+            <TrackingProvider />
+            <SmoothScroll />
+            <LoadingScreen />
+            <Navbar />
+            <OfferRibbon />
+            <main>{children}</main>
+            <CookieConsent />
           </InventoryProvider>
         </LanguageProvider>
       </body>

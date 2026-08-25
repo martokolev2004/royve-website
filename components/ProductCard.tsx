@@ -7,6 +7,7 @@ import { useLang } from "@/context/LanguageContext";
 import { useCartStore } from "@/lib/store";
 import { useInventory } from "@/context/InventoryContext";
 import { Product } from "@/lib/products";
+import { trackEvent } from "./MetaPixel";
 
 interface Props { product: Product }
 
@@ -126,7 +127,7 @@ export default function ProductCard({ product }: Props) {
           </div>
         ) : (
           <motion.button
-            onClick={() => addItem(product)}
+            onClick={() => { addItem(product); trackEvent("AddToCart", { content_ids: [product.id], content_name: product.name, value: product.price, currency: "EUR" }); }}
             className="btn-luxury w-full text-center text-xs"
             whileTap={{ scale: 0.97 }}
           >

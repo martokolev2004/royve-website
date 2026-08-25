@@ -6,6 +6,7 @@ import { useLang } from "@/context/LanguageContext";
 import { useCartStore } from "@/lib/store";
 import AnimatedSection from "@/components/AnimatedSection";
 import Footer from "@/components/Footer";
+import { trackEvent } from "@/components/MetaPixel";
 
 export default function CartPage() {
   const { t } = useLang();
@@ -118,7 +119,11 @@ export default function CartPage() {
                   <span className="text-xs tracking-[0.3em] uppercase font-sans text-white/60">{t("cart", "total")}</span>
                   <span className="font-serif text-2xl text-gold font-bold">{total()} €</span>
                 </div>
-                <Link href="/checkout" className="btn-luxury block text-center text-xs">
+                <Link
+                  href="/checkout"
+                  className="btn-luxury block text-center text-xs"
+                  onClick={() => trackEvent("InitiateCheckout", { value: total(), currency: "EUR", num_items: items.reduce((s, i) => s + i.quantity, 0) })}
+                >
                   <span>{t("cart", "checkout")}</span>
                 </Link>
                 <Link href="/shop" className="block text-center text-xs text-white/30 hover:text-gold transition-colors mt-4 tracking-widest uppercase font-sans">

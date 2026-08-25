@@ -1,14 +1,32 @@
 "use client";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { useLang } from "@/context/LanguageContext";
+import { trackEvent } from "@/components/MetaPixel";
 
 function SuccessContent() {
   const { t } = useLang();
   const params = useSearchParams();
   const orderId = params.get("order") || "—";
+
+  useEffect(() => {
+    if (!orderId || orderId === "—") return;
+    fetch(`/api/order/${orderId}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.total) {
+          trackEvent("Purchase", {
+            value: data.total,
+            currency: "EUR",
+            content_ids: data.items?.map((i: { name: string }) => i.name) ?? [],
+            order_id: orderId,
+          });
+        }
+      })
+      .catch(() => {});
+  }, [orderId]);
 
   return (
     <div className="bg-dark-1 min-h-screen flex items-center justify-center px-6">
