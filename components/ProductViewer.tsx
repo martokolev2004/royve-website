@@ -25,7 +25,7 @@ export default function ProductViewer({ images, alt }: ProductViewerProps) {
   function handleTouchEnd(e: React.TouchEvent) {
     if (touchStartX.current === null) return;
     const delta = e.changedTouches[0].clientX - touchStartX.current;
-    if (Math.abs(delta) > 40) delta < 0 ? next() : prev();
+    if (Math.abs(delta) > 40) { if (delta < 0) next(); else prev(); }
     touchStartX.current = null;
   }
 
@@ -35,7 +35,7 @@ export default function ProductViewer({ images, alt }: ProductViewerProps) {
   function handleMouseUp(e: React.MouseEvent) {
     if (mouseStartX.current === null) return;
     const delta = e.clientX - mouseStartX.current;
-    if (Math.abs(delta) > 40) delta < 0 ? next() : prev();
+    if (Math.abs(delta) > 40) { if (delta < 0) next(); else prev(); }
     mouseStartX.current = null;
   }
 
