@@ -43,6 +43,14 @@ async function ensureSchema(): Promise<void> {
     ON CONFLICT (code) DO NOTHING
   `);
   await db.query(`
+    CREATE TABLE IF NOT EXISTS rate_limits (
+      key TEXT NOT NULL,
+      window_start TIMESTAMPTZ NOT NULL,
+      count INT NOT NULL DEFAULT 1,
+      PRIMARY KEY (key, window_start)
+    )
+  `);
+  await db.query(`
     CREATE TABLE IF NOT EXISTS orders (
       id TEXT PRIMARY KEY,
       timestamp TIMESTAMPTZ NOT NULL,
@@ -244,6 +252,31 @@ export async function getActivePromoCode(code: string): Promise<PromoCodeRow | n
   const db = getPool();
   const res = await db.query(`SELECT code, discount, active FROM promo_codes WHERE code = $1 AND active = true`, [code]);
   return res.rows[0] ?? null;
+}
+
+// Returns true if the request is allowed, false if rate limited
+// limit: max requests per windowSeconds
+export async function checkRateLimit(ip: string, route: string, limit: number, windowSeconds: number): Promise<boolean> {
+  try {
+    await ensureSchema();
+    const db = getPool();
+    const windowStart = new Date(Math.floor(Date.now() / (windowSeconds * 1000)) * windowSeconds * 1000);
+    const key = `${ip}:${route}`;
+    const res = await db.query(
+      `INSERT INTO rate_limits (key, window_start, count)
+       VALUES ($1, $2, 1)
+       ON CONFLICT (key, window_start) DO UPDATE SET count = rate_limits.count + 1
+       RETURNING count`,
+      [key, windowStart]
+    );
+    // Clean up old windows occasionally
+    if (Math.random() < 0.01) {
+      await db.query(`DELETE FROM rate_limits WHERE window_start < NOW() - INTERVAL '1 hour'`);
+    }
+    return res.rows[0].count <= limit;
+  } catch {
+    return true; // fail open — don't block if DB is down
+  }
 }
 
 export async function decreaseInventory(productId: string, amount: number): Promise<void> {

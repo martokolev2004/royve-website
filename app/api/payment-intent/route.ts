@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 import { getStripe } from "@/lib/stripe";
-import { saveOrder } from "@/lib/db";
+import { saveOrder, checkRateLimit } from "@/lib/db";
 import { products } from "@/lib/products";
 import { getActivePromoCode } from "@/lib/db";
 
@@ -9,6 +9,10 @@ const BUNDLE_PRICE = 80;
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+    const allowed = await checkRateLimit(ip, "payment-intent", 5, 60);
+    if (!allowed) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+
     const body = await req.json();
     const { fullName, email, phone, address, city, postalCode, items, boxnowLocationId, promoCode } = body;
 
