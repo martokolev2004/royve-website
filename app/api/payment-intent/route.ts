@@ -14,7 +14,8 @@ export async function POST(req: NextRequest) {
     if (!allowed) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
 
     const body = await req.json();
-    const { fullName, email, phone, address, city, postalCode, items, boxnowLocationId, promoCode } = body;
+    const { fullName, email, phone, address, city, postalCode, items, boxnowLocationId, promoCode, paymentMethod } = body;
+    const isBankTransfer = paymentMethod === "bank_transfer";
 
     if (!items || items.length === 0) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
@@ -54,6 +55,41 @@ export async function POST(req: NextRequest) {
     }
 
     const stripe = getStripe();
+
+    if (isBankTransfer) {
+      const customer = await stripe.customers.create({ email, name: fullName });
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: Math.round(total * 100),
+        currency: "eur",
+        customer: customer.id,
+        payment_method_types: ["customer_balance"],
+        payment_method_data: { type: "customer_balance" },
+        payment_method_options: {
+          customer_balance: {
+            funding_type: "bank_transfer",
+            bank_transfer: {
+              type: "eu_bank_transfer",
+              eu_bank_transfer: { country: "BG" },
+            },
+          },
+        },
+        confirm: true,
+        receipt_email: email,
+        metadata: { orderId },
+      });
+
+      await saveOrder({
+        id: orderId, timestamp, customerName: fullName, customerEmail: email,
+        customerPhone: phone, deliveryAddress: address, city, postalCode,
+        items: orderItems, total, paymentStatus: "pending",
+        stripeSessionId: paymentIntent.id, boxnowLocationId: boxnowLocationId || null,
+      });
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const hostedUrl = (paymentIntent.next_action as any)?.display_bank_transfer_instructions?.hosted_instructions_url ?? null;
+      return NextResponse.json({ hostedUrl, orderId });
+    }
+
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(total * 100),
       currency: "eur",

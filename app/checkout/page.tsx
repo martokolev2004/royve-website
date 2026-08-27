@@ -55,6 +55,7 @@ function CheckoutForm() {
   const [promoDiscount, setPromoDiscount] = useState(0);
   const [promoError, setPromoError] = useState("");
   const [promoLoading, setPromoLoading] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<"card" | "bank_transfer">("card");
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({ resolver: zodResolver(schema) });
 
@@ -94,11 +95,23 @@ function CheckoutForm() {
           items: items.map((i) => ({ name: i.product.name, quantity: i.quantity })),
           boxnowLocationId: selectedLocker?.boxnowLockerId || null,
           promoCode: promoCode || null,
+          paymentMethod,
         }),
       });
       if (!res.ok) throw new Error("Failed");
-      const { clientSecret, orderId } = await res.json();
+      const result = await res.json();
 
+      if (paymentMethod === "bank_transfer") {
+        clearCart();
+        if (result.hostedUrl) {
+          window.location.href = result.hostedUrl;
+        } else {
+          window.location.href = `/success?order=${result.orderId}&pending=1`;
+        }
+        return;
+      }
+
+      const { clientSecret, orderId } = result;
       const cardNumber = elements.getElement(CardNumberElement);
       if (!cardNumber) throw new Error("Card element not found");
 
@@ -245,32 +258,64 @@ function CheckoutForm() {
             </div>
           </AnimatedSection>
 
-          {/* Card payment */}
+          {/* Payment method */}
           <AnimatedSection>
             <div className="border border-white/10 p-6">
               <h3 className="text-xs tracking-[0.4em] uppercase text-gold font-sans mb-6">— {t("checkout", "payment")} —</h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">Номер на карта</label>
-                  <div className="luxury-input py-3.5">
-                    <CardNumberElement options={CARD_STYLE} />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">Валидност</label>
-                    <div className="luxury-input py-3.5">
-                      <CardExpiryElement options={CARD_STYLE} />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">CVC</label>
-                    <div className="luxury-input py-3.5">
-                      <CardCvcElement options={CARD_STYLE} />
-                    </div>
-                  </div>
-                </div>
+
+              {/* Selector */}
+              <div className="grid grid-cols-2 gap-3 mb-6">
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod("card")}
+                  className={`py-3 text-xs tracking-widest uppercase font-sans border transition-colors ${paymentMethod === "card" ? "border-gold text-gold bg-gold/5" : "border-white/15 text-white/40 hover:border-white/30"}`}
+                >
+                  💳 Карта
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod("bank_transfer")}
+                  className={`py-3 text-xs tracking-widest uppercase font-sans border transition-colors ${paymentMethod === "bank_transfer" ? "border-gold text-gold bg-gold/5" : "border-white/15 text-white/40 hover:border-white/30"}`}
+                >
+                  🏦 Банков превод
+                </button>
               </div>
+
+              {paymentMethod === "card" && (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">Номер на карта</label>
+                    <div className="luxury-input py-3.5">
+                      <CardNumberElement options={CARD_STYLE} />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">Валидност</label>
+                      <div className="luxury-input py-3.5">
+                        <CardExpiryElement options={CARD_STYLE} />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">CVC</label>
+                      <div className="luxury-input py-3.5">
+                        <CardCvcElement options={CARD_STYLE} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {paymentMethod === "bank_transfer" && (
+                <div className="bg-dark-2 border border-white/5 p-4 space-y-2">
+                  <p className="text-white/60 text-xs font-sans leading-relaxed">
+                    След потвърждение ще получиш страница с виртуален IBAN и референтен номер за превода.
+                  </p>
+                  <p className="text-white/30 text-xs font-sans leading-relaxed">
+                    Поръчката се активира след получаване на превода (обикновено 1–3 работни дни).
+                  </p>
+                </div>
+              )}
             </div>
           </AnimatedSection>
 
