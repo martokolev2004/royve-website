@@ -56,6 +56,31 @@ function CheckoutForm() {
   const [promoError, setPromoError] = useState("");
   const [promoLoading, setPromoLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<"card" | "bank_transfer">("card");
+  const [termsAccepted, setTermsAccepted] = useState(false);
+
+  function TermsCheckbox() {
+    return (
+      <label className="flex items-start gap-3 cursor-pointer mb-4 group">
+        <div className="relative flex-shrink-0 mt-0.5">
+          <input
+            type="checkbox"
+            checked={termsAccepted}
+            onChange={(e) => setTermsAccepted(e.target.checked)}
+            className="sr-only"
+          />
+          <div className={`w-4 h-4 border transition-colors ${termsAccepted ? "border-gold bg-gold/20" : "border-white/20 group-hover:border-white/40"}`}>
+            {termsAccepted && <span className="block text-gold text-[10px] leading-4 text-center">✓</span>}
+          </div>
+        </div>
+        <span className="text-white/40 text-xs font-sans leading-relaxed">
+          Прочетох и приемам{" "}
+          <a href="/terms" target="_blank" className="text-gold hover:underline">Общите условия</a>
+          {" "}и{" "}
+          <a href="/privacy" target="_blank" className="text-gold hover:underline">Политиката за поверителност</a>
+        </span>
+      </label>
+    );
+  }
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({ resolver: zodResolver(schema) });
 
@@ -372,9 +397,10 @@ function CheckoutForm() {
                 <span className="font-serif text-2xl text-gold font-bold">{total()} €</span>
               </div>
             )}
+            <TermsCheckbox />
             <motion.button
               type="submit"
-              disabled={submitting || !stripe}
+              disabled={submitting || !stripe || !termsAccepted}
               className="btn-luxury w-full text-center text-xs disabled:opacity-50 disabled:cursor-not-allowed"
               whileTap={{ scale: 0.98 }}
             >
