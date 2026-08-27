@@ -40,12 +40,21 @@ export default function Footer() {
           <p className="text-white/20 text-xs font-sans">
             © {new Date().getFullYear()} ROYVÉ Eyewear. {t("footer", "rights")}.
           </p>
-          <div className="flex gap-6">
+          <div className="flex flex-wrap justify-center gap-4 md:gap-6">
             <Link href="/shop" className="text-white/20 text-xs hover:text-gold transition-colors font-sans tracking-widest uppercase">
               {t("nav", "shop")}
             </Link>
             <Link href="/cart" className="text-white/20 text-xs hover:text-gold transition-colors font-sans tracking-widest uppercase">
               {t("nav", "cart")}
+            </Link>
+            <Link href="/terms" className="text-white/20 text-xs hover:text-gold transition-colors font-sans tracking-widest uppercase">
+              Общи условия
+            </Link>
+            <Link href="/privacy" className="text-white/20 text-xs hover:text-gold transition-colors font-sans tracking-widest uppercase">
+              Поверителност
+            </Link>
+            <Link href="/cookies" className="text-white/20 text-xs hover:text-gold transition-colors font-sans tracking-widest uppercase">
+              Бисквитки
             </Link>
           </div>
         </div>
