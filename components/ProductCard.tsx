@@ -8,6 +8,7 @@ import { useCartStore } from "@/lib/store";
 import { useInventory } from "@/context/InventoryContext";
 import { Product } from "@/lib/products";
 import { trackEvent } from "./MetaPixel";
+import { track } from "@vercel/analytics";
 
 interface Props { product: Product }
 
@@ -127,7 +128,7 @@ export default function ProductCard({ product }: Props) {
           </div>
         ) : (
           <motion.button
-            onClick={() => { addItem(product); trackEvent("AddToCart", { content_ids: [product.id], content_name: product.name, value: product.price, currency: "EUR" }); }}
+            onClick={() => { addItem(product); trackEvent("AddToCart", { content_ids: [product.id], content_name: product.name, value: product.price, currency: "EUR" }); track("AddToCart", { product: product.name, value: product.price }); }}
             className="btn-luxury w-full text-center text-xs"
             whileTap={{ scale: 0.97 }}
           >

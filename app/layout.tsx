@@ -9,6 +9,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 import OfferRibbon from "@/components/OfferRibbon";
 import CookieConsent from "@/components/CookieConsent";
 import TrackingProvider from "@/components/TrackingProvider";
+import { Analytics } from "@vercel/analytics/next";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <OfferRibbon />
             <main>{children}</main>
             <CookieConsent />
+            <Analytics />
           </InventoryProvider>
         </LanguageProvider>
       </body>

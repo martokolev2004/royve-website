@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { useLang } from "@/context/LanguageContext";
 import { trackEvent } from "@/components/MetaPixel";
+import { track } from "@vercel/analytics";
 
 function SuccessContent() {
   const { t } = useLang();
@@ -23,6 +24,7 @@ function SuccessContent() {
             content_ids: data.items?.map((i: { name: string }) => i.name) ?? [],
             order_id: orderId,
           });
+          track("Purchase", { value: data.total, currency: "EUR", order_id: orderId });
         }
       })
       .catch(() => {});
