@@ -98,8 +98,8 @@ function CheckoutForm() {
           paymentMethod,
         }),
       });
-      if (!res.ok) throw new Error("Failed");
       const result = await res.json();
+      if (!res.ok) throw new Error(result.error || "Failed");
 
       if (paymentMethod === "bank_transfer") {
         clearCart();
@@ -132,8 +132,8 @@ function CheckoutForm() {
         clearCart();
         window.location.href = `/success?order=${orderId}`;
       }
-    } catch {
-      setError("Грешка при изпращане. Опитайте отново.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Грешка при изпращане. Опитайте отново.");
       setSubmitting(false);
     }
   }

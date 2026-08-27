@@ -115,8 +115,9 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ clientSecret: paymentIntent.client_secret, orderId });
-  } catch (err) {
-    console.error("Payment intent error:", err);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error("Payment intent error:", msg);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
