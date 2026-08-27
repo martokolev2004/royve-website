@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
             funding_type: "bank_transfer",
             bank_transfer: {
               type: "eu_bank_transfer",
-              eu_bank_transfer: { country: "BG" },
+              eu_bank_transfer: { country: "DE" },
             },
           },
         },
