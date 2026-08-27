@@ -272,13 +272,10 @@ function CheckoutForm() {
                 >
                   💳 Карта
                 </button>
-                <button
-                  type="button"
-                  onClick={() => setPaymentMethod("bank_transfer")}
-                  className={`py-3 text-xs tracking-widest uppercase font-sans border transition-colors ${paymentMethod === "bank_transfer" ? "border-gold text-gold bg-gold/5" : "border-white/15 text-white/40 hover:border-white/30"}`}
-                >
+                <div className="relative py-3 text-xs tracking-widest uppercase font-sans border border-white/10 text-white/20 cursor-not-allowed text-center">
                   🏦 Банков превод
-                </button>
+                  <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-dark-1 border border-gold/40 text-gold text-[8px] tracking-widest px-2 py-0.5">COMING SOON</span>
+                </div>
               </div>
 
               {paymentMethod === "card" && (
