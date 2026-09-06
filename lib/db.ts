@@ -68,6 +68,10 @@ async function ensureSchema(): Promise<void> {
       boxnow_reference TEXT
     )
   `);
+  // Migrate: add columns that may be missing in existing tables
+  await db.query(`ALTER TABLE orders ADD COLUMN IF NOT EXISTS boxnow_location_id TEXT`);
+  await db.query(`ALTER TABLE orders ADD COLUMN IF NOT EXISTS boxnow_reference TEXT`);
+  await db.query(`ALTER TABLE orders ADD COLUMN IF NOT EXISTS stripe_session_id TEXT`);
 }
 
 export interface OrderData {
