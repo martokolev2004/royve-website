@@ -36,6 +36,7 @@ export default function AdminPage() {
   const [promos, setPromos] = useState<PromoCode[]>([]);
   const [newPromoCode, setNewPromoCode] = useState("");
   const [newPromoDiscount, setNewPromoDiscount] = useState(10);
+  const [orderFilter, setOrderFilter] = useState<"all" | "card" | "bank">("all");
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -122,9 +123,15 @@ export default function AdminPage() {
 
   const paidOrders = orders.filter((o) => o.paymentStatus === "paid");
   const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
-  const visibleOrders = orders.filter(
-    (o) => o.paymentStatus === "paid" || new Date(o.timestamp).getTime() >= sevenDaysAgo
+  const allVisible = orders.filter(
+    (o) => o.paymentStatus === "paid" || o.paymentStatus === "pending_bank_transfer" || new Date(o.timestamp).getTime() >= sevenDaysAgo
   );
+  const visibleOrders = orderFilter === "bank"
+    ? allVisible.filter((o) => o.paymentStatus === "pending_bank_transfer")
+    : orderFilter === "card"
+    ? allVisible.filter((o) => o.paymentStatus !== "pending_bank_transfer")
+    : allVisible;
+  const bankTransferCount = allVisible.filter((o) => o.paymentStatus === "pending_bank_transfer").length;
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
@@ -174,6 +181,20 @@ export default function AdminPage() {
 
         {/* Orders */}
         {tab === "orders" && !loading && (
+          <div className="space-y-4">
+          <div className="flex gap-2 flex-wrap">
+            {(["all", "card", "bank"] as const).map((f) => (
+              <button
+                key={f}
+                onClick={() => setOrderFilter(f)}
+                className={`px-4 py-1.5 text-[10px] tracking-widest uppercase font-sans border transition-colors ${
+                  orderFilter === f ? "border-gold text-gold" : "border-white/10 text-white/30 hover:text-white/60"
+                }`}
+              >
+                {f === "all" ? `Всички (${allVisible.length})` : f === "card" ? "Карта" : `Банков превод${bankTransferCount > 0 ? ` (${bankTransferCount})` : ""}`}
+              </button>
+            ))}
+          </div>
           <div className="space-y-2">
             {visibleOrders.length === 0 && <p className="text-white/20 text-xs font-sans">Няма поръчки.</p>}
             {visibleOrders.map((order) => (
@@ -184,10 +205,14 @@ export default function AdminPage() {
                   className="w-full text-left px-5 py-4 flex items-center justify-between gap-4"
                 >
                   <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-                    <span className={`text-[10px] px-2 py-0.5 font-sans tracking-widest uppercase flex-shrink-0 ${
-                      order.paymentStatus === "paid" ? "bg-green-500/20 text-green-400 border border-green-500/30" : "bg-white/5 text-white/30 border border-white/10"
+                    <span className={`text-[10px] px-2 py-0.5 font-sans tracking-widest uppercase flex-shrink-0 border ${
+                      order.paymentStatus === "paid"
+                        ? "bg-green-500/20 text-green-400 border-green-500/30"
+                        : order.paymentStatus === "pending_bank_transfer"
+                        ? "bg-blue-500/10 text-blue-300 border-blue-500/20"
+                        : "bg-white/5 text-white/30 border-white/10"
                     }`}>
-                      {order.paymentStatus === "paid" ? "✓" : "…"}
+                      {order.paymentStatus === "paid" ? "✓ Карта" : order.paymentStatus === "pending_bank_transfer" ? "⏳ Банков" : "…"}
                     </span>
                     <div className="min-w-0">
                       <span className="text-white text-xs font-sans truncate block">{order.customerName}</span>
@@ -234,6 +259,7 @@ export default function AdminPage() {
                 )}
               </div>
             ))}
+          </div>
           </div>
         )}
 
