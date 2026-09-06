@@ -128,11 +128,7 @@ function CheckoutForm() {
 
       if (paymentMethod === "bank_transfer") {
         clearCart();
-        if (result.hostedUrl) {
-          window.location.href = result.hostedUrl;
-        } else {
-          window.location.href = `/success?order=${result.orderId}&pending=1`;
-        }
+        window.location.href = `/bank-transfer?order=${result.orderId}`;
         return;
       }
 
@@ -297,10 +293,13 @@ function CheckoutForm() {
                 >
                   💳 Карта
                 </button>
-                <div className="relative py-3 text-xs tracking-widest uppercase font-sans border border-white/10 text-white/20 cursor-not-allowed text-center">
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod("bank_transfer")}
+                  className={`py-3 text-xs tracking-widest uppercase font-sans border transition-colors ${paymentMethod === "bank_transfer" ? "border-gold text-gold bg-gold/5" : "border-white/15 text-white/40 hover:border-white/30"}`}
+                >
                   🏦 Банков превод
-                  <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-dark-1 border border-gold/40 text-gold text-[8px] tracking-widest px-2 py-0.5">COMING SOON</span>
-                </div>
+                </button>
               </div>
 
               {paymentMethod === "card" && (
@@ -331,10 +330,10 @@ function CheckoutForm() {
               {paymentMethod === "bank_transfer" && (
                 <div className="bg-dark-2 border border-white/5 p-4 space-y-2">
                   <p className="text-white/60 text-xs font-sans leading-relaxed">
-                    След потвърждение ще получиш страница с виртуален IBAN и референтен номер за превода.
+                    След потвърждение ще получиш банковите данни за превода (УББ, BG IBAN).
                   </p>
                   <p className="text-white/30 text-xs font-sans leading-relaxed">
-                    Поръчката се активира след получаване на превода (обикновено 1–3 работни дни).
+                    Поръчката се активира след получаване на превода (1–3 работни дни).
                   </p>
                 </div>
               )}
