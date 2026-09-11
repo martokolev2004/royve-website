@@ -8,7 +8,7 @@ import Footer from "@/components/Footer";
 const IBAN = "BG24UBBS80021481468410";
 const BIC = "UBBSBGSF";
 const BANK = "Юробанк България АД (УББ)";
-const RECIPIENT = "Мартин Веселинов Колев";
+const RECIPIENT = "Роен Митов";
 
 function BankTransferContent() {
   const params = useSearchParams();
