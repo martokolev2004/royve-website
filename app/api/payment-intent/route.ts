@@ -14,8 +14,10 @@ export async function POST(req: NextRequest) {
     if (!allowed) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
 
     const body = await req.json();
-    const { fullName, email, phone, address, city, postalCode, items, boxnowLocationId, promoCode, paymentMethod } = body;
+    const { fullName, email, phone, address, city, postalCode, items, boxnowLocationId, promoCode, paymentMethod, courier } = body;
     const isBankTransfer = paymentMethod === "bank_transfer";
+    const isCod = paymentMethod === "cod";
+    const DELIVERY_FEE = 5; // €5 for Econt/Speedy courier
 
     if (!items || items.length === 0) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
@@ -54,6 +56,10 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Add delivery fee for courier orders (not BoxNow, not bank transfer)
+    const deliveryFee = (!boxnowLocationId && !isBankTransfer) ? DELIVERY_FEE : 0;
+    total = Math.round((total + deliveryFee) * 100) / 100;
+
     const stripe = getStripe();
 
     if (isBankTransfer) {
@@ -62,6 +68,18 @@ export async function POST(req: NextRequest) {
         customerPhone: phone, deliveryAddress: address, city, postalCode,
         items: orderItems, total, paymentStatus: "pending_bank_transfer",
         stripeSessionId: undefined, boxnowLocationId: boxnowLocationId || null,
+        courier: courier || null, deliveryFee,
+      });
+      return NextResponse.json({ orderId });
+    }
+
+    if (isCod) {
+      await saveOrder({
+        id: orderId, timestamp, customerName: fullName, customerEmail: email,
+        customerPhone: phone, deliveryAddress: address, city, postalCode,
+        items: orderItems, total, paymentStatus: "pending_cod",
+        stripeSessionId: undefined, boxnowLocationId: boxnowLocationId || null,
+        courier: courier || null, deliveryFee,
       });
       return NextResponse.json({ orderId });
     }
@@ -88,6 +106,8 @@ export async function POST(req: NextRequest) {
       paymentStatus: "pending",
       stripeSessionId: paymentIntent.id,
       boxnowLocationId: boxnowLocationId || null,
+      courier: courier || null,
+      deliveryFee,
     });
 
     return NextResponse.json({ clientSecret: paymentIntent.client_secret, orderId });

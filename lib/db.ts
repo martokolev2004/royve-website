@@ -68,6 +68,8 @@ async function ensureSchema(): Promise<void> {
   await db.query(`ALTER TABLE orders ADD COLUMN IF NOT EXISTS boxnow_location_id TEXT`);
   await db.query(`ALTER TABLE orders ADD COLUMN IF NOT EXISTS boxnow_reference TEXT`);
   await db.query(`ALTER TABLE orders ADD COLUMN IF NOT EXISTS stripe_session_id TEXT`);
+  await db.query(`ALTER TABLE orders ADD COLUMN IF NOT EXISTS courier TEXT`);
+  await db.query(`ALTER TABLE orders ADD COLUMN IF NOT EXISTS delivery_fee NUMERIC NOT NULL DEFAULT 0`);
 }
 
 export interface OrderData {
@@ -85,14 +87,16 @@ export interface OrderData {
   stripeSessionId?: string;
   boxnowLocationId?: string;
   boxnowReference?: string;
+  courier?: string;
+  deliveryFee?: number;
 }
 
 export async function saveOrder(order: OrderData): Promise<void> {
   await ensureSchema();
   const db = getPool();
   await db.query(
-    `INSERT INTO orders (id, timestamp, customer_name, customer_email, customer_phone, delivery_address, city, postal_code, items, total, payment_status, stripe_session_id, boxnow_location_id, boxnow_reference)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
+    `INSERT INTO orders (id, timestamp, customer_name, customer_email, customer_phone, delivery_address, city, postal_code, items, total, payment_status, stripe_session_id, boxnow_location_id, boxnow_reference, courier, delivery_fee)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)`,
     [
       order.id,
       order.timestamp,
@@ -108,6 +112,8 @@ export async function saveOrder(order: OrderData): Promise<void> {
       order.stripeSessionId || null,
       order.boxnowLocationId || null,
       order.boxnowReference || null,
+      order.courier || null,
+      order.deliveryFee || 0,
     ]
   );
 }
@@ -127,28 +133,33 @@ export async function markOrderPaid(stripeSessionId: string): Promise<void> {
   );
 }
 
+function rowToOrder(row: Record<string, unknown>): OrderData {
+  return {
+    id: row.id as string,
+    timestamp: row.timestamp as string,
+    customerName: row.customer_name as string,
+    customerEmail: row.customer_email as string,
+    customerPhone: row.customer_phone as string,
+    deliveryAddress: row.delivery_address as string,
+    city: row.city as string,
+    postalCode: row.postal_code as string,
+    items: row.items as OrderData["items"],
+    total: Number(row.total),
+    paymentStatus: row.payment_status as string,
+    stripeSessionId: row.stripe_session_id as string | undefined,
+    boxnowLocationId: row.boxnow_location_id as string | undefined,
+    boxnowReference: row.boxnow_reference as string | undefined,
+    courier: row.courier as string | undefined,
+    deliveryFee: Number(row.delivery_fee) || 0,
+  };
+}
+
 export async function getOrderBySessionId(stripeSessionId: string): Promise<OrderData | null> {
   await ensureSchema();
   const db = getPool();
   const res = await db.query(`SELECT * FROM orders WHERE stripe_session_id = $1`, [stripeSessionId]);
   if (res.rows.length === 0) return null;
-  const row = res.rows[0];
-  return {
-    id: row.id,
-    timestamp: row.timestamp,
-    customerName: row.customer_name,
-    customerEmail: row.customer_email,
-    customerPhone: row.customer_phone,
-    deliveryAddress: row.delivery_address,
-    city: row.city,
-    postalCode: row.postal_code,
-    items: row.items,
-    total: Number(row.total),
-    paymentStatus: row.payment_status,
-    stripeSessionId: row.stripe_session_id,
-    boxnowLocationId: row.boxnow_location_id,
-    boxnowReference: row.boxnow_reference,
-  };
+  return rowToOrder(res.rows[0]);
 }
 
 export async function getOrderById(orderId: string): Promise<OrderData | null> {
@@ -156,23 +167,7 @@ export async function getOrderById(orderId: string): Promise<OrderData | null> {
   const db = getPool();
   const res = await db.query(`SELECT * FROM orders WHERE id = $1`, [orderId]);
   if (res.rows.length === 0) return null;
-  const row = res.rows[0];
-  return {
-    id: row.id,
-    timestamp: row.timestamp,
-    customerName: row.customer_name,
-    customerEmail: row.customer_email,
-    customerPhone: row.customer_phone,
-    deliveryAddress: row.delivery_address,
-    city: row.city,
-    postalCode: row.postal_code,
-    items: row.items,
-    total: Number(row.total),
-    paymentStatus: row.payment_status,
-    stripeSessionId: row.stripe_session_id,
-    boxnowLocationId: row.boxnow_location_id,
-    boxnowReference: row.boxnow_reference,
-  };
+  return rowToOrder(res.rows[0]);
 }
 
 export async function updateBoxNowReference(orderId: string, boxnowReference: string): Promise<void> {
@@ -185,22 +180,7 @@ export async function getAllOrders(): Promise<OrderData[]> {
   await ensureSchema();
   const db = getPool();
   const res = await db.query(`SELECT * FROM orders ORDER BY timestamp DESC`);
-  return res.rows.map((row) => ({
-    id: row.id,
-    timestamp: row.timestamp,
-    customerName: row.customer_name,
-    customerEmail: row.customer_email,
-    customerPhone: row.customer_phone,
-    deliveryAddress: row.delivery_address,
-    city: row.city,
-    postalCode: row.postal_code,
-    items: row.items,
-    total: Number(row.total),
-    paymentStatus: row.payment_status,
-    stripeSessionId: row.stripe_session_id,
-    boxnowLocationId: row.boxnow_location_id,
-    boxnowReference: row.boxnow_reference,
-  }));
+  return res.rows.map(rowToOrder);
 }
 
 export async function getInventory(): Promise<Record<string, number>> {

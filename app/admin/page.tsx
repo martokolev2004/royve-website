@@ -18,6 +18,8 @@ interface Order {
   paymentStatus: string;
   boxnowLocationId?: string;
   boxnowReference?: string;
+  courier?: string;
+  deliveryFee?: number;
 }
 
 interface PromoCode { code: string; discount: number; active: boolean }
@@ -124,12 +126,12 @@ export default function AdminPage() {
   const paidOrders = orders.filter((o) => o.paymentStatus === "paid");
   const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
   const allVisible = orders.filter(
-    (o) => o.paymentStatus === "paid" || o.paymentStatus === "pending_bank_transfer" || new Date(o.timestamp).getTime() >= sevenDaysAgo
+    (o) => ["paid", "pending_bank_transfer", "pending_cod"].includes(o.paymentStatus) || new Date(o.timestamp).getTime() >= sevenDaysAgo
   );
   const visibleOrders = orderFilter === "bank"
     ? allVisible.filter((o) => o.paymentStatus === "pending_bank_transfer")
     : orderFilter === "card"
-    ? allVisible.filter((o) => o.paymentStatus !== "pending_bank_transfer")
+    ? allVisible.filter((o) => !["pending_bank_transfer", "pending_cod"].includes(o.paymentStatus))
     : allVisible;
   const bankTransferCount = allVisible.filter((o) => o.paymentStatus === "pending_bank_transfer").length;
 
@@ -210,9 +212,11 @@ export default function AdminPage() {
                         ? "bg-green-500/20 text-green-400 border-green-500/30"
                         : order.paymentStatus === "pending_bank_transfer"
                         ? "bg-blue-500/10 text-blue-300 border-blue-500/20"
+                        : order.paymentStatus === "pending_cod"
+                        ? "bg-orange-500/10 text-orange-300 border-orange-500/20"
                         : "bg-white/5 text-white/30 border-white/10"
                     }`}>
-                      {order.paymentStatus === "paid" ? "✓ Карта" : order.paymentStatus === "pending_bank_transfer" ? "⏳ Банков" : "…"}
+                      {order.paymentStatus === "paid" ? "✓ Карта" : order.paymentStatus === "pending_bank_transfer" ? "⏳ Банков" : order.paymentStatus === "pending_cod" ? "💵 Наложен" : "…"}
                     </span>
                     <div className="min-w-0">
                       <span className="text-white text-xs font-sans truncate block">{order.customerName}</span>
@@ -237,8 +241,14 @@ export default function AdminPage() {
                       {order.boxnowLocationId ? (
                         <p className="text-[#00c853] text-xs font-sans mt-2">📦 BOX NOW — Автомат #{order.boxnowLocationId}</p>
                       ) : (
-                        <p className="text-white/50 text-xs font-sans mt-2">🚚 {order.deliveryAddress}, {order.city} {order.postalCode}</p>
+                        <p className="text-white/50 text-xs font-sans mt-2">
+                          {order.courier === "econt" ? "📦 Еконт" : order.courier === "speedy" ? "🚚 Спиди" : "🚚"}{" "}
+                          {order.deliveryAddress}, {order.city} {order.postalCode}
+                        </p>
                       )}
+                      {order.deliveryFee ? (
+                        <p className="text-white/30 text-xs font-sans mt-1">Доставка: {order.deliveryFee} €</p>
+                      ) : null}
                     </div>
                     <div>
                       <p className="text-white/30 text-[10px] tracking-widest uppercase font-sans mb-3">Продукти</p>

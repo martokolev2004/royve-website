@@ -55,8 +55,11 @@ function CheckoutForm() {
   const [promoDiscount, setPromoDiscount] = useState(0);
   const [promoError, setPromoError] = useState("");
   const [promoLoading, setPromoLoading] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<"card" | "bank_transfer">("card");
+  const [paymentMethod, setPaymentMethod] = useState<"card" | "bank_transfer" | "cod">("card");
+  const [courier, setCourier] = useState<"econt" | "speedy" | null>(null);
+  const [courierError, setCourierError] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const DELIVERY_FEE = 5;
 
   function TermsCheckbox() {
     return (
@@ -106,8 +109,13 @@ function CheckoutForm() {
     }
   }
 
+  const needsCourier = !selectedLocker && paymentMethod !== "bank_transfer";
+  const deliveryFee = needsCourier ? DELIVERY_FEE : 0;
+
   async function onSubmit(data: FormData) {
     if (!stripe || !elements || items.length === 0) return;
+    if (needsCourier && !courier) { setCourierError(true); return; }
+    setCourierError(false);
     setSubmitting(true);
     setError("");
 
@@ -121,6 +129,7 @@ function CheckoutForm() {
           boxnowLocationId: selectedLocker?.boxnowLockerId || null,
           promoCode: promoCode || null,
           paymentMethod,
+          courier: courier || null,
         }),
       });
       const result = await res.json();
@@ -129,6 +138,12 @@ function CheckoutForm() {
       if (paymentMethod === "bank_transfer") {
         clearCart();
         window.location.href = `/bank-transfer?order=${result.orderId}`;
+        return;
+      }
+
+      if (paymentMethod === "cod") {
+        clearCart();
+        window.location.href = `/success?order=${result.orderId}`;
         return;
       }
 
@@ -201,6 +216,32 @@ function CheckoutForm() {
               </div>
             </div>
           </AnimatedSection>
+
+          {/* Courier selection (when not using BoxNow) */}
+          {!selectedLocker && (
+            <AnimatedSection>
+              <div className={`border p-6 ${courierError ? "border-red-400/40" : "border-white/10"}`}>
+                <h3 className="text-xs tracking-[0.4em] uppercase text-white/60 font-sans mb-4">— КУРИЕР —</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  {(["econt", "speedy"] as const).map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => { setCourier(c); setCourierError(false); }}
+                      className={`py-4 text-xs tracking-widest uppercase font-sans border transition-colors flex flex-col items-center gap-1.5 ${
+                        courier === c ? "border-gold text-gold bg-gold/5" : "border-white/15 text-white/40 hover:border-white/30"
+                      }`}
+                    >
+                      <span className="text-base">{c === "econt" ? "📦" : "🚚"}</span>
+                      <span>{c === "econt" ? "Еконт" : "Спиди"}</span>
+                      <span className="text-[10px] text-white/30 normal-case tracking-normal">+{DELIVERY_FEE} €</span>
+                    </button>
+                  ))}
+                </div>
+                {courierError && <p className="text-red-400 text-xs mt-2 font-sans">Моля избери куриер.</p>}
+              </div>
+            </AnimatedSection>
+          )}
 
           {/* BoxNow locker selection */}
           <AnimatedSection>
@@ -285,7 +326,7 @@ function CheckoutForm() {
               <h3 className="text-xs tracking-[0.4em] uppercase text-gold font-sans mb-6">— {t("checkout", "payment")} —</h3>
 
               {/* Selector */}
-              <div className="grid grid-cols-2 gap-3 mb-6">
+              <div className="grid grid-cols-3 gap-3 mb-6">
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("card")}
@@ -298,7 +339,14 @@ function CheckoutForm() {
                   onClick={() => setPaymentMethod("bank_transfer")}
                   className={`py-3 text-xs tracking-widest uppercase font-sans border transition-colors ${paymentMethod === "bank_transfer" ? "border-gold text-gold bg-gold/5" : "border-white/15 text-white/40 hover:border-white/30"}`}
                 >
-                  🏦 Банков превод
+                  🏦 Банков
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod("cod")}
+                  className={`py-3 text-xs tracking-widest uppercase font-sans border transition-colors ${paymentMethod === "cod" ? "border-gold text-gold bg-gold/5" : "border-white/15 text-white/40 hover:border-white/30"}`}
+                >
+                  💵 Наложен
                 </button>
               </div>
 
@@ -337,6 +385,17 @@ function CheckoutForm() {
                   </p>
                 </div>
               )}
+
+              {paymentMethod === "cod" && (
+                <div className="bg-dark-2 border border-white/5 p-4 space-y-2">
+                  <p className="text-white/60 text-xs font-sans leading-relaxed">
+                    Плащаш в брой при получаване на пратката от куриера.
+                  </p>
+                  <p className="text-white/30 text-xs font-sans leading-relaxed">
+                    Таксата за доставка е <strong className="text-white">5 €</strong> и се включва в общата сума.
+                  </p>
+                </div>
+              )}
             </div>
           </AnimatedSection>
 
@@ -372,13 +431,20 @@ function CheckoutForm() {
                 <span>BOX NOW: {selectedLocker.boxnowLockerAddressLine1}</span>
               </div>
             )}
+            {deliveryFee > 0 && (
+              <div className="flex justify-between text-xs font-sans text-white/40 mb-2">
+                <span>Доставка ({courier === "econt" ? "Еконт" : courier === "speedy" ? "Спиди" : "куриер"})</span>
+                <span>+{deliveryFee.toFixed(2)} €</span>
+              </div>
+            )}
             {promoCode && (() => {
-              const promoAmount = Math.round(total() * promoDiscount) / 100;
-              const finalTotal = Math.round((total() - promoAmount) * 100) / 100;
+              const baseTotal = total();
+              const promoAmount = Math.round(baseTotal * promoDiscount) / 100;
+              const finalTotal = Math.round((baseTotal - promoAmount + deliveryFee) * 100) / 100;
               return (
                 <>
                   <div className="flex justify-between text-xs font-sans text-white/40 mb-2">
-                    <span>Преди промокод</span><span>{total()} €</span>
+                    <span>Преди промокод</span><span>{baseTotal} €</span>
                   </div>
                   <div className="flex justify-between text-xs font-sans text-gold mb-4">
                     <span>Промокод ({promoDiscount}%)</span><span>−{promoAmount.toFixed(2)} €</span>
@@ -393,7 +459,7 @@ function CheckoutForm() {
             {!promoCode && (
               <div className="flex justify-between items-center mb-8">
                 <span className="text-xs tracking-[0.3em] uppercase font-sans text-white/60">{t("cart", "total")}</span>
-                <span className="font-serif text-2xl text-gold font-bold">{total()} €</span>
+                <span className="font-serif text-2xl text-gold font-bold">{(total() + deliveryFee).toFixed(2)} €</span>
               </div>
             )}
             <TermsCheckbox />
