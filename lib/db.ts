@@ -1,4 +1,5 @@
 import { Pool } from "pg";
+import { products } from "./products";
 
 let pool: Pool | null = null;
 
@@ -12,11 +13,6 @@ function getPool(): Pool {
   return pool;
 }
 
-const INITIAL_STOCK: Record<string, number> = {
-  noir: 10, amber: 10, epoc: 10, obsidian: 10, krypt: 0,
-  sahra: 10, monarch: 10, azure: 10, velor: 10, octave: 10,
-};
-
 async function ensureSchema(): Promise<void> {
   const db = getPool();
   await db.query(`
@@ -25,10 +21,10 @@ async function ensureSchema(): Promise<void> {
       quantity INT NOT NULL DEFAULT 10
     )
   `);
-  for (const [id, qty] of Object.entries(INITIAL_STOCK)) {
+  for (const product of products) {
     await db.query(
       `INSERT INTO inventory (product_id, quantity) VALUES ($1, $2) ON CONFLICT (product_id) DO NOTHING`,
-      [id, qty]
+      [product.id, product.soldOut ? 0 : 10]
     );
   }
   await db.query(`
