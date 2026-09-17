@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="bg" className={`${playfair.variable} ${inter.variable}`}>
-      <body className="grain">
+      <body>
         <LanguageProvider>
           <InventoryProvider>
             <TrackingProvider />
