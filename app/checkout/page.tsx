@@ -227,6 +227,48 @@ function CheckoutForm() {
             </div>
           </AnimatedSection>
 
+          {/* Promo code */}
+          <AnimatedSection>
+            <div className="border border-white/10 p-6">
+              <h3 className="text-xs tracking-[0.4em] uppercase text-white/40 font-sans mb-4">— ПРОМОКОД —</h3>
+              {promoCode ? (
+                <div className="flex items-center justify-between bg-dark-2 border border-gold/30 px-4 py-3">
+                  <div>
+                    <p className="text-gold text-[10px] tracking-widest uppercase font-sans mb-0.5">✓ Промокодът е приложен</p>
+                    <p className="text-white text-xs font-sans">{promoCode} — {promoDiscount}% отстъпка</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => { setPromoCode(null); setPromoDiscount(0); setPromoInput(""); }}
+                    className="text-white/30 hover:text-gold text-[10px] tracking-widest uppercase font-sans transition-colors ml-4 flex-shrink-0"
+                  >
+                    Премахни
+                  </button>
+                </div>
+              ) : (
+                <div className="flex gap-3">
+                  <input
+                    type="text"
+                    value={promoInput}
+                    onChange={(e) => { setPromoInput(e.target.value); setPromoError(""); }}
+                    onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), applyPromoCode())}
+                    placeholder="Въведи промокод"
+                    className="luxury-input flex-1"
+                  />
+                  <button
+                    type="button"
+                    onClick={applyPromoCode}
+                    disabled={promoLoading || !promoInput.trim()}
+                    className="px-5 border border-gold text-gold text-xs tracking-widest uppercase font-sans hover:bg-gold hover:text-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    {promoLoading ? "..." : "Приложи"}
+                  </button>
+                </div>
+              )}
+              {promoError && <p className="text-red-400 text-xs mt-2 font-sans">{promoError}</p>}
+            </div>
+          </AnimatedSection>
+
           {/* Delivery method */}
           <AnimatedSection>
             <div className="border border-white/10 p-6">
@@ -299,48 +341,6 @@ function CheckoutForm() {
                   )}
                 </div>
               )}
-            </div>
-          </AnimatedSection>
-
-          {/* Promo code */}
-          <AnimatedSection>
-            <div className="border border-white/10 p-6">
-              <h3 className="text-xs tracking-[0.4em] uppercase text-white/40 font-sans mb-4">— ПРОМОКОД —</h3>
-              {promoCode ? (
-                <div className="flex items-center justify-between bg-dark-2 border border-gold/30 px-4 py-3">
-                  <div>
-                    <p className="text-gold text-[10px] tracking-widest uppercase font-sans mb-0.5">✓ Промокодът е приложен</p>
-                    <p className="text-white text-xs font-sans">{promoCode} — {promoDiscount}% отстъпка</p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => { setPromoCode(null); setPromoDiscount(0); setPromoInput(""); }}
-                    className="text-white/30 hover:text-gold text-[10px] tracking-widest uppercase font-sans transition-colors ml-4 flex-shrink-0"
-                  >
-                    Премахни
-                  </button>
-                </div>
-              ) : (
-                <div className="flex gap-3">
-                  <input
-                    type="text"
-                    value={promoInput}
-                    onChange={(e) => { setPromoInput(e.target.value); setPromoError(""); }}
-                    onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), applyPromoCode())}
-                    placeholder="Въведи промокод"
-                    className="luxury-input flex-1"
-                  />
-                  <button
-                    type="button"
-                    onClick={applyPromoCode}
-                    disabled={promoLoading || !promoInput.trim()}
-                    className="px-5 border border-gold text-gold text-xs tracking-widest uppercase font-sans hover:bg-gold hover:text-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                  >
-                    {promoLoading ? "..." : "Приложи"}
-                  </button>
-                </div>
-              )}
-              {promoError && <p className="text-red-400 text-xs mt-2 font-sans">{promoError}</p>}
             </div>
           </AnimatedSection>
 
