@@ -198,7 +198,7 @@ function CheckoutForm() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div className="lg:col-span-2 space-y-8">
 
-          {/* Contact & delivery info */}
+          {/* Contact info */}
           <AnimatedSection>
             <h2 className="text-xs tracking-[0.4em] uppercase text-gold font-sans mb-6">— {t("checkout", "title")} —</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -217,23 +217,111 @@ function CheckoutForm() {
                 <input {...register("phone")} type="tel" className="luxury-input" placeholder="+359 ..." />
                 {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone.message}</p>}
               </div>
-              {deliveryMethod !== "boxnow" && (<>
-              <div>
-                <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">{t("checkout", "city")}</label>
-                <input {...register("city")} className="luxury-input" placeholder={t("checkout", "city")} />
-                {errors.city && <p className="text-red-400 text-xs mt-1">{errors.city.message}</p>}
+            </div>
+          </AnimatedSection>
+
+          {/* Delivery method */}
+          <AnimatedSection>
+            <div className="border border-white/10 p-6">
+              <h3 className="text-xs tracking-[0.4em] uppercase text-gold font-sans mb-6">— ДОСТАВКА —</h3>
+
+              {/* 3 options */}
+              <div className="grid grid-cols-3 gap-3">
+                <button
+                  type="button"
+                  onClick={() => { setDeliveryMethod("boxnow"); setSelectedLocker(null); }}
+                  className={`py-4 text-xs tracking-widest uppercase font-sans border transition-colors flex flex-col items-center gap-1.5 ${
+                    deliveryMethod === "boxnow" ? "border-[#00c853] text-[#00c853] bg-[#00c853]/5" : "border-white/15 text-white/40 hover:border-white/30"
+                  }`}
+                >
+                  <span className="text-base">📦</span>
+                  <span>Box Now</span>
+                  <span className="text-[10px] text-white/30 normal-case tracking-normal">Автомат</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDeliveryMethod("econt")}
+                  className={`py-4 text-xs tracking-widest uppercase font-sans border transition-colors flex flex-col items-center gap-1.5 ${
+                    deliveryMethod === "econt" ? "border-gold text-gold bg-gold/5" : "border-white/15 text-white/40 hover:border-white/30"
+                  }`}
+                >
+                  <span className="text-base">🚚</span>
+                  <span>Еконт</span>
+                  <span className="text-[10px] text-white/30 normal-case tracking-normal">+{DELIVERY_FEE} €</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDeliveryMethod("speedy")}
+                  className={`py-4 text-xs tracking-widest uppercase font-sans border transition-colors flex flex-col items-center gap-1.5 ${
+                    deliveryMethod === "speedy" ? "border-gold text-gold bg-gold/5" : "border-white/15 text-white/40 hover:border-white/30"
+                  }`}
+                >
+                  <span className="text-base">🚀</span>
+                  <span>Спиди</span>
+                  <span className="text-[10px] text-white/30 normal-case tracking-normal">+{DELIVERY_FEE} €</span>
+                </button>
               </div>
-              <div>
-                <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">{t("checkout", "postalCode")}</label>
-                <input {...register("postalCode")} className="luxury-input" placeholder="1000" />
-                {errors.postalCode && <p className="text-red-400 text-xs mt-1">{errors.postalCode.message}</p>}
-              </div>
-              <div className="md:col-span-2">
-                <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">{t("checkout", "address")}</label>
-                <input {...register("address")} className="luxury-input" placeholder={t("checkout", "address")} />
-                {errors.address && <p className="text-red-400 text-xs mt-1">{errors.address.message}</p>}
-              </div>
-              </>)}
+
+              {/* BoxNow: locker picker */}
+              {deliveryMethod === "boxnow" && (
+                <div className="mt-4 pt-4 border-t border-white/5">
+                  {selectedLocker ? (
+                    <div>
+                      <div className="flex items-center justify-between bg-dark-2 border border-[#00c853]/30 px-4 py-3 mb-3">
+                        <div>
+                          <p className="text-[#00c853] text-[10px] tracking-widest uppercase font-sans mb-0.5">✓ Избран автомат</p>
+                          <p className="text-white text-xs font-sans">{selectedLocker.boxnowLockerAddressLine1}</p>
+                          <p className="text-white/40 text-xs font-sans mt-0.5">{selectedLocker.boxnowLockerPostalCode}</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setSelectedLocker(null)}
+                          className="text-white/30 hover:text-gold text-[10px] tracking-widest uppercase font-sans transition-colors ml-4 flex-shrink-0"
+                        >
+                          {t("checkout", "changeLocker")}
+                        </button>
+                      </div>
+                      <iframe
+                        title="BoxNow location"
+                        width="100%"
+                        height="200"
+                        style={{ border: 0, display: "block" }}
+                        loading="lazy"
+                        src={`https://maps.google.com/maps?q=${encodeURIComponent(selectedLocker.boxnowLockerAddressLine1 + ", " + selectedLocker.boxnowLockerPostalCode + ", Bulgaria")}&output=embed&zoom=16`}
+                      />
+                    </div>
+                  ) : (
+                    <div>
+                      <p className="text-white/40 text-xs font-sans mb-4">{t("checkout", "boxnowDesc")}</p>
+                      <BoxNowWidget
+                        partnerId={17321}
+                        onSelect={(locker: BNSelected) => setSelectedLocker(locker)}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Econt / Speedy: address fields */}
+              {hasCourierDelivery && (
+                <div className="mt-4 pt-4 border-t border-white/5 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">{t("checkout", "city")}</label>
+                    <input {...register("city")} className="luxury-input" placeholder={t("checkout", "city")} />
+                    {errors.city && <p className="text-red-400 text-xs mt-1">{errors.city.message}</p>}
+                  </div>
+                  <div>
+                    <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">{t("checkout", "postalCode")}</label>
+                    <input {...register("postalCode")} className="luxury-input" placeholder="1000" />
+                    {errors.postalCode && <p className="text-red-400 text-xs mt-1">{errors.postalCode.message}</p>}
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">{t("checkout", "address")}</label>
+                    <input {...register("address")} className="luxury-input" placeholder={t("checkout", "address")} />
+                    {errors.address && <p className="text-red-400 text-xs mt-1">{errors.address.message}</p>}
+                  </div>
+                </div>
+              )}
             </div>
           </AnimatedSection>
 
@@ -276,91 +364,6 @@ function CheckoutForm() {
                 </div>
               )}
               {promoError && <p className="text-red-400 text-xs mt-2 font-sans">{promoError}</p>}
-            </div>
-          </AnimatedSection>
-
-          {/* Delivery method */}
-          <AnimatedSection>
-            <div className="border border-white/10 p-6">
-              <h3 className="text-xs tracking-[0.4em] uppercase text-gold font-sans mb-6">— ДОСТАВКА —</h3>
-              <div className="grid grid-cols-3 gap-3">
-                {/* BoxNow */}
-                <button
-                  type="button"
-                  onClick={() => setDeliveryMethod("boxnow")}
-                  className={`py-4 text-xs tracking-widest uppercase font-sans border transition-colors flex flex-col items-center gap-1.5 ${
-                    deliveryMethod === "boxnow" ? "border-[#00c853] text-[#00c853] bg-[#00c853]/5" : "border-white/15 text-white/40 hover:border-white/30"
-                  }`}
-                >
-                  <span className="text-base">📦</span>
-                  <span>Box Now</span>
-                  <span className="text-[10px] text-white/30 normal-case tracking-normal">Автомат</span>
-                </button>
-                {/* Econt */}
-                <button
-                  type="button"
-                  onClick={() => setDeliveryMethod("econt")}
-                  className={`py-4 text-xs tracking-widest uppercase font-sans border transition-colors flex flex-col items-center gap-1.5 ${
-                    deliveryMethod === "econt" ? "border-gold text-gold bg-gold/5" : "border-white/15 text-white/40 hover:border-white/30"
-                  }`}
-                >
-                  <span className="text-base">🚚</span>
-                  <span>Еконт</span>
-                  <span className="text-[10px] text-white/30 normal-case tracking-normal">+{DELIVERY_FEE} €</span>
-                </button>
-                {/* Speedy */}
-                <button
-                  type="button"
-                  onClick={() => setDeliveryMethod("speedy")}
-                  className={`py-4 text-xs tracking-widest uppercase font-sans border transition-colors flex flex-col items-center gap-1.5 ${
-                    deliveryMethod === "speedy" ? "border-gold text-gold bg-gold/5" : "border-white/15 text-white/40 hover:border-white/30"
-                  }`}
-                >
-                  <span className="text-base">🚀</span>
-                  <span>Спиди</span>
-                  <span className="text-[10px] text-white/30 normal-case tracking-normal">+{DELIVERY_FEE} €</span>
-                </button>
-              </div>
-
-              {/* BoxNow locker picker — only when BoxNow selected */}
-              {deliveryMethod === "boxnow" && (
-                <div className="mt-4 pt-4 border-t border-white/5">
-                  {selectedLocker ? (
-                    <div>
-                      <div className="flex items-center justify-between bg-dark-2 border border-[#00c853]/30 px-4 py-3 mb-3">
-                        <div>
-                          <p className="text-[#00c853] text-[10px] tracking-widest uppercase font-sans mb-0.5">✓ Избран автомат</p>
-                          <p className="text-white text-xs font-sans">{selectedLocker.boxnowLockerAddressLine1}</p>
-                          <p className="text-white/40 text-xs font-sans mt-0.5">{selectedLocker.boxnowLockerPostalCode}</p>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => setSelectedLocker(null)}
-                          className="text-white/30 hover:text-gold text-[10px] tracking-widest uppercase font-sans transition-colors ml-4 flex-shrink-0"
-                        >
-                          {t("checkout", "changeLocker")}
-                        </button>
-                      </div>
-                      <iframe
-                        title="BoxNow location"
-                        width="100%"
-                        height="200"
-                        style={{ border: 0, display: "block" }}
-                        loading="lazy"
-                        src={`https://maps.google.com/maps?q=${encodeURIComponent(selectedLocker.boxnowLockerAddressLine1 + ", " + selectedLocker.boxnowLockerPostalCode + ", Bulgaria")}&output=embed&zoom=16`}
-                      />
-                    </div>
-                  ) : (
-                    <div>
-                      <p className="text-white/40 text-xs font-sans mb-4">{t("checkout", "boxnowDesc")}</p>
-                      <BoxNowWidget
-                        partnerId={17321}
-                        onSelect={(locker: BNSelected) => setSelectedLocker(locker)}
-                      />
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
           </AnimatedSection>
 
