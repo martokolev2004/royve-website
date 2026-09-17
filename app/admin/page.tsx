@@ -18,6 +18,7 @@ interface Order {
   paymentStatus: string;
   boxnowLocationId?: string;
   boxnowReference?: string;
+  boxnowLockerAddress?: string;
   courier?: string;
   deliveryFee?: number;
 }
@@ -245,7 +246,10 @@ export default function AdminPage() {
                       <p className="text-white/50 text-xs font-sans mb-1">{order.customerEmail}</p>
                       <p className="text-white/50 text-xs font-sans mb-1">{order.customerPhone}</p>
                       {order.boxnowLocationId ? (
-                        <p className="text-[#00c853] text-xs font-sans mt-2">📦 BOX NOW — Автомат #{order.boxnowLocationId}</p>
+                        <div className="mt-2">
+                          <p className="text-[#00c853] text-xs font-sans font-semibold">📦 BOX NOW Автомат</p>
+                          <p className="text-white/70 text-xs font-sans mt-0.5">{order.boxnowLockerAddress || `ID: ${order.boxnowLocationId}`}</p>
+                        </div>
                       ) : (
                         <p className="text-white/50 text-xs font-sans mt-2">
                           {order.courier === "econt" ? "📦 Еконт" : order.courier === "speedy" ? "🚚 Спиди" : "🚚"}{" "}

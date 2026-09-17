@@ -134,6 +134,9 @@ function CheckoutForm() {
           ...data,
           items: items.map((i) => ({ name: i.product.name, quantity: i.quantity })),
           boxnowLocationId: deliveryMethod === "boxnow" ? selectedLocker?.boxnowLockerId || null : null,
+          boxnowLockerAddress: deliveryMethod === "boxnow" && selectedLocker
+            ? `${selectedLocker.boxnowLockerAddressLine1}, ${selectedLocker.boxnowLockerPostalCode}`
+            : null,
           promoCode: promoCode || null,
           paymentMethod,
           courier: hasCourierDelivery ? deliveryMethod : null,

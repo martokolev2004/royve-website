@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     if (!allowed) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
 
     const body = await req.json();
-    const { fullName, email, phone, address, city, postalCode, items, boxnowLocationId, promoCode, paymentMethod, courier } = body;
+    const { fullName, email, phone, address, city, postalCode, items, boxnowLocationId, boxnowLockerAddress, promoCode, paymentMethod, courier } = body;
     const isBankTransfer = paymentMethod === "bank_transfer";
     const isCod = paymentMethod === "cod";
     const DELIVERY_FEE = 5; // €5 for Econt/Speedy courier
@@ -68,6 +68,7 @@ export async function POST(req: NextRequest) {
         customerPhone: phone, deliveryAddress: address, city, postalCode,
         items: orderItems, total, paymentStatus: "pending_bank_transfer",
         stripeSessionId: undefined, boxnowLocationId: boxnowLocationId || null,
+        boxnowLockerAddress: boxnowLockerAddress || null,
         courier: courier || null, deliveryFee,
       });
       return NextResponse.json({ orderId });
@@ -79,6 +80,7 @@ export async function POST(req: NextRequest) {
         customerPhone: phone, deliveryAddress: address, city, postalCode,
         items: orderItems, total, paymentStatus: "pending_cod",
         stripeSessionId: undefined, boxnowLocationId: boxnowLocationId || null,
+        boxnowLockerAddress: boxnowLockerAddress || null,
         courier: courier || null, deliveryFee,
       });
       return NextResponse.json({ orderId });
@@ -106,6 +108,7 @@ export async function POST(req: NextRequest) {
       paymentStatus: "pending",
       stripeSessionId: paymentIntent.id,
       boxnowLocationId: boxnowLocationId || null,
+      boxnowLockerAddress: boxnowLockerAddress || null,
       courier: courier || null,
       deliveryFee,
     });

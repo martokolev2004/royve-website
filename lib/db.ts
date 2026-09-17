@@ -70,6 +70,7 @@ async function ensureSchema(): Promise<void> {
   await db.query(`ALTER TABLE orders ADD COLUMN IF NOT EXISTS stripe_session_id TEXT`);
   await db.query(`ALTER TABLE orders ADD COLUMN IF NOT EXISTS courier TEXT`);
   await db.query(`ALTER TABLE orders ADD COLUMN IF NOT EXISTS delivery_fee NUMERIC NOT NULL DEFAULT 0`);
+  await db.query(`ALTER TABLE orders ADD COLUMN IF NOT EXISTS boxnow_locker_address TEXT`);
 }
 
 export interface OrderData {
@@ -87,6 +88,7 @@ export interface OrderData {
   stripeSessionId?: string;
   boxnowLocationId?: string;
   boxnowReference?: string;
+  boxnowLockerAddress?: string;
   courier?: string;
   deliveryFee?: number;
 }
@@ -95,8 +97,8 @@ export async function saveOrder(order: OrderData): Promise<void> {
   await ensureSchema();
   const db = getPool();
   await db.query(
-    `INSERT INTO orders (id, timestamp, customer_name, customer_email, customer_phone, delivery_address, city, postal_code, items, total, payment_status, stripe_session_id, boxnow_location_id, boxnow_reference, courier, delivery_fee)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)`,
+    `INSERT INTO orders (id, timestamp, customer_name, customer_email, customer_phone, delivery_address, city, postal_code, items, total, payment_status, stripe_session_id, boxnow_location_id, boxnow_reference, courier, delivery_fee, boxnow_locker_address)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)`,
     [
       order.id,
       order.timestamp,
@@ -114,6 +116,7 @@ export async function saveOrder(order: OrderData): Promise<void> {
       order.boxnowReference || null,
       order.courier || null,
       order.deliveryFee || 0,
+      order.boxnowLockerAddress || null,
     ]
   );
 }
@@ -149,6 +152,7 @@ function rowToOrder(row: Record<string, unknown>): OrderData {
     stripeSessionId: row.stripe_session_id as string | undefined,
     boxnowLocationId: row.boxnow_location_id as string | undefined,
     boxnowReference: row.boxnow_reference as string | undefined,
+    boxnowLockerAddress: row.boxnow_locker_address as string | undefined,
     courier: row.courier as string | undefined,
     deliveryFee: Number(row.delivery_fee) || 0,
   };
