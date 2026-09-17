@@ -9,7 +9,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useLang } from "@/context/LanguageContext";
 import { useCartStore } from "@/lib/store";
-import AnimatedSection from "@/components/AnimatedSection";
+
 import Footer from "@/components/Footer";
 import dynamic from "next/dynamic";
 import type { BNSelected } from "@/components/BoxNowWidget";
@@ -199,7 +199,7 @@ function CheckoutForm() {
         <div className="lg:col-span-2 space-y-8">
 
           {/* Contact info */}
-          <AnimatedSection>
+          <div>
             <h2 className="text-xs tracking-[0.4em] uppercase text-gold font-sans mb-6">— {t("checkout", "title")} —</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="md:col-span-2">
@@ -218,10 +218,10 @@ function CheckoutForm() {
                 {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone.message}</p>}
               </div>
             </div>
-          </AnimatedSection>
+          </div>
 
           {/* Delivery method */}
-          <AnimatedSection>
+          <div>
             <div className="border border-white/10 p-6">
               <h3 className="text-xs tracking-[0.4em] uppercase text-gold font-sans mb-6">— ДОСТАВКА —</h3>
 
@@ -323,10 +323,10 @@ function CheckoutForm() {
                 </div>
               )}
             </div>
-          </AnimatedSection>
+          </div>
 
           {/* Promo code */}
-          <AnimatedSection>
+          <div>
             <div className="border border-white/10 p-6">
               <h3 className="text-xs tracking-[0.4em] uppercase text-white/40 font-sans mb-4">— ПРОМОКОД —</h3>
               {promoCode ? (
@@ -365,10 +365,10 @@ function CheckoutForm() {
               )}
               {promoError && <p className="text-red-400 text-xs mt-2 font-sans">{promoError}</p>}
             </div>
-          </AnimatedSection>
+          </div>
 
           {/* Payment method */}
-          <AnimatedSection>
+          <div>
             <div className="border border-white/10 p-6">
               <h3 className="text-xs tracking-[0.4em] uppercase text-gold font-sans mb-6">— {t("checkout", "payment")} —</h3>
 
@@ -444,13 +444,13 @@ function CheckoutForm() {
                 </div>
               )}
             </div>
-          </AnimatedSection>
+          </div>
 
           {error && <p className="text-red-400 text-sm font-sans bg-red-400/10 border border-red-400/20 px-4 py-3">{error}</p>}
         </div>
 
         {/* Order summary */}
-        <AnimatedSection direction="right" delay={0.2}>
+        <div>
           <div className="bg-dark-2 border border-white/5 p-8 sticky top-24">
             <h2 className="font-sans text-xs tracking-[0.4em] uppercase text-gold mb-6">{t("checkout", "orderSummary")}</h2>
             <div className="space-y-3 mb-6">
@@ -500,7 +500,7 @@ function CheckoutForm() {
               <span>{submitting ? "..." : t("checkout", "confirm")}</span>
             </motion.button>
           </div>
-        </AnimatedSection>
+        </div>
       </div>
     </form>
   );
@@ -513,20 +513,20 @@ export default function CheckoutPage() {
   return (
     <div className="bg-dark-1 min-h-screen pt-20">
       <div className="max-w-6xl mx-auto px-6 lg:px-12 py-16">
-        <AnimatedSection>
+        <div>
           <Link href="/cart" className="inline-flex items-center gap-2 text-white/30 hover:text-gold text-xs tracking-widest uppercase font-sans transition-colors duration-200 mb-8 group">
             <span className="group-hover:-translate-x-1 transition-transform duration-200">←</span>
             <span>Обратно към количката</span>
           </Link>
           <p className="text-gold text-xs tracking-[0.5em] uppercase font-sans mb-4">— ROYVÉ —</p>
           <h1 className="font-serif text-5xl font-bold text-white tracking-widest mb-12">{t("checkout", "title")}</h1>
-        </AnimatedSection>
+        </div>
 
         {items.length === 0 ? (
-          <AnimatedSection className="text-center py-24">
+          <div>
             <p className="text-white/30 text-sm tracking-widest font-sans mb-8">{t("cart", "empty")}</p>
             <Link href="/shop" className="btn-luxury inline-block"><span>{t("cart", "continue")}</span></Link>
-          </AnimatedSection>
+          </div>
         ) : (
           <Elements stripe={stripePromise}>
             <CheckoutForm />
