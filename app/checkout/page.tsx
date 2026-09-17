@@ -23,9 +23,9 @@ const schema = z.object({
   fullName: z.string().min(2),
   email: z.string().email(),
   phone: z.string().min(6),
-  address: z.string().min(5),
-  city: z.string().min(2),
-  postalCode: z.string().min(3),
+  address: z.string().optional(),
+  city: z.string().optional(),
+  postalCode: z.string().optional(),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -118,9 +118,14 @@ function CheckoutForm() {
   async function onSubmit(data: FormData) {
     if (!stripe || !elements || items.length === 0) return;
     if (!deliveryMethod) { setError("Моля избери начин на доставка."); return; }
+    if (deliveryMethod === "boxnow" && !selectedLocker) { setError("Моля избери BoxNow автомат."); return; }
     if (!paymentMethod) { setError("Моля избери начин на плащане."); return; }
     if (paymentMethod === "cod" && deliveryMethod === "boxnow") {
       setError("Наложен платеж не е наличен за BoxNow автомати.");
+      return;
+    }
+    if (hasCourierDelivery && (!data.address || !data.city || !data.postalCode)) {
+      setError("Моля попълни адрес, град и пощенски код.");
       return;
     }
     setSubmitting(true);
@@ -212,6 +217,7 @@ function CheckoutForm() {
                 <input {...register("phone")} type="tel" className="luxury-input" placeholder="+359 ..." />
                 {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone.message}</p>}
               </div>
+              {deliveryMethod !== "boxnow" && (<>
               <div>
                 <label className="block text-xs text-white/40 tracking-widest uppercase font-sans mb-2">{t("checkout", "city")}</label>
                 <input {...register("city")} className="luxury-input" placeholder={t("checkout", "city")} />
@@ -227,6 +233,7 @@ function CheckoutForm() {
                 <input {...register("address")} className="luxury-input" placeholder={t("checkout", "address")} />
                 {errors.address && <p className="text-red-400 text-xs mt-1">{errors.address.message}</p>}
               </div>
+              </>)}
             </div>
           </AnimatedSection>
 
