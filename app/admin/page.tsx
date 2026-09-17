@@ -38,7 +38,7 @@ export default function AdminPage() {
   const [promos, setPromos] = useState<PromoCode[]>([]);
   const [newPromoCode, setNewPromoCode] = useState("");
   const [newPromoDiscount, setNewPromoDiscount] = useState(10);
-  const [orderFilter, setOrderFilter] = useState<"all" | "card" | "bank">("all");
+  const [orderFilter, setOrderFilter] = useState<"all" | "card" | "bank" | "cod">("all");
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -130,10 +130,13 @@ export default function AdminPage() {
   );
   const visibleOrders = orderFilter === "bank"
     ? allVisible.filter((o) => o.paymentStatus === "pending_bank_transfer")
+    : orderFilter === "cod"
+    ? allVisible.filter((o) => o.paymentStatus === "pending_cod")
     : orderFilter === "card"
     ? allVisible.filter((o) => !["pending_bank_transfer", "pending_cod"].includes(o.paymentStatus))
     : allVisible;
   const bankTransferCount = allVisible.filter((o) => o.paymentStatus === "pending_bank_transfer").length;
+  const codCount = allVisible.filter((o) => o.paymentStatus === "pending_cod").length;
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
@@ -185,7 +188,7 @@ export default function AdminPage() {
         {tab === "orders" && !loading && (
           <div className="space-y-4">
           <div className="flex gap-2 flex-wrap">
-            {(["all", "card", "bank"] as const).map((f) => (
+            {(["all", "card", "bank", "cod"] as const).map((f) => (
               <button
                 key={f}
                 onClick={() => setOrderFilter(f)}
@@ -193,7 +196,10 @@ export default function AdminPage() {
                   orderFilter === f ? "border-gold text-gold" : "border-white/10 text-white/30 hover:text-white/60"
                 }`}
               >
-                {f === "all" ? `Всички (${allVisible.length})` : f === "card" ? "Карта" : `Банков превод${bankTransferCount > 0 ? ` (${bankTransferCount})` : ""}`}
+                {f === "all" ? `Всички (${allVisible.length})`
+                  : f === "card" ? "Карта"
+                  : f === "bank" ? `Банков${bankTransferCount > 0 ? ` (${bankTransferCount})` : ""}`
+                  : `Наложен${codCount > 0 ? ` (${codCount})` : ""}`}
               </button>
             ))}
           </div>

@@ -42,6 +42,11 @@ const CARD_STYLE = {
   },
 };
 
+const DELIVERY_FEE = 5;
+
+type DeliveryMethod = "boxnow" | "econt" | "speedy";
+type PaymentMethod = "card" | "bank_transfer" | "cod";
+
 function CheckoutForm() {
   const { t } = useLang();
   const { items, subtotal, bundleSavings, total, clearCart } = useCartStore();
@@ -50,16 +55,17 @@ function CheckoutForm() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [selectedLocker, setSelectedLocker] = useState<BNSelected | null>(null);
+  const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
   const [promoInput, setPromoInput] = useState("");
   const [promoCode, setPromoCode] = useState<string | null>(null);
   const [promoDiscount, setPromoDiscount] = useState(0);
   const [promoError, setPromoError] = useState("");
   const [promoLoading, setPromoLoading] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<"card" | "bank_transfer" | "cod">("card");
-  const [courier, setCourier] = useState<"econt" | "speedy" | null>(null);
-  const [courierError, setCourierError] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const DELIVERY_FEE = 5;
+
+  const hasCourierDelivery = deliveryMethod === "econt" || deliveryMethod === "speedy";
+  const deliveryFee = hasCourierDelivery ? DELIVERY_FEE : 0;
 
   function TermsCheckbox() {
     return (
@@ -109,13 +115,14 @@ function CheckoutForm() {
     }
   }
 
-  const needsCourier = !selectedLocker && paymentMethod !== "bank_transfer";
-  const deliveryFee = needsCourier ? DELIVERY_FEE : 0;
-
   async function onSubmit(data: FormData) {
     if (!stripe || !elements || items.length === 0) return;
-    if (needsCourier && !courier) { setCourierError(true); return; }
-    setCourierError(false);
+    if (!deliveryMethod) { setError("Моля избери начин на доставка."); return; }
+    if (!paymentMethod) { setError("Моля избери начин на плащане."); return; }
+    if (paymentMethod === "cod" && deliveryMethod === "boxnow") {
+      setError("Наложен платеж не е наличен за BoxNow автомати.");
+      return;
+    }
     setSubmitting(true);
     setError("");
 
@@ -126,10 +133,10 @@ function CheckoutForm() {
         body: JSON.stringify({
           ...data,
           items: items.map((i) => ({ name: i.product.name, quantity: i.quantity })),
-          boxnowLocationId: selectedLocker?.boxnowLockerId || null,
+          boxnowLocationId: deliveryMethod === "boxnow" ? selectedLocker?.boxnowLockerId || null : null,
           promoCode: promoCode || null,
           paymentMethod,
-          courier: courier || null,
+          courier: hasCourierDelivery ? deliveryMethod : null,
         }),
       });
       const result = await res.json();
@@ -174,13 +181,16 @@ function CheckoutForm() {
     }
   }
 
+  const baseTotal = total();
+  const promoAmount = promoCode ? Math.round(baseTotal * promoDiscount) / 100 : 0;
+  const finalTotal = Math.round((baseTotal - promoAmount + deliveryFee) * 100) / 100;
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div className="lg:col-span-2 space-y-8">
 
-          {/* Contact & delivery */}
+          {/* Contact & delivery info */}
           <AnimatedSection>
             <h2 className="text-xs tracking-[0.4em] uppercase text-gold font-sans mb-6">— {t("checkout", "title")} —</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -217,62 +227,76 @@ function CheckoutForm() {
             </div>
           </AnimatedSection>
 
-          {/* Courier selection (when not using BoxNow) */}
-          {!selectedLocker && (
-            <AnimatedSection>
-              <div className={`border p-6 ${courierError ? "border-red-400/40" : "border-white/10"}`}>
-                <h3 className="text-xs tracking-[0.4em] uppercase text-white/60 font-sans mb-4">— КУРИЕР —</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  {(["econt", "speedy"] as const).map((c) => (
-                    <button
-                      key={c}
-                      type="button"
-                      onClick={() => { setCourier(c); setCourierError(false); }}
-                      className={`py-4 text-xs tracking-widest uppercase font-sans border transition-colors flex flex-col items-center gap-1.5 ${
-                        courier === c ? "border-gold text-gold bg-gold/5" : "border-white/15 text-white/40 hover:border-white/30"
-                      }`}
-                    >
-                      <span className="text-base">{c === "econt" ? "📦" : "🚚"}</span>
-                      <span>{c === "econt" ? "Еконт" : "Спиди"}</span>
-                      <span className="text-[10px] text-white/30 normal-case tracking-normal">+{DELIVERY_FEE} €</span>
-                    </button>
-                  ))}
-                </div>
-                {courierError && <p className="text-red-400 text-xs mt-2 font-sans">Моля избери куриер.</p>}
-              </div>
-            </AnimatedSection>
-          )}
-
-          {/* BoxNow locker selection */}
+          {/* Delivery method */}
           <AnimatedSection>
             <div className="border border-white/10 p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 bg-[#00c853] flex items-center justify-center text-white text-xs font-bold flex-shrink-0">BN</div>
-                <h3 className="text-xs tracking-[0.4em] uppercase text-white/60 font-sans">BOX NOW — {t("checkout", "boxnow")}</h3>
+              <h3 className="text-xs tracking-[0.4em] uppercase text-gold font-sans mb-6">— ДОСТАВКА —</h3>
+              <div className="grid grid-cols-3 gap-3">
+                {/* BoxNow */}
+                <button
+                  type="button"
+                  onClick={() => setDeliveryMethod("boxnow")}
+                  className={`py-4 text-xs tracking-widest uppercase font-sans border transition-colors flex flex-col items-center gap-1.5 ${
+                    deliveryMethod === "boxnow" ? "border-[#00c853] text-[#00c853] bg-[#00c853]/5" : "border-white/15 text-white/40 hover:border-white/30"
+                  }`}
+                >
+                  <span className="text-base">📦</span>
+                  <span>Box Now</span>
+                  <span className="text-[10px] text-white/30 normal-case tracking-normal">Автомат</span>
+                </button>
+                {/* Econt */}
+                <button
+                  type="button"
+                  onClick={() => setDeliveryMethod("econt")}
+                  className={`py-4 text-xs tracking-widest uppercase font-sans border transition-colors flex flex-col items-center gap-1.5 ${
+                    deliveryMethod === "econt" ? "border-gold text-gold bg-gold/5" : "border-white/15 text-white/40 hover:border-white/30"
+                  }`}
+                >
+                  <span className="text-base">🚚</span>
+                  <span>Еконт</span>
+                  <span className="text-[10px] text-white/30 normal-case tracking-normal">+{DELIVERY_FEE} €</span>
+                </button>
+                {/* Speedy */}
+                <button
+                  type="button"
+                  onClick={() => setDeliveryMethod("speedy")}
+                  className={`py-4 text-xs tracking-widest uppercase font-sans border transition-colors flex flex-col items-center gap-1.5 ${
+                    deliveryMethod === "speedy" ? "border-gold text-gold bg-gold/5" : "border-white/15 text-white/40 hover:border-white/30"
+                  }`}
+                >
+                  <span className="text-base">🚀</span>
+                  <span>Спиди</span>
+                  <span className="text-[10px] text-white/30 normal-case tracking-normal">+{DELIVERY_FEE} €</span>
+                </button>
               </div>
 
-              {selectedLocker ? (
-                <div className="flex items-center justify-between bg-dark-2 border border-[#00c853]/30 px-4 py-3">
-                  <div>
-                    <p className="text-[#00c853] text-[10px] tracking-widest uppercase font-sans mb-0.5">✓ Избран автомат</p>
-                    <p className="text-white text-xs font-sans">{selectedLocker.boxnowLockerAddressLine1}</p>
-                    <p className="text-white/40 text-xs font-sans mt-0.5">{selectedLocker.boxnowLockerPostalCode}</p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedLocker(null)}
-                    className="text-white/30 hover:text-gold text-[10px] tracking-widest uppercase font-sans transition-colors ml-4 flex-shrink-0"
-                  >
-                    {t("checkout", "changeLocker")}
-                  </button>
-                </div>
-              ) : (
-                <div>
-                  <p className="text-white/40 text-xs font-sans mb-4">{t("checkout", "boxnowDesc")}</p>
-                  <BoxNowWidget
-                    partnerId={17321}
-                    onSelect={(locker: BNSelected) => setSelectedLocker(locker)}
-                  />
+              {/* BoxNow locker picker — only when BoxNow selected */}
+              {deliveryMethod === "boxnow" && (
+                <div className="mt-4 pt-4 border-t border-white/5">
+                  {selectedLocker ? (
+                    <div className="flex items-center justify-between bg-dark-2 border border-[#00c853]/30 px-4 py-3">
+                      <div>
+                        <p className="text-[#00c853] text-[10px] tracking-widest uppercase font-sans mb-0.5">✓ Избран автомат</p>
+                        <p className="text-white text-xs font-sans">{selectedLocker.boxnowLockerAddressLine1}</p>
+                        <p className="text-white/40 text-xs font-sans mt-0.5">{selectedLocker.boxnowLockerPostalCode}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedLocker(null)}
+                        className="text-white/30 hover:text-gold text-[10px] tracking-widest uppercase font-sans transition-colors ml-4 flex-shrink-0"
+                      >
+                        {t("checkout", "changeLocker")}
+                      </button>
+                    </div>
+                  ) : (
+                    <div>
+                      <p className="text-white/40 text-xs font-sans mb-4">{t("checkout", "boxnowDesc")}</p>
+                      <BoxNowWidget
+                        partnerId={17321}
+                        onSelect={(locker: BNSelected) => setSelectedLocker(locker)}
+                      />
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -325,7 +349,6 @@ function CheckoutForm() {
             <div className="border border-white/10 p-6">
               <h3 className="text-xs tracking-[0.4em] uppercase text-gold font-sans mb-6">— {t("checkout", "payment")} —</h3>
 
-              {/* Selector */}
               <div className="grid grid-cols-3 gap-3 mb-6">
                 <button
                   type="button"
@@ -344,7 +367,8 @@ function CheckoutForm() {
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("cod")}
-                  className={`py-3 text-xs tracking-widest uppercase font-sans border transition-colors ${paymentMethod === "cod" ? "border-gold text-gold bg-gold/5" : "border-white/15 text-white/40 hover:border-white/30"}`}
+                  disabled={deliveryMethod === "boxnow"}
+                  className={`py-3 text-xs tracking-widest uppercase font-sans border transition-colors disabled:opacity-30 disabled:cursor-not-allowed ${paymentMethod === "cod" ? "border-gold text-gold bg-gold/5" : "border-white/15 text-white/40 hover:border-white/30"}`}
                 >
                   💵 Наложен
                 </button>
@@ -415,53 +439,34 @@ function CheckoutForm() {
               ))}
             </div>
             <div className="h-px bg-white/10 mb-6" />
+
             {bundleSavings() > 0 && (
-              <>
-                <div className="flex justify-between text-xs font-sans text-white/40 mb-2">
-                  <span>{t("cart", "subtotal")}</span><span>{subtotal()} €</span>
-                </div>
-                <div className="flex justify-between text-xs font-sans text-gold mb-6">
-                  <span>{t("cart", "bundleDiscount")}</span><span>−{bundleSavings()} €</span>
-                </div>
-              </>
+              <div className="flex justify-between text-xs font-sans text-white/40 mb-2">
+                <span>{t("cart", "subtotal")}</span><span>{subtotal()} €</span>
+              </div>
             )}
-            {selectedLocker && (
-              <div className="flex items-start gap-2 mb-4 text-xs font-sans text-[#00c853]">
-                <span className="flex-shrink-0">✓</span>
-                <span>BOX NOW: {selectedLocker.boxnowLockerAddressLine1}</span>
+            {bundleSavings() > 0 && (
+              <div className="flex justify-between text-xs font-sans text-gold mb-2">
+                <span>{t("cart", "bundleDiscount")}</span><span>−{bundleSavings()} €</span>
+              </div>
+            )}
+            {promoCode && (
+              <div className="flex justify-between text-xs font-sans text-gold mb-2">
+                <span>Промокод ({promoDiscount}%)</span><span>−{promoAmount.toFixed(2)} €</span>
               </div>
             )}
             {deliveryFee > 0 && (
               <div className="flex justify-between text-xs font-sans text-white/40 mb-2">
-                <span>Доставка ({courier === "econt" ? "Еконт" : courier === "speedy" ? "Спиди" : "куриер"})</span>
+                <span>Доставка ({deliveryMethod === "econt" ? "Еконт" : "Спиди"})</span>
                 <span>+{deliveryFee.toFixed(2)} €</span>
               </div>
             )}
-            {promoCode && (() => {
-              const baseTotal = total();
-              const promoAmount = Math.round(baseTotal * promoDiscount) / 100;
-              const finalTotal = Math.round((baseTotal - promoAmount + deliveryFee) * 100) / 100;
-              return (
-                <>
-                  <div className="flex justify-between text-xs font-sans text-white/40 mb-2">
-                    <span>Преди промокод</span><span>{baseTotal} €</span>
-                  </div>
-                  <div className="flex justify-between text-xs font-sans text-gold mb-4">
-                    <span>Промокод ({promoDiscount}%)</span><span>−{promoAmount.toFixed(2)} €</span>
-                  </div>
-                  <div className="flex justify-between items-center mb-8">
-                    <span className="text-xs tracking-[0.3em] uppercase font-sans text-white/60">{t("cart", "total")}</span>
-                    <span className="font-serif text-2xl text-gold font-bold">{finalTotal.toFixed(2)} €</span>
-                  </div>
-                </>
-              );
-            })()}
-            {!promoCode && (
-              <div className="flex justify-between items-center mb-8">
-                <span className="text-xs tracking-[0.3em] uppercase font-sans text-white/60">{t("cart", "total")}</span>
-                <span className="font-serif text-2xl text-gold font-bold">{(total() + deliveryFee).toFixed(2)} €</span>
-              </div>
-            )}
+
+            <div className="flex justify-between items-center mb-8 pt-2 border-t border-white/5">
+              <span className="text-xs tracking-[0.3em] uppercase font-sans text-white/60">{t("cart", "total")}</span>
+              <span className="font-serif text-2xl text-gold font-bold">{finalTotal.toFixed(2)} €</span>
+            </div>
+
             <TermsCheckbox />
             <motion.button
               type="submit"
@@ -471,7 +476,6 @@ function CheckoutForm() {
             >
               <span>{submitting ? "..." : t("checkout", "confirm")}</span>
             </motion.button>
-            <p className="text-white/20 text-[10px] text-center mt-3 font-sans tracking-wider">🔒 Защитено от Stripe</p>
           </div>
         </AnimatedSection>
       </div>
