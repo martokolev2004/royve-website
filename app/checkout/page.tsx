@@ -316,19 +316,29 @@ function CheckoutForm() {
               {deliveryMethod === "boxnow" && (
                 <div className="mt-4 pt-4 border-t border-white/5">
                   {selectedLocker ? (
-                    <div className="flex items-center justify-between bg-dark-2 border border-[#00c853]/30 px-4 py-3">
-                      <div>
-                        <p className="text-[#00c853] text-[10px] tracking-widest uppercase font-sans mb-0.5">✓ Избран автомат</p>
-                        <p className="text-white text-xs font-sans">{selectedLocker.boxnowLockerAddressLine1}</p>
-                        <p className="text-white/40 text-xs font-sans mt-0.5">{selectedLocker.boxnowLockerPostalCode}</p>
+                    <div>
+                      <div className="flex items-center justify-between bg-dark-2 border border-[#00c853]/30 px-4 py-3 mb-3">
+                        <div>
+                          <p className="text-[#00c853] text-[10px] tracking-widest uppercase font-sans mb-0.5">✓ Избран автомат</p>
+                          <p className="text-white text-xs font-sans">{selectedLocker.boxnowLockerAddressLine1}</p>
+                          <p className="text-white/40 text-xs font-sans mt-0.5">{selectedLocker.boxnowLockerPostalCode}</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setSelectedLocker(null)}
+                          className="text-white/30 hover:text-gold text-[10px] tracking-widest uppercase font-sans transition-colors ml-4 flex-shrink-0"
+                        >
+                          {t("checkout", "changeLocker")}
+                        </button>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => setSelectedLocker(null)}
-                        className="text-white/30 hover:text-gold text-[10px] tracking-widest uppercase font-sans transition-colors ml-4 flex-shrink-0"
-                      >
-                        {t("checkout", "changeLocker")}
-                      </button>
+                      <iframe
+                        title="BoxNow location"
+                        width="100%"
+                        height="200"
+                        style={{ border: 0, display: "block" }}
+                        loading="lazy"
+                        src={`https://maps.google.com/maps?q=${encodeURIComponent(selectedLocker.boxnowLockerAddressLine1 + ", " + selectedLocker.boxnowLockerPostalCode + ", Bulgaria")}&output=embed&zoom=16`}
+                      />
                     </div>
                   ) : (
                     <div>
