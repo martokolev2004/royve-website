@@ -4,6 +4,7 @@ import { getStripe } from "@/lib/stripe";
 import { saveOrder, checkRateLimit } from "@/lib/db";
 import { products } from "@/lib/products";
 import { getActivePromoCode } from "@/lib/db";
+import { sendOrderEmails } from "@/lib/emails";
 
 const BUNDLE_PRICE = 80;
 
@@ -63,26 +64,30 @@ export async function POST(req: NextRequest) {
     const stripe = getStripe();
 
     if (isBankTransfer) {
-      await saveOrder({
+      const order = {
         id: orderId, timestamp, customerName: fullName, customerEmail: email,
         customerPhone: phone, deliveryAddress: address, city, postalCode,
         items: orderItems, total, paymentStatus: "pending_bank_transfer",
         stripeSessionId: undefined, boxnowLocationId: boxnowLocationId || null,
         boxnowLockerAddress: boxnowLockerAddress || null,
         courier: courier || null, deliveryFee,
-      });
+      };
+      await saveOrder(order);
+      try { await sendOrderEmails(order, "bank_transfer"); } catch (e) { console.error("Email error:", e); }
       return NextResponse.json({ orderId });
     }
 
     if (isCod) {
-      await saveOrder({
+      const order = {
         id: orderId, timestamp, customerName: fullName, customerEmail: email,
         customerPhone: phone, deliveryAddress: address, city, postalCode,
         items: orderItems, total, paymentStatus: "pending_cod",
         stripeSessionId: undefined, boxnowLocationId: boxnowLocationId || null,
         boxnowLockerAddress: boxnowLockerAddress || null,
         courier: courier || null, deliveryFee,
-      });
+      };
+      await saveOrder(order);
+      try { await sendOrderEmails(order, "cod"); } catch (e) { console.error("Email error:", e); }
       return NextResponse.json({ orderId });
     }
 
